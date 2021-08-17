@@ -1,0 +1,17 @@
+---
+type: google.api.Service
+config_version: 3
+
+name: api.v1.ras
+title: RAS API
+
+apis:
+  - name: ClustersService
+
+http:
+  rules:
+    # Clusters
+    - selector: ras.api.v1.ClustersService.Clusters
+      get: '/clusters'
+    - selector: ras.api.v1.ClustersService.GetCluster
+      get: '/clusters/{cluster_id}'

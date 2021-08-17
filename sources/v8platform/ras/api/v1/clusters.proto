@@ -1,17 +1,29 @@
 syntax = "proto3";
 
-package v8platform.ras.api.v1;
+package ras.api.v1;
 
 import "v8platform/ras/serialize/clusters.proto";
+import "v8platform/ras/field_tag.proto";
+import "google/api/annotations.proto";
 
 option go_package = "github.com/v8platform/protos/v8platform/ras/api/v1";
 
 service ClustersService {
-    rpc List(ListRequest) returns (ListResponse);
+  rpc Clusters(ClustersRequest) returns (ListResponse) {};
+  rpc GetCluster(GetClusterRequest) returns (GetClusterResponse) {};
 }
 
-message ListRequest {}
+message ClustersRequest {}
+
+message GetClusterRequest {
+
+  string cluster_id = 1 [(v8platform.ras.tags) = "ras:\"uuid,1\""];
+
+}
 
 message ListResponse {
-    v8platform.ras.serialize.ClusterInfo items = 1;
+  repeated v8platform.ras.serialize.ClusterInfo items = 1;
+}
+message GetClusterResponse {
+  repeated v8platform.ras.serialize.ClusterInfo items = 1;
 }
