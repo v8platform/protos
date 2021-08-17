@@ -1,12 +1,11 @@
-
 syntax = "proto3";
 
 package v8platform.ras.serialize;
 
-option go_package = "github.com/v8platform/proto/v8platform/ras/serialize";
-
 import "google/protobuf/timestamp.proto";
 import "v8platform/ras/serialize/field_tag.proto";
+
+option go_package = "github.com/v8platform/protos/v8platform/ras/serialize";
 
 message SessionInfo {
     string uuid = 1 [(tags) = "ras:\"1,version=5,decoder=string\""];
@@ -59,7 +58,7 @@ message SessionInfo {
     string data_separation = 48;
     string client_ip_address = 49;
     string cluster_id = 50;
-    repeated LicenseInfo licenses= 51;
+    repeated LicenseInfo licenses = 51;
 }
 
 

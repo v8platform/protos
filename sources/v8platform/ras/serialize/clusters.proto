@@ -4,12 +4,12 @@ package v8platform.ras.serialize;
 
 import "v8platform/ras/serialize/field_tag.proto";
 
-option go_package = "github.com/v8platform/proto/v8platform/ras/serialize";
+option go_package = "github.com/v8platform/protos/v8platform/ras/serialize";
 
 
 message ClusterInfo {
 
-    string uuid = 1[(tags) = "graphql:\"withNewTags,optional\""];
+    string uuid = 1 [(tags) = "graphql:\"withNewTags,optional\""];
     string host = 2;
     string name = 3;
     int32 expiration_timeout = 4;

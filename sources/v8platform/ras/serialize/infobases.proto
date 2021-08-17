@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package v8platform.ras.serialize;
 
-option go_package = "github.com/v8platform/proto/v8platform/ras/serialize";
+option go_package = "github.com/v8platform/protos/v8platform/ras/serialize";
 
 message InfobaseInfo {
     string uuid = 1;

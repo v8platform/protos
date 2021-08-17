@@ -1,10 +1,9 @@
 syntax = "proto3";
 
-import "v8platform/ras/serialize/field_tag.proto";
-
 package v8platform.ras.serialize;
 
-option go_package = "github.com/v8platform/proto/v8platform/ras/serialize";
+
+option go_package = "github.com/v8platform/protos/v8platform/ras/serialize";
 
 message UUID {
     string value = 1;

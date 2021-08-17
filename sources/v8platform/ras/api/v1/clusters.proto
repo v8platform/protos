@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package v8platform.ras.api.v1;
+
+import "v8platform/ras/serialize/clusters.proto";
+
+option go_package = "github.com/v8platform/protos/v8platform/ras/api/v1";
+
+service ClustersService {
+    rpc List(ListRequest) returns (ListResponse);
+}
+
+message ListRequest {}
+
+message ListResponse {
+    v8platform.ras.serialize.ClusterInfo items = 1;
+}
