@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package ras.api.v1;
+
+import "v8platform/ras/serialize/clusters.proto";
+import "v8platform/ras/field_tag.proto";
+import "google/protobuf/any.proto";
+
+option go_package = "github.com/v8platform/protos/v8platform/ras/api/v1";
+
+
+message Param {
+  ParamType type = 1;
+  google.protobuf.Any value = 2;
+}
+
+enum ParamType {
+  PARAM_UNKNOWN_TYPE = 0;
+  PARAM_BOOLEAN                    = 1;
+  PARAM_BYTE                        = 2;
+  PARAM_SHORT                       = 3;
+  PARAM_INT                         = 4;
+  PARAM_LONG                        = 5;
+  PARAM_FLOAT                       = 6;
+  PARAM_DOUBLE                      = 7;
+  PARAM_SIZE                        = 8;
+  PARAM_NULLABLE_SIZE               = 9;
+  PARAM_STRING                      = 10;
+  PARAM_UUID                        = 11;
+  PARAM_TYPE                        = 12;
+  PARAM_ENDPOINT_ID                 = 13;
+}

@@ -9,11 +9,11 @@ import "google/api/annotations.proto";
 option go_package = "github.com/v8platform/protos/v8platform/ras/api/v1";
 
 service ClustersService {
-  rpc Clusters(ClustersRequest) returns (ListResponse) {};
+  rpc Clusters(GetClustersRequest) returns (ListResponse) {};
   rpc GetCluster(GetClusterRequest) returns (GetClusterResponse) {};
 }
 
-message ClustersRequest {}
+message GetClustersRequest {}
 
 message GetClusterRequest {
 

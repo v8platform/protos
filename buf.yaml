@@ -5,6 +5,7 @@ name: buf.build/v8platform/ras
 deps:
   - buf.build/googleapis/googleapis
   - buf.build/grpc-ecosystem/grpc-gateway
+#  - buf.build/srikrsna/protoc-gen-gotag
 build:
   roots:
     - sources

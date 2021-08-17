@@ -18,7 +18,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ClustersServiceClient interface {
-	Clusters(ctx context.Context, in *ClustersRequest, opts ...grpc.CallOption) (*ListResponse, error)
+	Clusters(ctx context.Context, in *GetClustersRequest, opts ...grpc.CallOption) (*ListResponse, error)
 	GetCluster(ctx context.Context, in *GetClusterRequest, opts ...grpc.CallOption) (*GetClusterResponse, error)
 }
 
@@ -30,7 +30,7 @@ func NewClustersServiceClient(cc grpc.ClientConnInterface) ClustersServiceClient
 	return &clustersServiceClient{cc}
 }
 
-func (c *clustersServiceClient) Clusters(ctx context.Context, in *ClustersRequest, opts ...grpc.CallOption) (*ListResponse, error) {
+func (c *clustersServiceClient) Clusters(ctx context.Context, in *GetClustersRequest, opts ...grpc.CallOption) (*ListResponse, error) {
 	out := new(ListResponse)
 	err := c.cc.Invoke(ctx, "/ras.api.v1.ClustersService/Clusters", in, out, opts...)
 	if err != nil {
@@ -52,7 +52,7 @@ func (c *clustersServiceClient) GetCluster(ctx context.Context, in *GetClusterRe
 // All implementations should embed UnimplementedClustersServiceServer
 // for forward compatibility
 type ClustersServiceServer interface {
-	Clusters(context.Context, *ClustersRequest) (*ListResponse, error)
+	Clusters(context.Context, *GetClustersRequest) (*ListResponse, error)
 	GetCluster(context.Context, *GetClusterRequest) (*GetClusterResponse, error)
 }
 
@@ -60,7 +60,7 @@ type ClustersServiceServer interface {
 type UnimplementedClustersServiceServer struct {
 }
 
-func (UnimplementedClustersServiceServer) Clusters(context.Context, *ClustersRequest) (*ListResponse, error) {
+func (UnimplementedClustersServiceServer) Clusters(context.Context, *GetClustersRequest) (*ListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Clusters not implemented")
 }
 func (UnimplementedClustersServiceServer) GetCluster(context.Context, *GetClusterRequest) (*GetClusterResponse, error) {
@@ -79,7 +79,7 @@ func RegisterClustersServiceServer(s grpc.ServiceRegistrar, srv ClustersServiceS
 }
 
 func _ClustersService_Clusters_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ClustersRequest)
+	in := new(GetClustersRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -91,7 +91,7 @@ func _ClustersService_Clusters_Handler(srv interface{}, ctx context.Context, dec
 		FullMethod: "/ras.api.v1.ClustersService/Clusters",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ClustersServiceServer).Clusters(ctx, req.(*ClustersRequest))
+		return srv.(ClustersServiceServer).Clusters(ctx, req.(*GetClustersRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
