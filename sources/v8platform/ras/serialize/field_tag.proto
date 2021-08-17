@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+import "google/protobuf/descriptor.proto";
+
+package v8platform.ras.serialize;
+
+option go_package = "github.com/v8platform/proto/v8platform/ras/serialize";
+
+// Tags are applied at the field level
+extend google.protobuf.FieldOptions {
+    // Multiple Tags can be spcified.
+    string tags = 847939;
+}
+
+extend google.protobuf.OneofOptions {
+    // Multiple Tags can be spcified.
+    string oneof_tags = 847939;
+}
