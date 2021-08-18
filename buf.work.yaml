@@ -2,5 +2,3 @@ version: v1
 directories:
   - serializeapis
   - rasapis
-#  - third_party/googleapis
-#  - third_party/protoc-gen-gotag
