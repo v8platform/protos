@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProtobufSettings">
+    <option name="importRoots">
+      <list>
+        <ImportRootEntry>
+          <option name="path" value="file://$USER_HOME$/go/include" />
+        </ImportRootEntry>
+        <ImportRootEntry>
+          <option name="path" value="file://$PROJECT_DIR$/sources" />
+        </ImportRootEntry>
+      </list>
+    </option>
+  </component>
+</project>

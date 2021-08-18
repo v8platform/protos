@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package ras.api.v1;
+
+import "v8platform/ras/serialize/infobases.proto";
+import "v8platform/ras/field_tag.proto";
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/any.proto";
+import "v8platform/ras/api/v1/auth.proto";
+import "v8platform/ras/api/v1/helpers.proto";
+
+option go_package = "github.com/v8platform/protos/v8platform/ras/api/v1/infobases";
+
+service InfobasesService {
+  rpc Infobases(InfobasesRequest) returns (InfobasesResponse) {};
+  rpc LookupInfobase(LookupInfobaseRequest) returns (LookupInfobaseResponse) {}
+  rpc GetInfobase(GetInfobaseRequest) returns (v8platform.ras.serialize.InfobaseInfo) {};
+  //  rpc UpdateInfobase(AddClusterRequest) returns (AddClusterResponse) {};
+  //  rpc DeleteInfobase(DeleteClusterRequest) returns (google.protobuf.Empty) {};
+}
+
+message InfobasesRequest {
+  Cluster cluster = 1;
+}
+
+message InfobasesResponse {
+  repeated v8platform.ras.serialize.InfobaseSummaryInfo items = 1;
+}
+
+message GetInfobaseRequest {
+  Cluster cluster = 1;
+  string infobase_id = 2;
+}
+
+message LookupInfobaseRequest {
+  Cluster cluster = 1;
+  repeated FieldFilter field = 2;
+}
+message LookupInfobaseResponse {
+  repeated v8platform.ras.serialize.InfobaseSummaryInfo items = 1;
+}
+
+message FieldFilter {
+  string name_reqexp = 1;
+  google.protobuf.Any value = 2;
+}

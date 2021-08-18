@@ -5,21 +5,23 @@ package v8platform.ras.serialize;
 option go_package = "github.com/v8platform/protos/v8platform/ras/serialize";
 
 message LicenseInfo {
-    string process_id = 1;
-    string session_id = 2;
-    string user_name = 3;
-    string host = 4;
-    string app_id = 5;
-    string full_name = 6;
-    string series = 7;
-    bool issued_by_server = 8;
-    int64 license_type = 9;
-    bool net = 10;
-    int64 max_users_all = 11;
-    int64 max_users_cur = 12;
-    string rmngr_address = 13;
-    int64 rmngr_port = 14;
-    string rmngr_pid = 15;
-    string short_presentation = 16;
-    string full_presentation = 17;
+
+  //  string cluster_id = 1;
+  string process_id = 1;
+  string session_id = 2;
+  string user_name = 3;
+  string host = 4;
+  string app_id = 5;
+  string full_name = 6;
+  string series = 7;
+  bool issued_by_server = 8;
+  int64 license_type = 9;
+  bool net = 10;
+  int64 max_users_all = 11;
+  int64 max_users_cur = 12;
+  string rmngr_address = 13;
+  int64 rmngr_port = 14;
+  string rmngr_pid = 15;
+  string short_presentation = 16;
+  string full_presentation = 17;
 }

@@ -5,23 +5,17 @@ package v8platform.ras.serialize;
 option go_package = "github.com/v8platform/protos/v8platform/ras/serialize";
 
 message InfobaseInfo {
-    string uuid = 1;
-    string name = 2;
-    string description = 3;
+  string uuid = 1;
+  string name = 2;
+  string description = 3;
 
-    // TODO: Добавить другие поля
 }
 
 message InfobaseSummaryInfo {
 
-    string uuid = 1;
-    string name = 2;
-    string description = 3;
-    string cluster_uuid = 4;
+  string cluster_id = 1;
+  string uuid = 2;
+  string name = 3;
+  string descr = 5;
 
-}
-
-message InfobaseSummaryList {
-    int32 count = 1;
-    repeated InfobaseSummaryInfo items = 2;
 }

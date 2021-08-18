@@ -6,7 +6,6 @@ import "v8platform/ras/field_tag.proto";
 
 option go_package = "github.com/v8platform/protos/v8platform/ras/serialize";
 
-
 message ClusterInfo {
 
   string uuid = 1 [(tags) = "ras:\"uuid,1\""];
@@ -25,12 +24,5 @@ message ClusterInfo {
 
   bool kill_problem_processes = 12;
   bool kill_by_memory_with_dump = 13;
-
-}
-
-message ClustersList {
-
-  int32 count = 1;
-  repeated ClusterInfo items = 2;
 
 }

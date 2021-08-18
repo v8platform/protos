@@ -13,7 +13,7 @@ option go_package = "github.com/v8platform/protos/v8platform/ras/api/v1";
 service EndpointService {
   rpc Open(EndpointOpenRequest) returns (EndpointOpenResponse) {};
   rpc Request(EndpointRequest) returns (EndpointResponse) {};
-//  rpc Close(GetClusterRequest) returns (GetClusterResponse) {};
+  //  rpc Close(GetClusterRequest) returns (GetClusterResponse) {};
 }
 
 message EndpointOpenRequest {
@@ -25,10 +25,11 @@ message EndpointOpenRequest {
 
 message EndpointOpenResponse {
 
-  string service_id = 1;
-  string Version = 1;
-  int32  enpoiont_id = 3;
-  map<string, Param> params = 4;
+  string uuid = 1;
+  string service_id = 2;
+  string Version = 3;
+  int32  enpoiont_id = 4;
+  map<string, Param> params = 5;
 
 }
 
@@ -38,15 +39,15 @@ enum EndpointServiceType {
 }
 
 enum Format {
-   FORMAT_UNKNOWN = 0;
-   FORMAT_255 = 1;
+  FORMAT_UNKNOWN = 0;
+  FORMAT_255 = 1;
 }
 
 message EndpointRequest  {
   int32 endpoint_id = 1;
   int32 format = 2;  // TODO int16
-//  EndpointMessageType type = 3;
-//  Message message = 4;
+  //  EndpointMessageType type = 3;
+  //  Message message = 4;
 }
 
 message EndpointResponse {
