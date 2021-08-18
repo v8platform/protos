@@ -3,7 +3,7 @@ syntax = "proto3";
 package v8platform.serialize.v1;
 
 import "google/protobuf/timestamp.proto";
-import "tagger/field_tag.proto";
+import "v8platform/tagger/field_tag.proto";
 
 message ClusterInfo {
 

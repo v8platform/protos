@@ -1,13 +1,12 @@
 syntax = "proto3";
 
-package v8platform.ras.api.v1;
+package ras.api.v1;
 
 import "v8platform/serialize/v1/infobases.proto";
-import "tagger/field_tag.proto";
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
 import "google/protobuf/any.proto";
-import "v8platform/ras/api/v1/helpers.proto";
+import "ras/api/v1/helpers.proto";
 
 option go_package = "github.com/v8platform/ras/api/v1";
 

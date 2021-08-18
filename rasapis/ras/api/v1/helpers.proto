@@ -1,15 +1,14 @@
 syntax = "proto3";
 
-package v8platform.ras.api.v1;
+package ras.api.v1;
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
-import "tagger/field_tag.proto";
 option go_package = "github.com/v8platform/ras/api/v1";
 
 message Cluster {
 
-  string id = 1 [(tagger.tags) = "rasapis:\"uuid,1\""];
+  string id = 1;
 
   optional string usr = 2;
   optional string pwd = 3;

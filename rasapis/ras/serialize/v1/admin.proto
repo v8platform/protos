@@ -1,8 +1,9 @@
 syntax = "proto3";
 
-package v8platform.ras.serialize.v1;
+package ras.serialize.v1;
 
-import "tagger/field_tag.proto";
+import "v8platform/tagger/field_tag.proto";
+
 option go_package = "github.com/v8platform/ras/serialize/v1";
 
 

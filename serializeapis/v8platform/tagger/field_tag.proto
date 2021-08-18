@@ -1,10 +1,8 @@
 syntax = "proto3";
 
-package tagger;
+package v8platform.tagger;
 
 import "google/protobuf/descriptor.proto";
-
-option go_package = "github.com/srikrsna/protoc-gen-gotag/tagger";
 
 // Tags are applied at the field level
 extend google.protobuf.FieldOptions {
