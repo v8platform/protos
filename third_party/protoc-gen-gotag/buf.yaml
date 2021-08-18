@@ -1,9 +1,8 @@
 version: v1
+
 lint:
   use:
     - DEFAULT
-  ignore:
-    - google/api/http.proto
 breaking:
   use:
     - FILE

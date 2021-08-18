@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package v8platform.serialize.v1;
+
+import "google/protobuf/timestamp.proto";
+import "tagger/field_tag.proto";
+
+message ClusterInfo {
+
+  string uuid = 1 [(tagger.tags) = "rasapis:\"uuid,1\""];
+  string host = 2;
+  string name = 3;
+  int32 expiration_timeout = 4;
+  int32 lifetime_limit = 5;
+
+  int32 max_memory_size = 6;
+  int32 max_memory_time_limit = 7;
+
+  int32 security_level = 8;
+  int32 session_fault_tolerance_level = 9;
+  int32 load_balancing_mode = 10;
+  int32 errors_count_threshold = 11;
+
+  bool kill_problem_processes = 12;
+  bool kill_by_memory_with_dump = 13;
+
+}

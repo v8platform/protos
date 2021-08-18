@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package v8platform.ras.api.v1;
+
+option go_package = "github.com/v8platform/ras/api/v1";
+
+
+message Auth {
+  string user = 1;
+  string password = 2;
+}

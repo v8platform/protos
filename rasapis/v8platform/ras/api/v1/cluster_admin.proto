@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package v8platform.ras.api.v1;
+
+import "v8platform/ras/api/v1/helpers.proto";
+import "v8platform/ras/serialize/v1/admin.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/v8platform/ras/api/v1";
+
+service ClusterAdminService {
+  rpc Admins(AdminsRequest) returns (AdminsResponse) {};
+  rpc AddAdmin(AddAdminRequest) returns (google.protobuf.Empty) {};
+  rpc DeleteAdmin(DeleteAdminRequest) returns (google.protobuf.Empty) {};
+}
+
+message AdminsRequest {
+  Cluster cluster = 1;
+}
+
+message AdminsResponse {
+  repeated v8platform.ras.serialize.v1.ClusterAdminInfo items = 1;
+}
+
+message DeleteAdminRequest {
+  Cluster cluster = 1;
+  string admin_name = 2;
+}
+
+message AddAdminRequest {
+  Cluster cluster = 1;
+  v8platform.ras.serialize.v1.ClusterAdminInfo admin_info = 2;
+}
+

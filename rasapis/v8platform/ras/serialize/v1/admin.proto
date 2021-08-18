@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package v8platform.ras.serialize.v1;
+
+import "tagger/field_tag.proto";
+option go_package = "github.com/v8platform/ras/serialize/v1";
+
+
+message ClusterAdminInfo {
+  string Name = 1;
+  string description = 2;
+  string password = 3;
+  bool password_auth_allowed = 4;
+  bool sys_auth_allowed = 5;
+  string sys_user_name = 6;
+}

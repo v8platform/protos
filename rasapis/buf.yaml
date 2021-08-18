@@ -1,0 +1,12 @@
+version: v1
+name: buf.build/v8platform/rasapis
+deps:
+  - buf.build/googleapis/googleapis
+#  - buf.build/v8platform/serializeapis
+
+lint:
+  use:
+    - DEFAULT
+breaking:
+  use:
+    - FILE

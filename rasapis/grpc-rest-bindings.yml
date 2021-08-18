@@ -1,0 +1,49 @@
+---
+type: google.api.Service
+config_version: 3
+
+name: api.v1.rasapis
+title: RAS API
+
+apis:
+  - name: ClustersService
+  - mane: ClusterAdminService
+  - mane: InfobasesService
+http:
+  rules:
+    # Clusters
+    - selector: rasapis.api.v1.ClustersService.Clusters
+      get: '/clusters'
+    - selector: rasapis.api.v1.ClustersService.GetCluster
+      get: '/clusters/{cluster.id}'
+    - selector: rasapis.api.v1.ClustersService.AddCluster
+      post: '/clusters'
+      body: '*'
+    - selector: rasapis.api.v1.ClustersService.DeleteCluster
+      delete: '/clusters/{cluster.id}'
+
+    # Cluster admin
+    - selector: rasapis.api.v1.ClusterAdminService.Admins
+      get: '/clusters/{cluster.id}/admins'
+      additional_bindings:
+        - get: "/admins"
+    - selector: rasapis.api.v1.ClusterAdminService.AddAdmin
+      post: '/clusters/{cluster.id}/admins'
+      body: 'admin_info'
+      additional_bindings:
+        - post: "/admins"
+          body: 'admin_info'
+    - selector: rasapis.api.v1.ClusterAdminService.DeleteAdmin
+      delete: '/clusters/{cluster.id}/admins/{admin_name}'
+      additional_bindings:
+        - delete: "/admins/{admin_name}"
+
+    # Infobases
+    - selector: rasapis.api.v1.InfobasesService.Infobases
+      get: '/infobases'
+      additional_bindings:
+        - get: '/clusters/{cluster.id}/infobases'
+    - selector: rasapis.api.v1.InfobasesService.LookupInfobase
+      get: "/infobases/lookup"
+      additional_bindings:
+        - get: '/clusters/{cluster.id}/infobases/lookup'

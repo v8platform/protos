@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package v8platform.serialize.v1;
+
+import "google/protobuf/timestamp.proto";
+import "tagger/field_tag.proto";
+import "v8platform/serialize/v1/licanses.proto";
+
+message SessionInfo {
+  string uuid = 1 [(tagger.tags) = "rasapis:\"uuid,1\""];
+  int32 id = 2;
+  string infobase_id = 3;
+  string connection_id = 4;
+  string process_id = 5;
+  string user_name = 6;
+  string host = 7;
+  string app_id = 8;
+  string locale = 9;
+  google.protobuf.Timestamp started_at = 10;
+  google.protobuf.Timestamp last_active_at = 11;
+  bool hibernate = 12;
+  int64 passive_session_hibernate_time = 13;
+  int64 hibernate_session_terminate_time = 14;
+  int64 blocked_by_dbms = 15;
+  int64 blocked_by_ls = 16;
+  int64 bytes_all = 17;
+  int64 bytes_last5min = 18;
+  int64 calls_all = 19;
+  int64 calls_last5min = 20;
+  int64 dbms_bytes_all = 21;
+  int64 dbms_bytes_last5min = 22;
+  string db_proc_info = 23;
+  int64 db_proc_took = 24;
+  google.protobuf.Timestamp db_proc_took_at = 25;
+  int64 duration_all = 26;
+  int64 duration_all_dbms = 27;
+  int64 duration_current = 28;
+  int64 duration_current_dbms = 29;
+  int64 duration_last5_min = 30;
+  int64 duration_last5_min_dbms = 31;
+  int64 memory_current = 32;
+  int64 memory_last5min = 33;
+  int64 memory_total = 34;
+  int64 read_current = 35;
+  int64 read_last5min = 36;
+  int64 read_total = 37;
+  int64 write_current = 38;
+  int64 write_last5min = 39;
+  int64 write_total = 40;
+  int64 duration_current_service = 41;
+  int64 duration_last5min_service = 42;
+  int64 duration_all_service = 43;
+  string current_service_name = 44;
+  int64 cpu_time_current = 45;
+  int64 cpu_time_last5min = 46;
+  int64 cpu_time_total = 47;
+  string data_separation = 48;
+  string client_ip_address = 49;
+  string cluster_id = 50;
+  repeated LicenseInfo licenses = 51;
+}
+

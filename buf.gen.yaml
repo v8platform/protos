@@ -1,6 +1,12 @@
 ---
-version: v1beta1
-
+version: v1
+managed:
+  enabled: true
+  go_package_prefix:
+    default: github.com/v8platform/gen/proto/go
+#    except:
+#      - buf.build/googleapis/googleapis
+#      - googleapies/google/api
 plugins:
   - name: go
     out: .
@@ -13,7 +19,7 @@ plugins:
     opt:
       - paths=source_relative
       - generate_unbound_methods=true
-      - grpc_api_configuration=sources/v8platform/ras/grpc-rest-bindings.yml
+      - grpc_api_configuration=sources/v8platform/rasapis/grpc-rest-bindings.yml
   - name: gotag
     out: .
     opt: paths=source_relative

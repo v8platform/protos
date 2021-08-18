@@ -1,9 +1,10 @@
 version: v1
+
+name: buf.build/googleapis/googleapis
+
 lint:
   use:
     - DEFAULT
-  ignore:
-    - google/api/http.proto
 breaking:
   use:
     - FILE

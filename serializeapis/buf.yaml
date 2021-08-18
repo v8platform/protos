@@ -1,9 +1,9 @@
 version: v1
+name: buf.build/v8platform/serializeapis
+
 lint:
   use:
     - DEFAULT
-  ignore:
-    - google/api/http.proto
 breaking:
   use:
     - FILE

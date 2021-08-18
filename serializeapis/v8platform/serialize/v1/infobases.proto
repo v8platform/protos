@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package v8platform.serialize.v1;
+
+import "google/protobuf/timestamp.proto";
+import "tagger/field_tag.proto";
+
+message InfobaseInfo {
+  string uuid = 1;
+  string name = 2;
+  string description = 3;
+
+}
+
+message InfobaseSummaryInfo {
+
+  string cluster_id = 1;
+  string uuid = 2;
+  string name = 3;
+  string descr = 5;
+
+}
