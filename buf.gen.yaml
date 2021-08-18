@@ -3,7 +3,7 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: github.com/v8platform/gen/go
+    default: github.com/v8platform/protos
     except:
       - buf.build/googleapis/googleapis
       - googleapies/google/api

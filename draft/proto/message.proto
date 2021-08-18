@@ -3,7 +3,7 @@ syntax = "proto3";
 package ras.api.v1;
 
 import "v8platform/rasapis/serializeapis/clusters.proto";
-import "v8platform/rasapis/field_tag.proto";
+import "v8platform/rasapis/tagger.proto";
 import "google/api/annotations.proto";
 
 option go_package = "github.com/v8platform/protos/v8platform/rasapis/api/v1";
@@ -15,11 +15,7 @@ message EndpointMessage  {
   Message message = 4;
 }
 
-enum EndpointMessageType {
-  VOID_MESSAGE_KIND = 0;
-  MESSAGE_KIND = 1;
-  EXCEPTION_KIND = 99;
-}
+
 
 message Message {
 

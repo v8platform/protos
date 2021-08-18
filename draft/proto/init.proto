@@ -3,7 +3,7 @@ syntax = "proto3";
 package ras.api.v1;
 
 import "v8platform/rasapis/serializeapis/clusters.proto";
-import "v8platform/rasapis/field_tag.proto";
+import "v8platform/rasapis/tagger.proto";
 import "v8platform/rasapis/api/v1/param.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/empty.proto";

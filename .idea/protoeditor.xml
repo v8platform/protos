@@ -8,10 +8,13 @@
           <option name="location" value="jar://$APPLICATION_PLUGINS_DIR$/protoeditor/lib/protoeditor.jar!/include" />
         </ImportPathEntry>
         <ImportPathEntry>
-          <option name="location" value="file://$PROJECT_DIR$/sources" />
+          <option name="location" value="file://$PROJECT_DIR$/third_party/googleapis" />
         </ImportPathEntry>
         <ImportPathEntry>
-          <option name="location" value="file://$PROJECT_DIR$/third_party/googleapis" />
+          <option name="location" value="file://$PROJECT_DIR$/rasapis" />
+        </ImportPathEntry>
+        <ImportPathEntry>
+          <option name="location" value="file://$PROJECT_DIR$/serializeapis" />
         </ImportPathEntry>
       </list>
     </option>

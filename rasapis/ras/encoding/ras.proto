@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package ras.encoding;
+
+import "ras/serialize/v1/param.proto";
+import "google/protobuf/descriptor.proto";
+import "ras/serialize/v1/types.proto";
+
+option go_package = "github.com/v8platform/ras";
+
+extend google.protobuf.MessageOptions {
+   EncodingMessageOptions message_options = 475223888;
+   ras.serialize.v1.RequestType request_type = 475223889;
+   ras.serialize.v1.EndpointMessageKind message_kind = 475223890;
+}
+
+message EncodingMessageOptions {
+   bool generate_marshaller = 1;
+   bool generate_unmarshal = 2;
+   bool generate_tags = 3;
+}
+
+extend google.protobuf.FileOptions {
+   EncodingFileOptions options = 475223888;
+}
+
+message EncodingFileOptions {
+   bool generate_marshaller = 1;
+   bool generate_unmarshal = 2;
+   bool generate_tags = 3;
+}
+
+// Tags are applied at the field level
+extend google.protobuf.FieldOptions {
+  // Multiple Tags can be spcified.
+  string tags = 847939;
+}
+
+extend google.protobuf.OneofOptions {
+  // Multiple Tags can be spcified.
+  string oneof_tags = 847939;
+}
+
+extend google.protobuf.FieldOptions {
+  // Multiple Tags can be spcified.
+  EncodingFieldOptions field = 475223888;
+}
+
+extend google.protobuf.OneofOptions {
+  EncodingFieldOptions oneof_field = 475223888;
+}
+
+message EncodingFieldOptions {
+  optional string encoder = 1;
+  int32 number = 2;
+  optional int32 version = 3;
+  map<string, string> opts = 4;
+  bool generate_marshal = 5;
+  bool generate_unmarshal = 6;
+}

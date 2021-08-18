@@ -19,7 +19,7 @@ message AdminsRequest {
 }
 
 message AdminsResponse {
-  repeated ras.serialize.v1.ClusterAdminInfo items = 1;
+  repeated ras.serialize.v1.AdminInfo items = 1;
 }
 
 message DeleteAdminRequest {
@@ -29,6 +29,6 @@ message DeleteAdminRequest {
 
 message AddAdminRequest {
   Cluster cluster = 1;
-  ras.serialize.v1.ClusterAdminInfo admin_info = 2;
+  ras.serialize.v1.AdminInfo admin_info = 2;
 }
 
