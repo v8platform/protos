@@ -1,5 +1,7 @@
 version: v1
 name: buf.build/v8platform/serializeapis
+deps:
+  - buf.build/googleapis/googleapis
 
 lint:
   use:

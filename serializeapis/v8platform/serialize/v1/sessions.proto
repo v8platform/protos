@@ -3,6 +3,7 @@ syntax = "proto3";
 package v8platform.serialize.v1;
 
 import "google/protobuf/timestamp.proto";
+import "google/type/datetime.proto";
 import "v8platform/tagger/field_tag.proto";
 import "v8platform/serialize/v1/licanses.proto";
 
@@ -16,7 +17,7 @@ message SessionInfo {
   string host = 7;
   string app_id = 8;
   string locale = 9;
-  google.protobuf.Timestamp started_at = 10;
+  google.type.DateTime started_at = 10;
   google.protobuf.Timestamp last_active_at = 11;
   bool hibernate = 12;
   int64 passive_session_hibernate_time = 13;
