@@ -6,17 +6,42 @@ import "google/protobuf/timestamp.proto";
 import "v8platform/tagger/field_tag.proto";
 
 message InfobaseInfo {
-  string uuid = 1;
-  string name = 2;
-  string description = 3;
+
+  // ignore
+  string cluster_id = 1;
+
+  string uuid = 2 [(tagger.tags) = "ras:\"uuid,1\""];
+  int32 date_offset = 3 [(tagger.tags) = "ras:\",2\""];
+  string dbms = 4 [(tagger.tags) = "ras:\",3\""];
+  string db_server = 5 [(tagger.tags) = "ras:\",4\""];
+  string db_name = 6 [(tagger.tags) = "ras:\",5\""];
+  string db_user = 7 [(tagger.tags) = "ras:\",6\""];
+  string db_pwd = 8 [(tagger.tags) = "ras:\",7\""];
+  google.protobuf.Timestamp denied_from = 9 [(tagger.tags) = "ras:\"time,8\""];
+  string denied_message = 10 [(tagger.tags) = "ras:\",9\""];
+  string denied_parameter = 11 [(tagger.tags) = "ras:\",10\""];
+  google.protobuf.Timestamp denied_to = 12 [(tagger.tags) = "ras:\"time,11\""];
+  string descr = 13 [(tagger.tags) = "ras:\",12\""];
+  string locale = 14 [(tagger.tags) = "ras:\",13\""];
+  string name = 15 [(tagger.tags) = "ras:\",14\""];
+  string permission_code = 16 [(tagger.tags) = "ras:\",15\""];
+  bool scheduled_jobs_deny = 17 [(tagger.tags) = "ras:\",16\""];
+  int32 security_level = 18 [(tagger.tags) = "ras:\",17\""];
+  bool sessions_deny = 19 [(tagger.tags) = "ras:\",18\""];
+  int32 license_distribution = 20 [(tagger.tags) = "ras:\",19\""];
+  string external_session_manager_connection_string = 21 [(tagger.tags) = "ras:\",20\""];
+  bool external_session_manager_required = 22 [(tagger.tags) = "ras:\",21\""];
+  string SecurityProfileName = 23 [(tagger.tags) = "ras:\",22\""];
+  string SafeModeSecurityProfileName = 24 [(tagger.tags) = "ras:\",23\""];
+  // version >=9
+  bool ReserveWorkingProcesses = 25 [(tagger.tags) = "ras:\",24\""];
 
 }
 
 message InfobaseSummaryInfo {
 
-  string cluster_id = 1;
-  string uuid = 2;
-  string name = 3;
-  string descr = 5;
-
+  // all versions
+  string uuid = 2 [(tagger.tags) = "ras:\"uuid,1\""];
+  string descr = 3 [(tagger.tags) = "ras:\",2\""];
+  string name = 4 [(tagger.tags) = "ras:\",3\""];
 }

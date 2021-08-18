@@ -8,56 +8,68 @@ import "v8platform/tagger/field_tag.proto";
 import "v8platform/serialize/v1/licanses.proto";
 
 message SessionInfo {
-  string uuid = 1 [(tagger.tags) = "rasapis:\"uuid,1\""];
-  int32 id = 2;
-  string infobase_id = 3;
-  string connection_id = 4;
-  string process_id = 5;
-  string user_name = 6;
-  string host = 7;
-  string app_id = 8;
-  string locale = 9;
-  google.type.DateTime started_at = 10;
-  google.protobuf.Timestamp last_active_at = 11;
-  bool hibernate = 12;
-  int64 passive_session_hibernate_time = 13;
-  int64 hibernate_session_terminate_time = 14;
-  int64 blocked_by_dbms = 15;
-  int64 blocked_by_ls = 16;
-  int64 bytes_all = 17;
-  int64 bytes_last5min = 18;
-  int64 calls_all = 19;
-  int64 calls_last5min = 20;
-  int64 dbms_bytes_all = 21;
-  int64 dbms_bytes_last5min = 22;
-  string db_proc_info = 23;
-  int64 db_proc_took = 24;
-  google.protobuf.Timestamp db_proc_took_at = 25;
-  int64 duration_all = 26;
-  int64 duration_all_dbms = 27;
-  int64 duration_current = 28;
-  int64 duration_current_dbms = 29;
-  int64 duration_last5_min = 30;
-  int64 duration_last5_min_dbms = 31;
-  int64 memory_current = 32;
-  int64 memory_last5min = 33;
-  int64 memory_total = 34;
-  int64 read_current = 35;
-  int64 read_last5min = 36;
-  int64 read_total = 37;
-  int64 write_current = 38;
-  int64 write_last5min = 39;
-  int64 write_total = 40;
-  int64 duration_current_service = 41;
-  int64 duration_last5min_service = 42;
-  int64 duration_all_service = 43;
-  string current_service_name = 44;
-  int64 cpu_time_current = 45;
-  int64 cpu_time_last5min = 46;
-  int64 cpu_time_total = 47;
-  string data_separation = 48;
-  string client_ip_address = 49;
-  string cluster_id = 50;
-  repeated LicenseInfo licenses = 51;
+
+  string uuid = 1 [(tagger.tags) = "ras:\"uuid,1\""];
+  string app_id = 2 [(tagger.tags) = "ras:\",2\""];
+  int32 blocked_by_dbms = 3 [(tagger.tags) = "ras:\",3\""];
+  int32 blocked_by_ls = 4 [(tagger.tags) = "ras:\",4\""];
+  int64 bytes_all = 5 [(tagger.tags) = "ras:\",5\""];
+  int64 bytes_last5min = 6 [(tagger.tags) = "ras:\",6\""];
+  int32 calls_all = 7  [(tagger.tags) = "ras:\",7\""];
+  int64 calls_last5min = 8 [(tagger.tags) = "ras:\",8\""];
+  string connection_id = 9 [(tagger.tags) = "ras:\"uuid,9\""];
+  int64 dbms_bytes_all = 10 [(tagger.tags) = "ras:\",10\""];
+  int64 dbms_bytes_last5min = 11 [(tagger.tags) = "ras:\",11\""];
+  string db_proc_info = 12 [(tagger.tags) = "ras:\",12\""];
+  int32 db_proc_took = 13 [(tagger.tags) = "ras:\",13\""];
+  google.protobuf.Timestamp db_proc_took_at = 14 [(tagger.tags) = "ras:\"time,14\""];
+  int32 duration_all = 15 [(tagger.tags) = "ras:\", 15\""];
+  int32 duration_all_dbms = 16 [(tagger.tags) = "ras:\", 16\""];
+  int32 duration_current = 17 [(tagger.tags) = "ras:\", 17\""];
+  int32 duration_current_dbms = 18 [(tagger.tags) = "ras:\", 18\""];
+  int64 duration_last_5_min = 19 [(tagger.tags) = "ras:\", 19\""];
+  int64 duration_last_5_min_dbms = 20 [(tagger.tags) = "ras:\", 20\""];
+  string host = 21 [(tagger.tags) = "ras:\", 21\""];
+  string infobase_id = 22 [(tagger.tags) = "ras:\"uuid, 22\""];
+  google.protobuf.Timestamp last_active_at = 23 [(tagger.tags) = "ras:\"time,23\""];
+  bool hibernate = 24 [(tagger.tags) = "ras:\",24\""];
+  int32 passive_session_hibernate_time = 25 [(tagger.tags) = "ras:\",25\""];
+  int32 hibernate_session_terminate_time = 26 [(tagger.tags) = "ras:\",26\""];
+  repeated LicenseInfo licenses = 27 [(tagger.tags) = "ras:\",27\""];
+  string locale = 28 [(tagger.tags) = "ras:\",28\""];
+  string process_id = 29 [(tagger.tags) = "ras:\"uuid, 29\""];
+  int32 id = 30 [(tagger.tags) = "ras:\",30\""];
+  google.protobuf.Timestamp started_at = 31 [(tagger.tags) = "ras:\"time,31\""];
+  string user_name = 32 [(tagger.tags) = "ras:\",32\""];
+
+  // version >= 4
+  int64 memory_current = 33 [(tagger.tags) = "ras:\",33,4\""];
+  int64 memory_last5min = 34 [(tagger.tags) = "ras:\",34,4\""];
+  int64 memory_total = 35 [(tagger.tags) = "ras:\",35,4\""];
+  int64 read_current = 36 [(tagger.tags) = "ras:\",36,4\""];
+  int64 read_last5min = 37 [(tagger.tags) = "ras:\",37,4\""];
+  int64 read_total = 38 [(tagger.tags) = "ras:\",38,4\""];
+  int64 write_current = 39 [(tagger.tags) = "ras:\",39,4\""];
+  int64 write_last5min = 40 [(tagger.tags) = "ras:\",40,4\""];
+  int64 write_total = 41 [(tagger.tags) = "ras:\",41,4\""];
+  // version >= 5
+  int32 duration_current_service = 42 [(tagger.tags) = "ras:\",42,5\""];
+  int64 duration_last5min_service = 43 [(tagger.tags) = "ras:\",43,5\""];
+  int32 duration_all_service = 44 [(tagger.tags) = "ras:\",44,5\""];
+  string current_service_name = 45 [(tagger.tags) = "ras:\",45,5\""];
+
+  // version >= 6
+  int64 cpu_time_current = 46 [(tagger.tags) = "ras:\",46,6\""];
+  int64 cpu_time_last5min = 47 [(tagger.tags) = "ras:\",47,7\""];
+  int64 cpu_time_total = 48 [(tagger.tags) = "ras:\",48,7\""];
+
+  // version >= 7
+  string data_separation = 49 [(tagger.tags) = "ras:\",49,7\""];
+  // version >= 10
+  string client_ip_address = 50 [(tagger.tags) = "ras:\",50,10\""];
+
+  // ignore
+  string cluster_id = 51;
+
 }
 

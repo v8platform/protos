@@ -7,21 +7,20 @@ import "v8platform/tagger/field_tag.proto";
 
 message ClusterInfo {
 
-  string uuid = 1 [(tagger.tags) = "rasapis:\"uuid,1\""];
-  string host = 2;
-  string name = 3;
-  int32 expiration_timeout = 4;
-  int32 lifetime_limit = 5;
-
-  int32 max_memory_size = 6;
-  int32 max_memory_time_limit = 7;
-
-  int32 security_level = 8;
-  int32 session_fault_tolerance_level = 9;
-  int32 load_balancing_mode = 10;
-  int32 errors_count_threshold = 11;
-
-  bool kill_problem_processes = 12;
-  bool kill_by_memory_with_dump = 13;
+  string uuid = 1 [(tagger.tags) = "ras:\"uuid,1\""];
+  int32 expiration_timeout = 2 [(tagger.tags) = "ras:\",2\""];
+  string host = 3 [(tagger.tags) = "ras:\",3\""];
+  int32 lifetime_limit = 4 [(tagger.tags) = "ras:\",4\""];
+  int32 Port = 5 [(tagger.tags) = "ras:\"short,5\""];
+  int32 max_memory_size = 6 [(tagger.tags) = "ras:\",6\""];
+  int32 max_memory_time_limit = 7 [(tagger.tags) = "ras:\",7\""];
+  string name = 8 [(tagger.tags) = "ras:\",8\""];
+  int32 security_level = 9 [(tagger.tags) = "ras:\",9\""];
+  int32 session_fault_tolerance_level = 10 [(tagger.tags) = "ras:\",10\""];
+  int32 load_balancing_mode = 11 [(tagger.tags) = "ras:\",11\""];
+  int32 errors_count_threshold = 12 [(tagger.tags) = "ras:\",12\""];
+  bool kill_problem_processes = 13 [(tagger.tags) = "ras:\",13\""];
+  // version >= 9
+  bool kill_by_memory_with_dump = 14 [(tagger.tags) = "ras:\",14,9\""];
 
 }

@@ -8,22 +8,27 @@ import "v8platform/tagger/field_tag.proto";
 
 message LicenseInfo {
 
-  //  string cluster_id = 1;
-  string process_id = 1;
-  string session_id = 2;
-  string user_name = 3;
-  string host = 4;
-  string app_id = 5;
-  string full_name = 6;
-  string series = 7;
-  bool issued_by_server = 8;
-  int64 license_type = 9;
-  bool net = 10;
-  int64 max_users_all = 11;
-  int64 max_users_cur = 12;
-  string rmngr_address = 13;
-  int64 rmngr_port = 14;
-  string rmngr_pid = 15;
-  string short_presentation = 16;
-  string full_presentation = 17;
+  // ignore
+  // need fill
+  string cluster_id = 1;
+  string process_id = 2;
+  string session_id = 3;
+  string user_name = 4;
+  string host = 6;
+  string app_id = 7;
+
+  // all version
+  string full_name = 8 [(tagger.tags) = "ras:\",1\""];
+  string full_presentation = 9 [(tagger.tags) = "ras:\",2\""];
+  bool issued_by_server = 10 [(tagger.tags) = "ras:\",3\""];
+  int32 license_type = 11 [(tagger.tags) = "ras:\",4\""];
+  int32 max_users_all = 12 [(tagger.tags) = "ras:\",5\""];
+  int32 max_users_cur = 13 [(tagger.tags) = "ras:\",6\""];
+  bool net = 14 [(tagger.tags) = "ras:\",7\""];
+  string rmngr_address = 15 [(tagger.tags) = "ras:\",8\""];
+  string rmngr_pid = 16 [(tagger.tags) = "ras:\",9\""];
+  int32 rmngr_port = 17 [(tagger.tags) = "ras:\",10\""];
+  string series = 18 [(tagger.tags) = "ras:\",11\""];
+  string short_presentation = 19 [(tagger.tags) = "ras:\",12\""];
+
 }
