@@ -1,0 +1,29 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+title Описание пакета данных ras
+caption Установка подключения
+class packet {
+  type : PacketTypes
+  size : INTEGER
+  ..
+  data : BYTES
+}
+
+
+class NegotiateMessage {
+  magic : int32
+  protocol : uint16
+  version : uint16}
+}
+
+enum PacketTypes {
+    PACKET_TYPE_NEGOTIATE = 0
+    PACKET_TYPE_CONNECT = 1
+}
+packet::type *-- PacketTypes::PACKET_TYPE_NEGOTIATE
+packet::data <-- NegotiateMessage : Encode
+
+newpage
+
+@enduml
