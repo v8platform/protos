@@ -1,0 +1,44 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+== Подключение ==
+Клиент -> ras: NegotiateMessage
+note left: Начало работы
+Клиент --> ras: ConnectMessage
+note left: Подключение
+ras --> Клиент: ConnectMessageAck
+note right: Ответ на подлючение
+
+== Открытые точки работы ==
+Клиент --> ras: EndpointOpen
+note left: Передается версия и \n формат обмена
+ras --> Клиент: EndpointOpenAck
+note right: Ответ на открытие точки работы \n, в том числе и endpoint_id
+
+== Цикл работы ==
+
+Клиент --> ras: AuthenticateAgentRequest
+note left: Авторитизация на агенте\n(необязательно)
+Клиент --> ras: GetClustersRequest
+ras --> Клиент: GetClustersResponse
+
+Клиент --> ras: ClusterAuthenticateRequest
+note left: Авторитизация на кластере\n(необязательно)
+
+Клиент --> ras: GetInfobasesRequest
+ras --> Клиент: GetInfobasesResponse
+
+== Закрытие точки работы ==
+ref over ras
+  Закрытие открытых
+  точек работы
+end ref
+Клиент --> ras: EndpointClose
+
+
+== Отключение ==
+Клиент --> ras: DisconnectMessage
+
+@enduml

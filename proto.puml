@@ -1,0 +1,85 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+title Описание пакета данных ras
+caption Установка подключения
+class packet {
+  type : PacketTypes
+  size : INTEGER
+  ..
+  data : BYTES
+}
+
+
+packet::type *-- PacketTypes
+NegotiateMessage *-- PacketTypes::PACKET_TYPE_NEGOTIATE
+packet::data <-- NegotiateMessage : Encode
+
+
+class NegotiateMessage {
+  magic : int32
+  protocol : uint16
+  version : uint16}
+}
+
+enum PacketTypes {
+    PACKET_TYPE_NEGOTIATE = 0
+    PACKET_TYPE_CONNECT = 1
+}
+
+newpage
+title Описание пакета данных
+caption Запрос списка кластеров
+
+class packet {
+  type : PacketTypes
+  size : INTEGER
+  ..
+  data : BYTES
+}
+
+
+
+packet::data <-- EndpointMessage : Encode
+
+
+class EndpointMessage {
+  endpoint_id : int32
+  format: int32
+  type: EndpointDataType
+  data: EndpointDataMessage
+}
+
+
+class GetClustersRequest {}
+
+enum EndpointMessageType {
+    GET_CLUSTERS_REQUEST = 11
+}
+enum EndpointDataType {
+    VOID_MESSAGE = 0
+    MESSAGE = 1
+    EXCEPTION = 255
+}
+
+class EndpointDataMessage {
+    type: EndpointMessageType
+    data: BYTES
+}
+
+enum PacketTypes {
+   ...
+   PACKET_TYPE_ENDPOINT_MESSAGE = 10
+   ...
+}
+
+' GetClustersRequest *-- EndpointMessageType::GET_CLUSTERS_REQUEST
+EndpointDataMessage::type *-- EndpointMessageType::GET_CLUSTERS_REQUEST
+EndpointDataMessage::data <-- GetClustersRequest : encode
+packet::type *-- PacketTypes::PACKET_TYPE_ENDPOINT_MESSAGE
+EndpointMessage::data *-- EndpointDataMessage
+EndpointMessage::type *-- EndpointDataType::MESSAGE
+
+
+
+@enduml
