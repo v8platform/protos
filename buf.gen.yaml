@@ -3,17 +3,17 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: github.com/v8platform/protos
+    default: github.com/v8platform/protos/gen
     except:
       - buf.build/googleapis/googleapis
       - googleapies/google/api
 
 plugins:
   - name: go
-    out: .
+    out: ./gen
     opt: paths=source_relative
   - name: go-grpc
-    out: .
+    out: ./gen
     opt: paths=source_relative,require_unimplemented_servers=false
   #  - name: grpc-gateway
   #    out: .
@@ -23,4 +23,6 @@ plugins:
   #      - grpc_api_configuration=sources/v8platform/rasapis/grpc-rest-bindings.yml
   - name: gotag
     out: .
-    opt: paths=source_relative
+    opt:
+      - paths=source_relative
+      - outdir=./gen

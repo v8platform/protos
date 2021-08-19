@@ -1,15 +1,12 @@
 syntax = "proto3";
 
-package ras.serialize.v1;
+package ras.protocol.v1;
 
-import "google/protobuf/any.proto";
-
-option go_package = "github.com/v8platform/ras/serialize/v1";
-
+option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
 
 message Param {
   ParamType type = 1;
-  google.protobuf.Any value = 2;
+  bytes value = 2;
 }
 
 enum ParamType {

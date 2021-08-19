@@ -2,32 +2,35 @@ syntax = "proto3";
 
 package ras.encoding;
 
-import "ras/serialize/v1/param.proto";
 import "google/protobuf/descriptor.proto";
-import "ras/serialize/v1/types.proto";
+
+import "ras/protocol/v1/param.proto";
+import "ras/protocol/v1/types.proto";
+import "ras/messages/v1/types.proto";
 
 option go_package = "github.com/v8platform/ras";
 
 extend google.protobuf.MessageOptions {
-   EncodingMessageOptions message_options = 475223888;
-   ras.serialize.v1.RequestType request_type = 475223889;
-   ras.serialize.v1.EndpointMessageKind message_kind = 475223890;
+  EncodingMessageOptions message_options = 475223888;
+  ras.protocol.v1.PacketType packet_type = 475223889;
+  ras.protocol.v1.EndpointDataType endpoint_data_type = 475223890;
+  ras.messages.v1.EndpointMessageType endpoint_message_type = 475223891;
 }
 
 message EncodingMessageOptions {
-   bool generate_marshaller = 1;
-   bool generate_unmarshal = 2;
-   bool generate_tags = 3;
+  bool generate_marshaller = 1;
+  bool generate_unmarshal = 2;
+  bool generate_tags = 3;
 }
 
 extend google.protobuf.FileOptions {
-   EncodingFileOptions options = 475223888;
+  EncodingFileOptions options = 475223888;
 }
 
 message EncodingFileOptions {
-   bool generate_marshaller = 1;
-   bool generate_unmarshal = 2;
-   bool generate_tags = 3;
+  bool generate_marshaller = 1;
+  bool generate_unmarshal = 2;
+  bool generate_tags = 3;
 }
 
 // Tags are applied at the field level

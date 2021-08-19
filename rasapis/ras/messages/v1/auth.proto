@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package ras.messages.v1;
+
+import "ras/protocol/v1/param.proto";
+import "ras/encoding/ras.proto";
+import "ras/protocol/v1/types.proto";
+import "ras/messages/v1/types.proto";
+import "google/protobuf/any.proto";
+
+option go_package = "github.com/v8platform/protos/gen/ras/messages/v1";
+
+option (ras.encoding.options) = {
+  generate_unmarshal: true,
+  generate_marshaller: true,
+  generate_tags: true,
+};
+
+message AuthenticateAgentRequest {
+  option (ras.encoding.endpoint_message_type) = AUTHENTICATE_AGENT_REQUEST;
+  string user = 1 [(ras.encoding.tags) = "ras:\",1\""];
+  string password = 2 [(ras.encoding.tags) = "ras:\",2\""];
+}
+
+message ClusterAuthenticateRequest  {
+  option (ras.encoding.endpoint_message_type) = AUTHENTICATE_REQUEST;
+  string cluster_id = 1 [(ras.encoding.tags) = "ras:\"uuid,1\""];
+  string user = 2 [(ras.encoding.tags) = "ras:\",2\""];
+  string password = 3 [(ras.encoding.tags) = "ras:\",3\""];
+}
+
+message AuthenticateInfobaseRequest   {
+  option (ras.encoding.endpoint_message_type) = ADD_AUTHENTICATION_REQUEST;
+  string cluster_id = 1 [(ras.encoding.tags) = "ras:\"uuid,1\""];
+  string user = 2 [(ras.encoding.tags) = "ras:\",2\""];
+  string password = 3 [(ras.encoding.tags) = "ras:\",3\""];
+}

@@ -3,7 +3,6 @@ syntax = "proto3";
 package v8platform.serialize.v1;
 
 import "google/protobuf/timestamp.proto";
-import "v8platform/tagger/field_tag.proto";
 
 message UUID {
   string value = 1;

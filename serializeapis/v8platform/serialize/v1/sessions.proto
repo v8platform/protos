@@ -3,70 +3,69 @@ syntax = "proto3";
 package v8platform.serialize.v1;
 
 import "google/protobuf/timestamp.proto";
-import "google/type/datetime.proto";
-import "v8platform/tagger/field_tag.proto";
+import "ras/encoding/ras.proto";
 import "v8platform/serialize/v1/licanses.proto";
 
 message SessionInfo {
 
-  string uuid = 1 [(tagger.tags) = "ras:\"uuid,1\""];
-  string app_id = 2 [(tagger.tags) = "ras:\",2\""];
-  int32 blocked_by_dbms = 3 [(tagger.tags) = "ras:\",3\""];
-  int32 blocked_by_ls = 4 [(tagger.tags) = "ras:\",4\""];
-  int64 bytes_all = 5 [(tagger.tags) = "ras:\",5\""];
-  int64 bytes_last5min = 6 [(tagger.tags) = "ras:\",6\""];
-  int32 calls_all = 7  [(tagger.tags) = "ras:\",7\""];
-  int64 calls_last5min = 8 [(tagger.tags) = "ras:\",8\""];
-  string connection_id = 9 [(tagger.tags) = "ras:\"uuid,9\""];
-  int64 dbms_bytes_all = 10 [(tagger.tags) = "ras:\",10\""];
-  int64 dbms_bytes_last5min = 11 [(tagger.tags) = "ras:\",11\""];
-  string db_proc_info = 12 [(tagger.tags) = "ras:\",12\""];
-  int32 db_proc_took = 13 [(tagger.tags) = "ras:\",13\""];
-  google.protobuf.Timestamp db_proc_took_at = 14 [(tagger.tags) = "ras:\"time,14\""];
-  int32 duration_all = 15 [(tagger.tags) = "ras:\", 15\""];
-  int32 duration_all_dbms = 16 [(tagger.tags) = "ras:\", 16\""];
-  int32 duration_current = 17 [(tagger.tags) = "ras:\", 17\""];
-  int32 duration_current_dbms = 18 [(tagger.tags) = "ras:\", 18\""];
-  int64 duration_last_5_min = 19 [(tagger.tags) = "ras:\", 19\""];
-  int64 duration_last_5_min_dbms = 20 [(tagger.tags) = "ras:\", 20\""];
-  string host = 21 [(tagger.tags) = "ras:\", 21\""];
-  string infobase_id = 22 [(tagger.tags) = "ras:\"uuid, 22\""];
-  google.protobuf.Timestamp last_active_at = 23 [(tagger.tags) = "ras:\"time,23\""];
-  bool hibernate = 24 [(tagger.tags) = "ras:\",24\""];
-  int32 passive_session_hibernate_time = 25 [(tagger.tags) = "ras:\",25\""];
-  int32 hibernate_session_terminate_time = 26 [(tagger.tags) = "ras:\",26\""];
-  repeated LicenseInfo licenses = 27 [(tagger.tags) = "ras:\",27\""];
-  string locale = 28 [(tagger.tags) = "ras:\",28\""];
-  string process_id = 29 [(tagger.tags) = "ras:\"uuid, 29\""];
-  int32 id = 30 [(tagger.tags) = "ras:\",30\""];
-  google.protobuf.Timestamp started_at = 31 [(tagger.tags) = "ras:\"time,31\""];
-  string user_name = 32 [(tagger.tags) = "ras:\",32\""];
+  string uuid = 1 [(ras.encoding.tags) = "ras:\"uuid,1\""];
+  string app_id = 2 [(ras.encoding.tags) = "ras:\",2\""];
+  int32 blocked_by_dbms = 3 [(ras.encoding.tags) = "ras:\",3\""];
+  int32 blocked_by_ls = 4 [(ras.encoding.tags) = "ras:\",4\""];
+  int64 bytes_all = 5 [(ras.encoding.tags) = "ras:\",5\""];
+  int64 bytes_last5min = 6 [(ras.encoding.tags) = "ras:\",6\""];
+  int32 calls_all = 7  [(ras.encoding.tags) = "ras:\",7\""];
+  int64 calls_last5min = 8 [(ras.encoding.tags) = "ras:\",8\""];
+  string connection_id = 9 [(ras.encoding.tags) = "ras:\"uuid,9\""];
+  int64 dbms_bytes_all = 10 [(ras.encoding.tags) = "ras:\",10\""];
+  int64 dbms_bytes_last5min = 11 [(ras.encoding.tags) = "ras:\",11\""];
+  string db_proc_info = 12 [(ras.encoding.tags) = "ras:\",12\""];
+  int32 db_proc_took = 13 [(ras.encoding.tags) = "ras:\",13\""];
+  google.protobuf.Timestamp db_proc_took_at = 14 [(ras.encoding.tags) = "ras:\"time,14\""];
+  int32 duration_all = 15 [(ras.encoding.tags) = "ras:\", 15\""];
+  int32 duration_all_dbms = 16 [(ras.encoding.tags) = "ras:\", 16\""];
+  int32 duration_current = 17 [(ras.encoding.tags) = "ras:\", 17\""];
+  int32 duration_current_dbms = 18 [(ras.encoding.tags) = "ras:\", 18\""];
+  int64 duration_last_5_min = 19 [(ras.encoding.tags) = "ras:\", 19\""];
+  int64 duration_last_5_min_dbms = 20 [(ras.encoding.tags) = "ras:\", 20\""];
+  string host = 21 [(ras.encoding.tags) = "ras:\", 21\""];
+  string infobase_id = 22 [(ras.encoding.tags) = "ras:\"uuid, 22\""];
+  google.protobuf.Timestamp last_active_at = 23 [(ras.encoding.tags) = "ras:\"time,23\""];
+  bool hibernate = 24 [(ras.encoding.tags) = "ras:\",24\""];
+  int32 passive_session_hibernate_time = 25 [(ras.encoding.tags) = "ras:\",25\""];
+  int32 hibernate_session_terminate_time = 26 [(ras.encoding.tags) = "ras:\",26\""];
+  repeated LicenseInfo licenses = 27 [(ras.encoding.tags) = "ras:\",27\""];
+  string locale = 28 [(ras.encoding.tags) = "ras:\",28\""];
+  string process_id = 29 [(ras.encoding.tags) = "ras:\"uuid, 29\""];
+  int32 id = 30 [(ras.encoding.tags) = "ras:\",30\""];
+  google.protobuf.Timestamp started_at = 31 [(ras.encoding.tags) = "ras:\"time,31\""];
+  string user_name = 32 [(ras.encoding.tags) = "ras:\",32\""];
 
   // version >= 4
-  int64 memory_current = 33 [(tagger.tags) = "ras:\",33,4\""];
-  int64 memory_last5min = 34 [(tagger.tags) = "ras:\",34,4\""];
-  int64 memory_total = 35 [(tagger.tags) = "ras:\",35,4\""];
-  int64 read_current = 36 [(tagger.tags) = "ras:\",36,4\""];
-  int64 read_last5min = 37 [(tagger.tags) = "ras:\",37,4\""];
-  int64 read_total = 38 [(tagger.tags) = "ras:\",38,4\""];
-  int64 write_current = 39 [(tagger.tags) = "ras:\",39,4\""];
-  int64 write_last5min = 40 [(tagger.tags) = "ras:\",40,4\""];
-  int64 write_total = 41 [(tagger.tags) = "ras:\",41,4\""];
+  int64 memory_current = 33 [(ras.encoding.tags) = "ras:\",33,4\""];
+  int64 memory_last5min = 34 [(ras.encoding.tags) = "ras:\",34,4\""];
+  int64 memory_total = 35 [(ras.encoding.tags) = "ras:\",35,4\""];
+  int64 read_current = 36 [(ras.encoding.tags) = "ras:\",36,4\""];
+  int64 read_last5min = 37 [(ras.encoding.tags) = "ras:\",37,4\""];
+  int64 read_total = 38 [(ras.encoding.tags) = "ras:\",38,4\""];
+  int64 write_current = 39 [(ras.encoding.tags) = "ras:\",39,4\""];
+  int64 write_last5min = 40 [(ras.encoding.tags) = "ras:\",40,4\""];
+  int64 write_total = 41 [(ras.encoding.tags) = "ras:\",41,4\""];
   // version >= 5
-  int32 duration_current_service = 42 [(tagger.tags) = "ras:\",42,5\""];
-  int64 duration_last5min_service = 43 [(tagger.tags) = "ras:\",43,5\""];
-  int32 duration_all_service = 44 [(tagger.tags) = "ras:\",44,5\""];
-  string current_service_name = 45 [(tagger.tags) = "ras:\",45,5\""];
+  int32 duration_current_service = 42 [(ras.encoding.tags) = "ras:\",42,5\""];
+  int64 duration_last5min_service = 43 [(ras.encoding.tags) = "ras:\",43,5\""];
+  int32 duration_all_service = 44 [(ras.encoding.tags) = "ras:\",44,5\""];
+  string current_service_name = 45 [(ras.encoding.tags) = "ras:\",45,5\""];
 
   // version >= 6
-  int64 cpu_time_current = 46 [(tagger.tags) = "ras:\",46,6\""];
-  int64 cpu_time_last5min = 47 [(tagger.tags) = "ras:\",47,7\""];
-  int64 cpu_time_total = 48 [(tagger.tags) = "ras:\",48,7\""];
+  int64 cpu_time_current = 46 [(ras.encoding.tags) = "ras:\",46,6\""];
+  int64 cpu_time_last5min = 47 [(ras.encoding.tags) = "ras:\",47,7\""];
+  int64 cpu_time_total = 48 [(ras.encoding.tags) = "ras:\",48,7\""];
 
   // version >= 7
-  string data_separation = 49 [(tagger.tags) = "ras:\",49,7\""];
+  string data_separation = 49 [(ras.encoding.tags) = "ras:\",49,7\""];
   // version >= 10
-  string client_ip_address = 50 [(tagger.tags) = "ras:\",50,10\""];
+  string client_ip_address = 50 [(ras.encoding.tags) = "ras:\",50,10\""];
 
   // ignore
   string cluster_id = 51;

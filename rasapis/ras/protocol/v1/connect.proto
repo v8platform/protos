@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package ras.protocol.v1;
+
+import "google/protobuf/any.proto";
+import "google/protobuf/descriptor.proto";
+import "ras/protocol/v1/param.proto";
+import "ras/protocol/v1/types.proto";
+import "ras/protocol/v1/packet.proto";
+import "ras/encoding/ras.proto";
+
+
+option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
+option (ras.encoding.options) = {
+  generate_unmarshal: true,
+  generate_marshaller: true,
+  generate_tags: true,
+};
+
+message NegotiateMessage {
+  option (ras.encoding.packet_type) = PACKET_TYPE_NEGOTIATE;
+
+  int32 magic = 1 [(ras.encoding.tags) = "ras:\",1\""];      // Use only one value `475223888`
+  int32 protocol = 2 [(ras.encoding.tags) = "ras:\"short,2\""];
+  int32 version = 3 [(ras.encoding.tags) = "ras:\"short,3\""];
+}
+
+message ConnectMessage {
+  option (ras.encoding.packet_type) = PACKET_TYPE_CONNECT;
+  map<string, Param> params = 2 [(ras.encoding.tags) = "ras:\"byte,1\""];;
+}
+
+message DisconnectMessage {
+  option (ras.encoding.packet_type) = PACKET_TYPE_DISCONNECT;
+  map<string, Param> params = 2 [(ras.encoding.tags) = "ras:\"byte,1\""];;
+}
+
+message ConnectMessageAck {
+  option (ras.encoding.packet_type) = PACKET_TYPE_CONNECT_ACK;
+}

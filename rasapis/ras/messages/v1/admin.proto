@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package ras.messages.v1;
+
+import "ras/protocol/v1/param.proto";
+import "ras/encoding/ras.proto";
+import "ras/protocol/v1/types.proto";
+import "ras/messages/v1/types.proto";
+import "google/protobuf/any.proto";
+
+option go_package = "github.com/v8platform/protos/gen/ras/messages/v1";
+
+option (ras.encoding.options) = {
+  generate_unmarshal: true,
+  generate_marshaller: true,
+  generate_tags: true,
+};
+
+message GetAgentVersionRequest {
+  option (ras.encoding.endpoint_message_type) = GET_AGENT_VERSION_REQUEST;
+}
+message GetAgentVersionResponse {
+  option (ras.encoding.endpoint_message_type) = GET_AGENT_VERSION_RESPONSE;
+  string version = 1[(ras.encoding.tags) = "ras:\",1\""];
+}
+
+message ClusterAdminsRequest {
+  option (ras.encoding.endpoint_message_type) = GET_CLUSTER_ADMINS_REQUEST;
+  string cluster_id = 1 [(ras.encoding.tags) = "ras:\"uuid,1\""];
+}
+
+message GetClusterAdminsResponse {
+  option (ras.encoding.endpoint_message_type) = GET_CLUSTER_ADMINS_RESPONSE;
+  repeated AdminInfo admins = 1 [(ras.encoding.tags) = "ras:\",1\""];
+}
+
+message GetAgentAdminsRequest {
+  option (ras.encoding.endpoint_message_type) = GET_AGENT_ADMINS_REQUEST;
+}
+
+message GetAgentAdminsResponse {
+  option (ras.encoding.endpoint_message_type) = GET_AGENT_ADMINS_RESPONSE;
+  repeated AdminInfo admins = 1 [(ras.encoding.tags) = "ras:\",1\""];
+}
+
+message RegClusterAdminRequest {
+  option (ras.encoding.endpoint_message_type) = REG_CLUSTER_ADMIN_REQUEST;
+  string cluster_id = 1 [(ras.encoding.tags) = "ras:\"uuid,1\""];
+  AdminInfo admin_info = 2 [(ras.encoding.tags) = "ras:\",2\""];
+}
+
+message UnregClusterAdminRequest {
+  option (ras.encoding.endpoint_message_type) = UNREG_CLUSTER_ADMIN_REQUEST;
+  string cluster_id = 1 [(ras.encoding.tags) = "ras:\"uuid,1\""];
+  string admin_name = 2 [(ras.encoding.tags) = "ras:\",2\""];
+}
+
+message RegAgentAdminRequest {
+  option (ras.encoding.endpoint_message_type) = REG_AGENT_ADMIN_REQUEST;
+  AdminInfo admin_info = 1 [(ras.encoding.tags) = "ras:\",1\""];
+}
+
+message UnregAgentAdminRequest {
+  option (ras.encoding.endpoint_message_type) = UNREG_AGENT_ADMIN_REQUEST;
+  string admin_name = 1 [(ras.encoding.tags) = "ras:\",1\""];
+}
+
+message AdminInfo {
+  string Name = 1 [(ras.encoding.tags) = "ras:\",1\""];
+  string description = 2 [(ras.encoding.tags) = "ras:\",2\""];
+  string password = 3 [(ras.encoding.tags) = "ras:\",3\""];
+  bool password_auth_allowed = 4 [(ras.encoding.tags) = "ras:\",4\""];
+  bool sys_auth_allowed = 5 [(ras.encoding.tags) = "ras:\",5\""];
+  string sys_user_name = 6 [(ras.encoding.tags) = "ras:\",6\""];
+}

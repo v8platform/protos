@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package ras.messages.v1;
+
+import "ras/encoding/ras.proto";
+import "ras/messages/v1/types.proto";
+
+import "v8platform/serialize/v1/clusters.proto";
+
+option go_package = "github.com/v8platform/protos/gen/ras/messages/v1";
+
+option (ras.encoding.options) = {
+  generate_unmarshal: true,
+  generate_marshaller: true,
+  generate_tags: true,
+};
+
+message GetClustersRequest {
+  option (ras.encoding.endpoint_message_type) = GET_CLUSTERS_REQUEST;
+}
+
+message GetClustersResponse {
+  option (ras.encoding.endpoint_message_type) = GET_CLUSTERS_RESPONSE;
+  repeated v8platform.serialize.v1.ClusterInfo clusters = 1 [(ras.encoding.tags) = "ras:\",1\""];;
+}
+
+message GetClusterInfoRequest {
+  option (ras.encoding.endpoint_message_type) = GET_CLUSTER_INFO_REQUEST;
+  string cluster_id = 1 [(ras.encoding.tags) = "ras:\"uuid,1\""];
+}
+
+message GetClusterInfoResponse {
+  option (ras.encoding.endpoint_message_type) = GET_CLUSTER_INFO_RESPONSE;
+  v8platform.serialize.v1.ClusterInfo cluster_info = 1 [(ras.encoding.tags) = "ras:\",1\""];;
+}
+
+message RegClusterRequest {
+  option (ras.encoding.endpoint_message_type) = REG_CLUSTER_REQUEST;
+  v8platform.serialize.v1.ClusterInfo cluster_info = 1 [(ras.encoding.tags) = "ras:\",1\""];;
+}
+
+message RegClusterResponse {
+  option (ras.encoding.endpoint_message_type) = REG_CLUSTER_RESPONSE;
+  string cluster_id = 1 [(ras.encoding.tags) = "ras:\"uuid,1\""];
+}
+
+message UnregClusterRequest  {
+  option (ras.encoding.endpoint_message_type) = UNREG_CLUSTER_REQUEST;
+  string cluster_id = 1 [(ras.encoding.tags) = "ras:\"uuid,1\""];
+}
+

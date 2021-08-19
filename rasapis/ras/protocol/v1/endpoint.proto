@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package ras.protocol.v1;
+
+import "ras/protocol/v1/param.proto";
+import "ras/encoding/ras.proto";
+import "ras/protocol/v1/types.proto";
+import "ras/protocol/v1/packet.proto";
+import "google/protobuf/any.proto";
+import "ras/messages/v1/types.proto";
+
+option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
+
+option (ras.encoding.options) = {
+  generate_unmarshal: true,
+  generate_marshaller: true,
+  generate_tags: true,
+};
+
+message EndpointOpen {
+  option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_OPEN;
+  string service = 1;
+  string encoding = 2;
+  string Version = 3;
+  map<string, Param> params = 4;
+}
+
+message EndpointOpenAck {
+  option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_OPEN_ACK;
+  string service_id = 1;
+  string Version = 2;
+  int32  enpoiont_id = 3;
+  map<string, Param> params = 4;
+}
+
+message EndpointMessage {
+  option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_MESSAGE;
+  int32 endpoint_id = 1;
+  int32 format = 2;
+  EndpointDataType type = 3;
+  EndpointDataMessage data = 4;
+}
+
+message EndpointMessageAck {
+  option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_MESSAGE;
+  int32 endpoint_id = 1;
+  int32 format = 2;
+  EndpointDataType type = 3;
+  oneof data {
+    EndpointDataVoidMessage void_message = 4;
+    EndpointDataMessage message = 5;
+    EndpointFailureMessage failure = 6;
+  }
+}
+
+message EndpointFailureAck  {
+  option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_FAILURE;
+  string service_id = 2;
+  string version = 3;
+  int32 endpoint_id = 4;
+  string class_cause = 5;
+  string message = 6;
+  repeated string trace = 7;
+  optional CauseError cause = 8;
+}
+
+message CauseError {
+  option (ras.encoding.message_options) = {
+    generate_marshaller: false,
+  };
+  string service_id = 1;
+  string message = 2;
+  optional CauseError cause = 3;
+}
+
+message EndpointDataVoidMessage {
+  option (ras.encoding.endpoint_data_type) = ENDPOINT_DATA_TYPE_VOID_MESSAGE;
+}
+
+message EndpointDataMessage {
+  option (ras.encoding.endpoint_data_type) = ENDPOINT_DATA_TYPE_MESSAGE;
+  ras.messages.v1.EndpointMessageType type = 1;
+  bytes data = 2;
+}
+
+message EndpointFailureMessage {
+  option (ras.encoding.endpoint_data_type) = ENDPOINT_DATA_TYPE_EXCEPTION;
+  string service_id = 1;
+  string message = 2;
+  optional CauseError cause = 3;
+}

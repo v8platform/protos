@@ -3,24 +3,24 @@ syntax = "proto3";
 package v8platform.serialize.v1;
 
 import "google/protobuf/timestamp.proto";
-import "v8platform/tagger/field_tag.proto";
+import "ras/encoding/ras.proto";
 
 message ClusterInfo {
 
-  string uuid = 1 [(tagger.tags) = "ras:\"uuid,1\""];
-  int32 expiration_timeout = 2 [(tagger.tags) = "ras:\",2\""];
-  string host = 3 [(tagger.tags) = "ras:\",3\""];
-  int32 lifetime_limit = 4 [(tagger.tags) = "ras:\",4\""];
-  int32 Port = 5 [(tagger.tags) = "ras:\"short,5\""];
-  int32 max_memory_size = 6 [(tagger.tags) = "ras:\",6\""];
-  int32 max_memory_time_limit = 7 [(tagger.tags) = "ras:\",7\""];
-  string name = 8 [(tagger.tags) = "ras:\",8\""];
-  int32 security_level = 9 [(tagger.tags) = "ras:\",9\""];
-  int32 session_fault_tolerance_level = 10 [(tagger.tags) = "ras:\",10\""];
-  int32 load_balancing_mode = 11 [(tagger.tags) = "ras:\",11\""];
-  int32 errors_count_threshold = 12 [(tagger.tags) = "ras:\",12\""];
-  bool kill_problem_processes = 13 [(tagger.tags) = "ras:\",13\""];
+  string uuid = 1 [(ras.encoding.tags) = "ras:\"uuid,1\""];
+  int32 expiration_timeout = 2 [(ras.encoding.tags) = "ras:\",2\""];
+  string host = 3 [(ras.encoding.tags) = "ras:\",3\""];
+  int32 lifetime_limit = 4 [(ras.encoding.tags) = "ras:\",4\""];
+  int32 Port = 5 [(ras.encoding.tags) = "ras:\"short,5\""];
+  int32 max_memory_size = 6 [(ras.encoding.tags) = "ras:\",6\""];
+  int32 max_memory_time_limit = 7 [(ras.encoding.tags) = "ras:\",7\""];
+  string name = 8 [(ras.encoding.tags) = "ras:\",8\""];
+  int32 security_level = 9 [(ras.encoding.tags) = "ras:\",9\""];
+  int32 session_fault_tolerance_level = 10 [(ras.encoding.tags) = "ras:\",10\""];
+  int32 load_balancing_mode = 11 [(ras.encoding.tags) = "ras:\",11\""];
+  int32 errors_count_threshold = 12 [(ras.encoding.tags) = "ras:\",12\""];
+  bool kill_problem_processes = 13 [(ras.encoding.tags) = "ras:\",13\""];
   // version >= 9
-  bool kill_by_memory_with_dump = 14 [(tagger.tags) = "ras:\",14,9\""];
+  bool kill_by_memory_with_dump = 14 [(ras.encoding.tags) = "ras:\",14,9\""];
 
 }

@@ -135,7 +135,7 @@ import (
 	// This import path is based on the name declaration in the go.mod,
 	// and the gen/proto/go output location in the buf.gen.yaml.
 	rasv1 "github.com/your-name/repo-name/gen/go/ras/api/v1"
-	serializev1 "github.com/your-name/repo-name/gen/go/v8platform/serialize/v1"
+	serializev1 "github.com/your-name/repo-name/gen/go/v8platform/protocol/v1"
 
 	"google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"

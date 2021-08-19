@@ -3,8 +3,7 @@ syntax = "proto3";
 package v8platform.serialize.v1;
 
 import "google/protobuf/timestamp.proto";
-import "v8platform/tagger/field_tag.proto";
-
+import "ras/encoding/ras.proto";
 
 message LicenseInfo {
 
@@ -18,17 +17,17 @@ message LicenseInfo {
   string app_id = 7;
 
   // all version
-  string full_name = 8 [(tagger.tags) = "ras:\",1\""];
-  string full_presentation = 9 [(tagger.tags) = "ras:\",2\""];
-  bool issued_by_server = 10 [(tagger.tags) = "ras:\",3\""];
-  int32 license_type = 11 [(tagger.tags) = "ras:\",4\""];
-  int32 max_users_all = 12 [(tagger.tags) = "ras:\",5\""];
-  int32 max_users_cur = 13 [(tagger.tags) = "ras:\",6\""];
-  bool net = 14 [(tagger.tags) = "ras:\",7\""];
-  string rmngr_address = 15 [(tagger.tags) = "ras:\",8\""];
-  string rmngr_pid = 16 [(tagger.tags) = "ras:\",9\""];
-  int32 rmngr_port = 17 [(tagger.tags) = "ras:\",10\""];
-  string series = 18 [(tagger.tags) = "ras:\",11\""];
-  string short_presentation = 19 [(tagger.tags) = "ras:\",12\""];
+  string full_name = 8 [(ras.encoding.tags) = "ras:\",1\""];
+  string full_presentation = 9 [(ras.encoding.tags) = "ras:\",2\""];
+  bool issued_by_server = 10 [(ras.encoding.tags) = "ras:\",3\""];
+  int32 license_type = 11 [(ras.encoding.tags) = "ras:\",4\""];
+  int32 max_users_all = 12 [(ras.encoding.tags) = "ras:\",5\""];
+  int32 max_users_cur = 13 [(ras.encoding.tags) = "ras:\",6\""];
+  bool net = 14 [(ras.encoding.tags) = "ras:\",7\""];
+  string rmngr_address = 15 [(ras.encoding.tags) = "ras:\",8\""];
+  string rmngr_pid = 16 [(ras.encoding.tags) = "ras:\",9\""];
+  int32 rmngr_port = 17 [(ras.encoding.tags) = "ras:\",10\""];
+  string series = 18 [(ras.encoding.tags) = "ras:\",11\""];
+  string short_presentation = 19 [(ras.encoding.tags) = "ras:\",12\""];
 
 }
