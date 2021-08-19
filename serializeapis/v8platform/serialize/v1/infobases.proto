@@ -34,7 +34,7 @@ message InfobaseInfo {
   string SecurityProfileName = 23 [(tagger.tags) = "ras:\",22\""];
   string SafeModeSecurityProfileName = 24 [(tagger.tags) = "ras:\",23\""];
   // version >=9
-  bool ReserveWorkingProcesses = 25 [(tagger.tags) = "ras:\",24\""];
+  bool ReserveWorkingProcesses = 25 [(tagger.tags) = "ras:\",24,9\""];
 
 }
 
