@@ -1,0 +1,54 @@
+@startuml
+'https://plantuml.com/component-diagram
+set namespaceSeparator none
+
+title Описание пакета данных
+caption Запрос списка кластеров
+
+class ras.protocol.v1.Packet {
+  type : ras.protocol.v1.PacketTypes
+  size : INTEGER
+  ..
+  data : BYTES
+}
+
+class ras.protocol.v1.EndpointMessage {
+  endpoint_id : int32
+  format: int32
+  type: ras.protocol.v1.EndpointDataType
+  data: ras.protocol.v1.EndpointDataMessage
+}
+
+
+class ras.messages.v1.GetClustersRequest {}
+
+enum ras.messages.v1.EndpointMessageType {
+    GET_CLUSTERS_REQUEST = 11
+}
+enum ras.protocol.v1.EndpointDataType {
+    VOID_MESSAGE = 0
+    MESSAGE = 1
+    EXCEPTION = 255
+}
+
+class ras.protocol.v1.EndpointDataMessage {
+    type: ras.messages.v1.EndpointMessageType
+    data: BYTES
+}
+
+enum ras.protocol.v1.PacketTypes {
+   ...
+   PACKET_TYPE_ENDPOINT_MESSAGE = 10
+   ...
+}
+
+' GetClustersRequest *-- EndpointMessageType::GET_CLUSTERS_REQUEST
+ras.protocol.v1.EndpointDataMessage::type *-- ras.messages.v1.EndpointMessageType::GET_CLUSTERS_REQUEST
+ras.protocol.v1.EndpointDataMessage::data <-- ras.messages.v1.GetClustersRequest : encode
+ras.protocol.v1.Packet::type *-- ras.protocol.v1.PacketTypes::PACKET_TYPE_ENDPOINT_MESSAGE
+ras.protocol.v1.EndpointMessage::data *-- ras.protocol.v1.EndpointDataMessage
+ras.protocol.v1.EndpointMessage::type *-- ras.protocol.v1.EndpointDataType::MESSAGE
+ras.protocol.v1.Packet::data <-- ras.protocol.v1.EndpointMessage : Encode
+
+
+@enduml
