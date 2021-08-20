@@ -1,0 +1,78 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+participant "Клиент http" as clientH #gray
+participant "Прокси RAS" as proxy
+participant "Служба RAS" as ras #99FF99
+
+clientH -> proxy: ras.api.v1.GetClustersRequest
+activate clientH
+proxy -> proxy: init connection
+
+activate proxy #DarkSalmon
+proxy -> ras: ras.protocol.v1.NegotiateMessage
+activate ras
+proxy -> ras: ras.protocol.v1.ConnectMessage
+
+deactivate proxy #DarkSalmon
+|||
+proxy -> ras: ras.protocol.v1.EndpointOpen
+activate proxy #DarkSalmon
+activate ras #Lightblue
+alt #Lightyellow Successful
+    ras -> proxy: ras.protocol.v1.EndpointOpenAck
+else #Pink Failure
+    ras -> proxy: ras.protocol.v1.EndpointFailure
+    proxy -> clientH: HTTP CODE 505
+end
+
+deactivate proxy
+|||
+proxy -> ras: ras.messages.v1.AuthenticateAgentRequest
+activate proxy #Lightyellow
+proxy -> ras: ras.messages.v1.GetClustersRequest
+
+alt #Lightyellow Successful
+    ras -> proxy: ras.messages.v1.GetClustersResponse
+else #Pink Failure
+    ras -> proxy: ras.protocol.v1.EndpointFailure
+end
+|||
+
+alt #Lightyellow Successful
+    proxy -> clientH: ras.api.v1.GetClustersResponse
+else #Pink Failure
+    proxy -> clientH: CODE 505
+end
+
+deactivate proxy
+deactivate clientH
+
+|||
+clientH -> proxy: ras.api.v1.GetCluster
+activate clientH
+proxy -> ras: ras.messages.v1.AuthenticateAgentRequest
+activate proxy
+proxy -> ras: ras.messages.v1.ClusterAuthenticateRequest
+proxy -> ras: ras.messages.v1.GetClusterInfoRequest
+alt #Lightyellow Successful
+    ras -> proxy: ras.messages.v1.GetClusterInfoResponse
+else #Pink Failure
+    ras -> proxy: ras.protocol.v1.EndpointFailure
+end
+
+alt #Lightyellow Successful
+    proxy -> clientH: v8platform.serialize.v1.ClusterInfo
+else #Pink Failure
+    proxy -> clientH: CODE 505
+end
+deactivate proxy
+
+deactivate clientH
+... Timeout ...
+
+proxy -> ras: ras.protocol.v1.EndpointClose
+deactivate ras
+proxy -> ras: ras.protocol.v1.DisconnectMessage
+deactivate ras
+@enduml
