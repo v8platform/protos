@@ -24,6 +24,4 @@ enum PacketTypes {
 packet::type *-- PacketTypes::PACKET_TYPE_NEGOTIATE
 packet::data <-- NegotiateMessage : Encode
 
-newpage
-
 @enduml
