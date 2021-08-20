@@ -18,7 +18,7 @@ option (ras.encoding.options) = {
 };
 
 message EndpointOpen {
-  option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_OPEN;
+//  option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_OPEN;
   string service = 1 [(ras.encoding.field).order = 1];
   string encoding = 2 [(ras.encoding.field).order = 2];
   string version = 3 [(ras.encoding.field).order = 3];
@@ -26,7 +26,7 @@ message EndpointOpen {
 }
 
 message EndpointOpenAck {
-  option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_OPEN_ACK;
+//  option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_OPEN_ACK;
   string service_id = 1 [(ras.encoding.field).order = 1];
   string Version = 2 [(ras.encoding.field).order = 2];
   int32  enpoiont_id = 3 [(ras.encoding.field) = {
@@ -37,7 +37,7 @@ message EndpointOpenAck {
 }
 
 message EndpointMessage {
-  option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_MESSAGE;
+//  option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_MESSAGE;
   int32 endpoint_id = 1 [(ras.encoding.field) = {
     order: 1,
     encoder: "nullable-size",
@@ -54,7 +54,7 @@ message EndpointMessage {
 }
 
 message EndpointMessageAck {
-  option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_MESSAGE;
+//  option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_MESSAGE;
   int32 endpoint_id = 1 [(ras.encoding.field) = {
     order: 1,
     encoder: "nullable-size",
@@ -68,14 +68,15 @@ message EndpointMessageAck {
     encoder: "byte",
   }];
   oneof data {
-    EndpointDataVoidMessage void_message = 4 [(ras.encoding.oneof_field).order = 4];
-    EndpointDataMessage message = 5 [(ras.encoding.oneof_field).order = 4];
-    EndpointFailureMessage failure = 6 [(ras.encoding.oneof_field).order = 4];
+    option (ras.encoding.oneof_field).order = 4;
+    EndpointDataVoidMessage void_message = 4;
+    EndpointDataMessage message = 5;
+    EndpointFailureMessage failure = 6;
   };
 }
 
 message EndpointFailureAck  {
-  option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_FAILURE;
+//  option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_FAILURE;
   string service_id = 2;
   string version = 3;
   int32 endpoint_id = 4;
@@ -95,11 +96,11 @@ message CauseError {
 }
 
 message EndpointDataVoidMessage {
-  option (ras.encoding.endpoint_data_type) = ENDPOINT_DATA_TYPE_VOID_MESSAGE;
+//  option (ras.encoding.endpoint_data_type) = ENDPOINT_DATA_TYPE_VOID_MESSAGE;
 }
 
 message EndpointDataMessage {
-  option (ras.encoding.endpoint_data_type) = ENDPOINT_DATA_TYPE_MESSAGE;
+//  option (ras.encoding.endpoint_data_type) = ENDPOINT_DATA_TYPE_MESSAGE;
   ras.messages.v1.EndpointMessageType type = 1 [(ras.encoding.field) = {
     order: 3,
     encoder:"byte",
@@ -108,7 +109,7 @@ message EndpointDataMessage {
 }
 
 message EndpointFailureMessage {
-  option (ras.encoding.endpoint_data_type) = ENDPOINT_DATA_TYPE_EXCEPTION;
+//  option (ras.encoding.endpoint_data_type) = ENDPOINT_DATA_TYPE_EXCEPTION;
   string service_id = 1;
   string message = 2;
   optional CauseError cause = 3;

@@ -18,7 +18,7 @@ option (ras.encoding.options) = {
 };
 
 message NegotiateMessage {
-  option (ras.encoding.packet_type) = PACKET_TYPE_NEGOTIATE;
+//  option (ras.encoding.packet_type) = PACKET_TYPE_NEGOTIATE;
 
   int32 magic = 1 [(ras.encoding.tags) = "ras:\",1\"",
   (ras.encoding.field) = {
@@ -38,15 +38,19 @@ message NegotiateMessage {
 }
 
 message ConnectMessage {
-  option (ras.encoding.packet_type) = PACKET_TYPE_CONNECT;
-  map<string, Param> params = 2 [(ras.encoding.tags) = "ras:\"byte,1\""];;
+//  option (ras.encoding.packet_type) = PACKET_TYPE_CONNECT;
+  map<string, Param> params = 2 [(ras.encoding.tags) = "ras:\",1\"",
+    (ras.encoding.field).order = 1
+  ];
 }
 
 message DisconnectMessage {
-  option (ras.encoding.packet_type) = PACKET_TYPE_DISCONNECT;
-  map<string, Param> params = 2 [(ras.encoding.tags) = "ras:\"byte,1\""];;
+//  option (ras.encoding.packet_type) = PACKET_TYPE_DISCONNECT;
+  map<string, Param> params = 2 [(ras.encoding.tags) = "ras:\",1\"",
+    (ras.encoding.field).order = 1
+  ];
 }
 
 message ConnectMessageAck {
-  option (ras.encoding.packet_type) = PACKET_TYPE_CONNECT_ACK;
+//  option (ras.encoding.packet_type) = PACKET_TYPE_CONNECT_ACK;
 }

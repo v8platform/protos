@@ -4,17 +4,17 @@ package ras.encoding;
 
 import "google/protobuf/descriptor.proto";
 
-import "ras/protocol/v1/param.proto";
-import "ras/protocol/v1/types.proto";
-import "ras/messages/v1/types.proto";
+//import "ras/protocol/v1/param.proto";
+//import "ras/protocol/v1/types.proto";
+//import "ras/messages/v1/types.proto";
 
 option go_package = "github.com/v8platform/ras";
 
 extend google.protobuf.MessageOptions {
   EncodingMessageOptions message_options = 475223888;
-  ras.protocol.v1.PacketType packet_type = 475223889;
-  ras.protocol.v1.EndpointDataType endpoint_data_type = 475223890;
-  ras.messages.v1.EndpointMessageType endpoint_message_type = 475223891;
+  int32 packet_type = 475223889;
+  int32 endpoint_data_type = 475223890;
+  int32 endpoint_message_type = 475223891;
 }
 
 message EncodingMessageOptions {

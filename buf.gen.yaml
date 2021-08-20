@@ -21,8 +21,8 @@ plugins:
   #      - paths=source_relative
   #      - generate_unbound_methods=true
   #      - grpc_api_configuration=sources/v8platform/rasapis/grpc-rest-bindings.yml
-  - name: gotag
-    out: .
-    opt:
-      - paths=source_relative
-      - outdir=./gen
+#  - name: gotag
+#    out: .
+#    opt:
+#      - paths=source_relative
+#      - outdir=./gen

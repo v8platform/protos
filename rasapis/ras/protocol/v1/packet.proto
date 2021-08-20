@@ -21,7 +21,7 @@ option (ras.encoding.options) = {
 message Packet {
   PacketType Type = 1 [(ras.encoding.tags) = "ras:\"byte,1\"",
     (ras.encoding.field) =  {
-      encoder: "bytes",
+      encoder: "byte",
       order: 1,
     }
   ];
@@ -30,9 +30,9 @@ message Packet {
       encoder: "size",
       order: 2,
     }];;
-  bytes Data = 3 [(ras.encoding.tags) = "ras:\"bytes,3\""
+  bytes Data = 3 [(ras.encoding.tags) = "ras:\"bytes,3\"",
     (ras.encoding.field) =  {
       encoder: "bytes",
       order: 3,
-    }];;
+    }];
 }
