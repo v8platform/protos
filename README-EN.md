@@ -2,8 +2,6 @@
 
 Public interface definitions of 1C Enterprise
 
-![cached image](http://www.plantuml.com/plantuml/proxy?src=https://raw.githubusercontent.com/v8platform/protos/develop/ras-client.puml)
-
 ## How to use
 
 1. Install `buf`on your machine
