@@ -55,9 +55,9 @@ extend google.protobuf.OneofOptions {
 
 message EncodingFieldOptions {
   optional string encoder = 1;
-  int32 number = 2;
+  int32 order = 2;
   optional int32 version = 3;
   map<string, string> opts = 4;
-  bool generate_marshal = 5;
-  bool generate_unmarshal = 6;
+  bool no_marshal = 5;
+  bool no_unmarshal = 6;
 }

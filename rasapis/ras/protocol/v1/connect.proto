@@ -20,9 +20,21 @@ option (ras.encoding.options) = {
 message NegotiateMessage {
   option (ras.encoding.packet_type) = PACKET_TYPE_NEGOTIATE;
 
-  int32 magic = 1 [(ras.encoding.tags) = "ras:\",1\""];      // Use only one value `475223888`
-  int32 protocol = 2 [(ras.encoding.tags) = "ras:\"short,2\""];
-  int32 version = 3 [(ras.encoding.tags) = "ras:\"short,3\""];
+  int32 magic = 1 [(ras.encoding.tags) = "ras:\",1\"",
+  (ras.encoding.field) = {
+    order: 1,
+    encoder: "int32",
+  }];      // Use only one value `475223888`
+  int32 protocol = 2 [(ras.encoding.tags) = "ras:\"short,2\"",
+    (ras.encoding.field) = {
+      order: 2,
+      encoder: "short",
+    }];
+  int32 version = 3 [(ras.encoding.tags) = "ras:\"short,3\"",
+    (ras.encoding.field) = {
+    order: 3,
+    encoder: "short",
+  }];
 }
 
 message ConnectMessage {

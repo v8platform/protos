@@ -19,38 +19,59 @@ option (ras.encoding.options) = {
 
 message EndpointOpen {
   option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_OPEN;
-  string service = 1;
-  string encoding = 2;
-  string Version = 3;
-  map<string, Param> params = 4;
+  string service = 1 [(ras.encoding.field).order = 1];
+  string encoding = 2 [(ras.encoding.field).order = 2];
+  string version = 3 [(ras.encoding.field).order = 3];
+  map<string, Param> params = 4 [(ras.encoding.field).order = 4];
 }
 
 message EndpointOpenAck {
   option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_OPEN_ACK;
-  string service_id = 1;
-  string Version = 2;
-  int32  enpoiont_id = 3;
-  map<string, Param> params = 4;
+  string service_id = 1 [(ras.encoding.field).order = 1];
+  string Version = 2 [(ras.encoding.field).order = 2];
+  int32  enpoiont_id = 3 [(ras.encoding.field) = {
+    order: 3,
+    encoder: "nullable-size",
+  }];
+  map<string, Param> params = 4 [(ras.encoding.field).order = 4];
 }
 
 message EndpointMessage {
   option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_MESSAGE;
-  int32 endpoint_id = 1;
-  int32 format = 2;
-  EndpointDataType type = 3;
-  EndpointDataMessage data = 4;
+  int32 endpoint_id = 1 [(ras.encoding.field) = {
+    order: 1,
+    encoder: "nullable-size",
+  }];
+  int32 format = 2 [(ras.encoding.field) = {
+    order: 2,
+    encoder: "short",
+  }];
+  EndpointDataType type = 3 [(ras.encoding.field) = {
+    order: 3,
+    encoder: "byte",
+  }];
+  EndpointDataMessage data = 4 [(ras.encoding.field).order = 4];
 }
 
 message EndpointMessageAck {
   option (ras.encoding.packet_type) = PACKET_TYPE_ENDPOINT_MESSAGE;
-  int32 endpoint_id = 1;
-  int32 format = 2;
-  EndpointDataType type = 3;
+  int32 endpoint_id = 1 [(ras.encoding.field) = {
+    order: 1,
+    encoder: "nullable-size",
+  }];
+  int32 format = 2 [(ras.encoding.field) = {
+    order: 2,
+    encoder: "short",
+  }];
+  EndpointDataType type = 3 [(ras.encoding.field) = {
+    order: 3,
+    encoder: "byte",
+  }];
   oneof data {
-    EndpointDataVoidMessage void_message = 4;
-    EndpointDataMessage message = 5;
-    EndpointFailureMessage failure = 6;
-  }
+    EndpointDataVoidMessage void_message = 4 [(ras.encoding.oneof_field).order = 4];
+    EndpointDataMessage message = 5 [(ras.encoding.oneof_field).order = 4];
+    EndpointFailureMessage failure = 6 [(ras.encoding.oneof_field).order = 4];
+  };
 }
 
 message EndpointFailureAck  {
@@ -79,8 +100,11 @@ message EndpointDataVoidMessage {
 
 message EndpointDataMessage {
   option (ras.encoding.endpoint_data_type) = ENDPOINT_DATA_TYPE_MESSAGE;
-  ras.messages.v1.EndpointMessageType type = 1;
-  bytes data = 2;
+  ras.messages.v1.EndpointMessageType type = 1 [(ras.encoding.field) = {
+    order: 3,
+    encoder:"byte",
+  }];
+  bytes data = 2 [(ras.encoding.field).order = 2];
 }
 
 message EndpointFailureMessage {

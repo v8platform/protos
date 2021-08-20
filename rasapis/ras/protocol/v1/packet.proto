@@ -16,23 +16,23 @@ option (ras.encoding.options) = {
   generate_tags: true,
 };
 
+
+// Порядок кодирования/декодирования в формат RAS
 message Packet {
   PacketType Type = 1 [(ras.encoding.tags) = "ras:\"byte,1\"",
     (ras.encoding.field) =  {
-        encoder: "bytes",
-        number: 1,
+      encoder: "bytes",
+      order: 1,
     }
   ];
   int32 Length = 2 [(ras.encoding.tags) = "ras:\"size,2\"",
     (ras.encoding.field) =  {
       encoder: "size",
-      number: 2,
+      order: 2,
     }];;
   bytes Data = 3 [(ras.encoding.tags) = "ras:\"bytes,3\""
     (ras.encoding.field) =  {
       encoder: "bytes",
-      number: 3,
+      order: 3,
     }];;
 }
-
-Safira-89
