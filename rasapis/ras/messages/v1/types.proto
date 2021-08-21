@@ -2,15 +2,15 @@ syntax = "proto3";
 
 package ras.messages.v1;
 
-import "google/protobuf/any.proto";
+import "ras/encoding/ras.proto";
 
 option go_package = "github.com/v8platform/protos/gen/ras/messages/v1";
 
 enum EndpointMessageType {
-  GET_AGENT_ADMINS_REQUEST = 0;
-  GET_AGENT_ADMINS_RESPONSE = 1;
-  GET_CLUSTER_ADMINS_REQUEST = 2;
-  GET_CLUSTER_ADMINS_RESPONSE = 3;
+  GET_AGENT_ADMINS_REQUEST = 0 [(ras.encoding.type_url) = "ras.messages.v1.GetAgentVersionRequest"];
+  GET_AGENT_ADMINS_RESPONSE = 1 [(ras.encoding.type_url) = "ras.messages.v1.GetAgentVersionResponse"];
+  GET_CLUSTER_ADMINS_REQUEST = 2 [(ras.encoding.type_url) = "ras.messages.v1.GetClusterAdminsRequest"];
+  GET_CLUSTER_ADMINS_RESPONSE = 3 [(ras.encoding.type_url) = "ras.messages.v1.GetClusterAdminsResponse"];
   REG_AGENT_ADMIN_REQUEST = 4;
   REG_CLUSTER_ADMIN_REQUEST = 5;
   UNREG_AGENT_ADMIN_REQUEST = 6;

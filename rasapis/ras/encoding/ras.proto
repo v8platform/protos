@@ -61,3 +61,8 @@ message EncodingFieldOptions {
   bool no_marshal = 5;
   bool no_unmarshal = 6;
 }
+
+extend google.protobuf.EnumValueOptions {
+  // Ссылка на тип связанного сообщения
+  string type_url = 475223891;
+}

@@ -23,7 +23,7 @@ message GetAgentVersionResponse {
   string version = 1[(ras.encoding.tags) = "ras:\",1\""];
 }
 
-message ClusterAdminsRequest {
+message GetClusterAdminsRequest {
 //  option (ras.encoding.endpoint_message_type) = GET_CLUSTER_ADMINS_REQUEST;
   string cluster_id = 1 [(ras.encoding.tags) = "ras:\"uuid,1\""];
 }

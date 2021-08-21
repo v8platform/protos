@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package ras.protocol.v1;
+
+import "google/protobuf/descriptor.proto";
+import "ras/protocol/v1/types.proto"
+//import "ras/protocol/v1/param.proto";
+//import "ras/protocol/v1/types.proto";
+//import "ras/messages/v1/types.proto";
+
+option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
+
+extend google.protobuf.MessageOptions {
+  PacketType packet_type = 475223889;
+  EndpointDataType endpoint_data_type = 475223890;
+}
+
+extend google.protobuf.FieldOptions {
+  // Multiple Tags can be spcified.
+  MessageDataFieldOptions field_dep = 475223890;
+}
+
+
+
+extend google.protobuf.OneofOptions {
+  MessageDataFieldOptions oneof_field_dep = 475223888;
+}
+
+message MessageDataFieldOptions {
+  int32 type_field = 1; // Номер поля получения типа
+  EndpointDataType type = 2; // Зависимость типа
+}
