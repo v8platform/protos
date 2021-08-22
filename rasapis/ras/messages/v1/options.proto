@@ -5,7 +5,7 @@ package ras.messages.v1;
 import "google/protobuf/descriptor.proto";
 import "ras/messages/v1/types.proto";
 
-option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
+option go_package = "github.com/v8platform/protos/gen/rasbinary/protocol/v1";
 
 extend google.protobuf.MessageOptions {
   MessageType message_type = 475223891;

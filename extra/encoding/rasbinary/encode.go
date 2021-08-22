@@ -1,4 +1,4 @@
-package ras
+package rasbinary
 
 import (
 	"bytes"

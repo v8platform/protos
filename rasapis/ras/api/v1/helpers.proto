@@ -4,7 +4,7 @@ package ras.api.v1;
 
 import "google/api/annotations.proto";
 import "google/protobuf/empty.proto";
-option go_package = "github.com/v8platform/ras/api/v1";
+option go_package = "github.com/v8platform/rasbinary/api/v1";
 
 message Cluster {
 

@@ -17,17 +17,17 @@ message LicenseInfo {
   string app_id = 7;
 
   // all version
-  string full_name = 8 [(ras.encoding.tags) = "ras:\",1\""];
-  string full_presentation = 9 [(ras.encoding.tags) = "ras:\",2\""];
-  bool issued_by_server = 10 [(ras.encoding.tags) = "ras:\",3\""];
-  int32 license_type = 11 [(ras.encoding.tags) = "ras:\",4\""];
-  int32 max_users_all = 12 [(ras.encoding.tags) = "ras:\",5\""];
-  int32 max_users_cur = 13 [(ras.encoding.tags) = "ras:\",6\""];
-  bool net = 14 [(ras.encoding.tags) = "ras:\",7\""];
-  string rmngr_address = 15 [(ras.encoding.tags) = "ras:\",8\""];
-  string rmngr_pid = 16 [(ras.encoding.tags) = "ras:\",9\""];
-  int32 rmngr_port = 17 [(ras.encoding.tags) = "ras:\",10\""];
-  string series = 18 [(ras.encoding.tags) = "ras:\",11\""];
-  string short_presentation = 19 [(ras.encoding.tags) = "ras:\",12\""];
+  string full_name = 8 [(ras.encoding.tags) = "rasbinary:\",1\""];
+  string full_presentation = 9 [(ras.encoding.tags) = "rasbinary:\",2\""];
+  bool issued_by_server = 10 [(ras.encoding.tags) = "rasbinary:\",3\""];
+  int32 license_type = 11 [(ras.encoding.tags) = "rasbinary:\",4\""];
+  int32 max_users_all = 12 [(ras.encoding.tags) = "rasbinary:\",5\""];
+  int32 max_users_cur = 13 [(ras.encoding.tags) = "rasbinary:\",6\""];
+  bool net = 14 [(ras.encoding.tags) = "rasbinary:\",7\""];
+  string rmngr_address = 15 [(ras.encoding.tags) = "rasbinary:\",8\""];
+  string rmngr_pid = 16 [(ras.encoding.tags) = "rasbinary:\",9\""];
+  int32 rmngr_port = 17 [(ras.encoding.tags) = "rasbinary:\",10\""];
+  string series = 18 [(ras.encoding.tags) = "rasbinary:\",11\""];
+  string short_presentation = 19 [(ras.encoding.tags) = "rasbinary:\",12\""];
 
 }

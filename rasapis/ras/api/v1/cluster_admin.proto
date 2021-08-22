@@ -6,7 +6,7 @@ import "ras/api/v1/helpers.proto";
 import "ras/messages/v1/admin.proto";
 import "google/protobuf/empty.proto";
 
-option go_package = "github.com/v8platform/ras/api/v1";
+option go_package = "github.com/v8platform/rasbinary/api/v1";
 
 service ClusterAdminService {
   rpc Admins(AdminsRequest) returns (AdminsResponse) {};

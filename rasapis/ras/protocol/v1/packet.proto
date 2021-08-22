@@ -9,7 +9,7 @@ import "ras/protocol/v1/types.proto";
 import "ras/encoding/ras.proto";
 
 
-option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
+option go_package = "github.com/v8platform/protos/gen/rasbinary/protocol/v1";
 option (ras.encoding.options) = {
   generate_unmarshal: true,
   generate_marshaller: true,
@@ -20,20 +20,20 @@ option (ras.encoding.options) = {
 // Порядок кодирования/декодирования в формат RAS
 message Packet {
 
-  PacketType type = 1 [(ras.encoding.tags) = "ras:\"byte,1\"",
+  PacketType type = 1 [(ras.encoding.tags) = "rasbinary:\"byte,1\"",
     (ras.encoding.field) =  {
       encoder: "byte",
       order: 1,
     }
   ];
 
-  int32 size = 2 [(ras.encoding.tags) = "ras:\"size,2\"",
+  int32 size = 2 [(ras.encoding.tags) = "rasbinary:\"size,2\"",
     (ras.encoding.field) = {
       encoder: "size",
       order: 2,
     }];
 
-  bytes data = 3 [(ras.encoding.tags) = "ras:\"bytes,3\"",
+  bytes data = 3 [(ras.encoding.tags) = "rasbinary:\"bytes,3\"",
     (ras.encoding.field) = {
       encoder: "bytes",
       order: 3,

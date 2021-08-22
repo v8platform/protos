@@ -11,7 +11,7 @@ import "ras/encoding/ras.proto";
 import "ras/protocol/v1/options.proto";
 
 
-option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
+option go_package = "github.com/v8platform/protos/gen/rasbinary/protocol/v1";
 option (ras.encoding.options) = {
   generate_unmarshal: true,
   generate_marshaller: true,
@@ -22,17 +22,17 @@ message NegotiateMessage {
   option (packet_type) = PACKET_TYPE_NEGOTIATE;
   option (type).packet_type = PACKET_TYPE_NEGOTIATE;
 
-  int32 magic = 1 [(ras.encoding.tags) = "ras:\",1\"",
+  int32 magic = 1 [(ras.encoding.tags) = "rasbinary:\",1\"",
   (ras.encoding.field) = {
     order: 1,
     encoder: "int32",
   }];      // Use only one value `475223888`
-  int32 protocol = 2 [(ras.encoding.tags) = "ras:\"short,2\"",
+  int32 protocol = 2 [(ras.encoding.tags) = "rasbinary:\"short,2\"",
     (ras.encoding.field) = {
       order: 2,
       encoder: "short",
     }];
-  int32 version = 3 [(ras.encoding.tags) = "ras:\"short,3\"",
+  int32 version = 3 [(ras.encoding.tags) = "rasbinary:\"short,3\"",
     (ras.encoding.field) = {
     order: 3,
     encoder: "short",
@@ -41,14 +41,14 @@ message NegotiateMessage {
 
 message ConnectMessage {
   option (packet_type) = PACKET_TYPE_CONNECT;
-  map<string, Param> params = 2 [(ras.encoding.tags) = "ras:\",1\"",
+  map<string, Param> params = 2 [(ras.encoding.tags) = "rasbinary:\",1\"",
     (ras.encoding.field).order = 1
   ];
 }
 
 message DisconnectMessage {
 //  option (ras.encoding.packet_type) = PACKET_TYPE_DISCONNECT;
-  map<string, Param> params = 2 [(ras.encoding.tags) = "ras:\",1\"",
+  map<string, Param> params = 2 [(ras.encoding.tags) = "rasbinary:\",1\"",
     (ras.encoding.field).order = 1
   ];
 }

@@ -1,9 +1,10 @@
-package ras
+package rasbinary
 
 import (
 	"encoding/binary"
 	"fmt"
 	uuid "github.com/satori/go.uuid"
+	"strconv"
 
 	pb "google.golang.org/protobuf/types/known/timestamppb"
 	"io"
@@ -447,6 +448,14 @@ func decodeString(r io.Reader, into interface{}, opts ...map[string]string) (int
 		*typed = buf
 	case []byte:
 		copy(typed, buf)
+	case *int32:
+
+		v, err := strconv.ParseInt(string(buf), 10, 64)
+		if err != nil {
+			return 0, &TypeDecodeError{"string",
+				fmt.Sprintf("convert to <%v> err: %s", typed, err.Error())}
+		}
+		*typed = int32(v)
 	default:
 		return total, &TypeDecodeError{"string",
 			fmt.Sprintf("convert to <%s> unsupporsed", typed)}
@@ -610,11 +619,11 @@ type TypeDecodeError struct {
 
 func (e *TypeDecodeError) Error() string {
 	// if e.Type == nil {
-	// 	return "ras: Decode(nil)"
+	// 	return "rasbinary: Decode(nil)"
 	// }
 
 	// if e.Type.Kind() != reflect.Ptr {
-	// 	return "ras: Decode(non-pointer " + e.Type.String() + ")"
+	// 	return "rasbinary: Decode(non-pointer " + e.Type.String() + ")"
 	// }
-	return "ras: (decoderFunc " + e.Mame + ") " + e.Msg + ""
+	return "rasbinary: (decoderFunc " + e.Mame + ") " + e.Msg + ""
 }

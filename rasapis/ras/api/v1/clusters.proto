@@ -5,7 +5,7 @@ package ras.api.v1;
 import "google/protobuf/empty.proto";
 import "v8platform/serialize/v1/clusters.proto";
 import "ras/api/v1/helpers.proto";
-option go_package = "github.com/v8platform/ras/api/v1";
+option go_package = "github.com/v8platform/rasbinary/api/v1";
 
 service ClustersService {
   rpc Clusters(GetClustersRequest) returns (GetClustersResponse) {};

@@ -1,4 +1,4 @@
-package ras
+package rasbinary
 
 import (
 	"encoding/binary"
@@ -526,7 +526,7 @@ type EncoderWriteError struct {
 
 func (e *EncoderWriteError) Error() string {
 
-	return "ras: (encoderFunc " + e.Mame + ") write" + e.err.Error() + ""
+	return "rasbinary: (encoderFunc " + e.Mame + ") write" + e.err.Error() + ""
 }
 
 type TypeEncoderError struct {
@@ -536,11 +536,11 @@ type TypeEncoderError struct {
 
 func (e *TypeEncoderError) Error() string {
 	// if e.Type == nil {
-	// 	return "ras: Decode(nil)"
+	// 	return "rasbinary: Decode(nil)"
 	// }
 
 	// if e.Type.Kind() != reflect.Ptr {
-	// 	return "ras: Decode(non-pointer " + e.Type.String() + ")"
+	// 	return "rasbinary: Decode(non-pointer " + e.Type.String() + ")"
 	// }
-	return "ras: (encoderFunc " + e.Mame + ") " + e.Msg + ""
+	return "rasbinary: (encoderFunc " + e.Mame + ") " + e.Msg + ""
 }

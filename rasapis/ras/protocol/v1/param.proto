@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package ras.protocol.v1;
 
-option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
+option go_package = "github.com/v8platform/protos/gen/rasbinary/protocol/v1";
 
 message Param {
   ParamType type = 1;

@@ -1,9 +1,9 @@
-package ras
+package rasbinary
 
 import (
 	"bytes"
 	"fmt"
-	"github.com/v8platform/protos/encoding/ras/internal/set"
+	"github.com/v8platform/protos/extra/encoding/rasbinary/internal/set"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"

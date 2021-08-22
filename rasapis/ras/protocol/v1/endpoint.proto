@@ -12,7 +12,7 @@ import "google/protobuf/type.proto";
 import "ras/messages/v1/types.proto";
 import "ras/messages/v1/clusters.proto";
 
-option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
+option go_package = "github.com/v8platform/protos/gen/rasbinary/protocol/v1";
 
 option (ras.encoding.options) = {
   generate_unmarshal: true,
@@ -31,7 +31,10 @@ message EndpointOpen {
 message EndpointOpenAck {
   option (packet_type) = PACKET_TYPE_ENDPOINT_OPEN_ACK;
   string service_id = 1 [(ras.encoding.field).order = 1];
-  string version = 2 [(ras.encoding.field).order = 2];
+  int32 version = 2 [(ras.encoding.field) = {
+    order: 2,
+    encoder: "string",
+  }];
   int32 endpoint_id = 3 [(ras.encoding.field) = {
     order: 3,
     encoder: "null-size",

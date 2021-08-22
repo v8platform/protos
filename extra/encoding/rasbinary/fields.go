@@ -1,4 +1,4 @@
-package ras
+package rasbinary
 
 import (
 	extpb "github.com/v8platform/protos/gen/ras/encoding"

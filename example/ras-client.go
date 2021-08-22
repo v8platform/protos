@@ -5,11 +5,12 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	ras2 "github.com/v8platform/protos/encoding/ras"
+	"github.com/v8platform/protos/extra/encoding/rasbinary"
 	"io"
 	"log"
 	"net"
 
+	types "github.com/v8platform/protos/extra/types"
 	messagesv1 "github.com/v8platform/protos/gen/ras/messages/v1"
 	protocolv1 "github.com/v8platform/protos/gen/ras/protocol/v1"
 	"google.golang.org/protobuf/proto"
@@ -71,12 +72,15 @@ func main() {
 
 	log.Println(packet.String())
 	var v protocolv1.EndpointMessage
-	err = ras2.Unmarshal(packet.Data, &v)
+	err = types.UnpackPacketDataTo(packet, &v)
+
 	if err != nil {
 		panic(err)
 	}
-
 	log.Println(v.String())
+
+	val, _ := types.UnpackPacketDataNew(packet)
+	log.Println(val.(*protocolv1.EndpointMessage).String())
 
 }
 
@@ -92,7 +96,7 @@ func newEndpointMessage(id int32, format int32, m proto.Message) (*protocolv1.En
 
 	dataType := proto.GetExtension(md.Options(), messagesv1.E_MessageType).(messagesv1.MessageType)
 
-	encoder := ras2.MarshalOptions{
+	encoder := rasbinary.MarshalOptions{
 		ProtocolVersion: format,
 	}
 

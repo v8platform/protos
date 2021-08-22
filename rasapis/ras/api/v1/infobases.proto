@@ -8,7 +8,7 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/any.proto";
 import "ras/api/v1/helpers.proto";
 
-option go_package = "github.com/v8platform/ras/api/v1";
+option go_package = "github.com/v8platform/rasbinary/api/v1";
 
 service InfobasesService {
   rpc Infobases(InfobasesRequest) returns (InfobasesResponse) {};

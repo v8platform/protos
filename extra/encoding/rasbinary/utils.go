@@ -1,4 +1,4 @@
-package ras
+package rasbinary
 
 import (
 	pref "google.golang.org/protobuf/reflect/protoreflect"
