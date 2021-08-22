@@ -17,7 +17,9 @@ func getFields(m protoreflect.Message) []field {
 		fd := mFields.Get(i)
 
 		encoderOptions := proto.GetExtension(fd.Options(), extpb.E_Field).(*extpb.EncodingFieldOptions)
-
+		if encoderOptions == nil {
+			continue
+		}
 		fields = append(fields, field{
 			encoderOptions,
 			fd,

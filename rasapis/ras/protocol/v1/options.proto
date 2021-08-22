@@ -13,4 +13,12 @@ option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
 extend google.protobuf.MessageOptions {
   PacketType packet_type = 475223889;
   EndpointDataType endpoint_data_type = 475223890;
+  Type type = 475223893;
+}
+
+message Type {
+  oneof kind {
+    PacketType packet_type = 1;
+    EndpointDataType endpoint_data_type = 2;
+  }
 }

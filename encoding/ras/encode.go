@@ -3,11 +3,10 @@ package ras
 import (
 	"bytes"
 	"fmt"
-	"io"
-
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
+	"io"
 )
 
 // Marshal writes the given proto.Message in RAS format using default options.
@@ -50,7 +49,7 @@ func (o MarshalOptions) marshal(m proto.Message) ([]byte, error) {
 	// Treat nil message interface as an empty message,
 	// in which case the output in an empty RAS object.
 	if m == nil {
-		return []byte("{}"), nil
+		return []byte{}, nil
 	}
 
 	buf := &bytes.Buffer{}
@@ -119,14 +118,36 @@ func (e encoder) marshalMessage(m pref.Message, typeURL string) error {
 		fd := f.fd
 		v := f.value
 
-		if f.GetVersion() <= e.opts.ProtocolVersion ||
+		if f.GetVersion() > e.opts.ProtocolVersion ||
 			f.GetIgnore() || f.GetNoMarshal() {
 			return true
 		}
 
-		if err = e.marshalValue(f, v, fd); err != nil {
-			return false
+		switch fd.Kind() {
+
+		case pref.MessageKind, pref.GroupKind:
+
+			if f.TypeField != nil {
+				md := fd.Message()
+				fd2 := m.Descriptor().Fields().ByNumber(pref.FieldNumber(f.GetTypeField()))
+
+				val2 := m.Get(fd2)
+				val := findExtensionByFullname(md, string(fd2.Enum().FullName()))
+
+				if int32(val.Enum()) != int32(val2.Enum()) {
+					return true
+				}
+			}
+
+			if err = e.marshalMessage(v.Message(), ""); err != nil {
+				return false
+			}
+		default:
+			if err = e.marshalValue(f, v, fd); err != nil {
+				return false
+			}
 		}
+
 		return true
 	})
 	return err
@@ -184,7 +205,7 @@ func (e encoder) marshalSingular(f field, val pref.Value, fd pref.FieldDescripto
 			encodeFunc = encodeUint32
 		}
 
-		_, err := encodeFunc(e, val.Uint())
+		_, err := encodeFunc(e, int32(val.Int()))
 		if err != nil {
 			return err
 		}
@@ -196,7 +217,7 @@ func (e encoder) marshalSingular(f field, val pref.Value, fd pref.FieldDescripto
 			encodeFunc = encodeUint64
 		}
 
-		_, err := encodeFunc(e, val.Uint())
+		_, err := encodeFunc(e, val.Int())
 		if err != nil {
 			return err
 		}
@@ -240,11 +261,6 @@ func (e encoder) marshalSingular(f field, val pref.Value, fd pref.FieldDescripto
 
 		_, err := encodeFunc(e, int(val.Enum()))
 		if err != nil {
-			return err
-		}
-
-	case pref.MessageKind, pref.GroupKind:
-		if err := e.marshalMessage(val.Message(), ""); err != nil {
 			return err
 		}
 

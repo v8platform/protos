@@ -5,20 +5,15 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/k0kubun/pp"
-	ras "github.com/v8platform/encoder/ras"
-	ras2 "github.com/v8platform/protos/example/ras"
-	extpb "github.com/v8platform/protos/gen/ras/encoding"
+	ras2 "github.com/v8platform/protos/encoding/ras"
+	"io"
+	"log"
+	"net"
+
 	messagesv1 "github.com/v8platform/protos/gen/ras/messages/v1"
 	protocolv1 "github.com/v8platform/protos/gen/ras/protocol/v1"
 	"google.golang.org/protobuf/proto"
-	"google.golang.org/protobuf/reflect/protoreflect"
-	"io"
-	"net"
-	"sort"
 )
-
-var codec = ras.NewCodec()
 
 func main() {
 
@@ -36,11 +31,11 @@ func main() {
 	//	//panic(err)
 	//}
 
-	negotiate, err := NewPacket(&protocolv1.NegotiateMessage{
-		Magic:    475223888, // Константы
-		Protocol: 256,       // Константы
-		Version:  256,       // Константы
-	})
+	//negotiate, err := NewPacket(&protocolv1.NegotiateMessage{
+	//	Magic:    475223888, // Константы
+	//	Protocol: 256,       // Константы
+	//	Version:  256,       // Константы
+	//})
 
 	clustersReq, err := newEndpointMessage(1, 255, &messagesv1.GetClustersRequest{})
 
@@ -50,22 +45,38 @@ func main() {
 		panic(err)
 	}
 
-	pp.Println(negotiate)
-	pp.Println(p)
-
-	_, err = writePacket(conn, negotiate)
+	//pp.Println(negotiate)
+	log.Println(p.String())
+	//
+	_, err = writePacket(conn, p)
 	if err != nil {
 		panic(err)
 	}
+	//
+	//pp.Println(conn.Bytes())
+	//
 
-	pp.Println(conn.Bytes())
+	clustersResp, err := newEndpointMessage(1, 255, &messagesv1.GetClustersResponse{})
+	p, err = NewPacket(clustersResp)
 
+	conn.Reset()
+	_, err = writePacket(conn, p)
+	if err != nil {
+		panic(err)
+	}
 	packet, err := ReadPacket(bytes.NewReader(conn.Bytes()), false)
 	if err != nil {
 		panic(err)
 	}
 
-	pp.Println(packet.GetBytes())
+	log.Println(packet.String())
+	var v protocolv1.EndpointMessage
+	err = ras2.Unmarshal(packet.Data, &v)
+	if err != nil {
+		panic(err)
+	}
+
+	log.Println(v.String())
 
 }
 
@@ -79,9 +90,13 @@ func newEndpointMessage(id int32, format int32, m proto.Message) (*protocolv1.En
 		return nil, fmt.Errorf("this is not packet message: <%s>", proto.MessageName(m))
 	}
 
-	dataType := proto.GetExtension(md.Options(), messagesv1.E_MessageType).(messagesv1.EndpointMessageType)
+	dataType := proto.GetExtension(md.Options(), messagesv1.E_MessageType).(messagesv1.MessageType)
 
-	bytes, err := encode(m)
+	encoder := ras2.MarshalOptions{
+		ProtocolVersion: format,
+	}
+
+	b, err := encoder.Marshal(m)
 
 	if err != nil {
 		return nil, err
@@ -91,106 +106,15 @@ func newEndpointMessage(id int32, format int32, m proto.Message) (*protocolv1.En
 		EndpointId: id,
 		Format:     format,
 		Type:       protocolv1.EndpointDataType_ENDPOINT_DATA_TYPE_MESSAGE,
-		Data: &protocolv1.EndpointDataMessage{
-			Type: dataType,
-			Data: &protocolv1.EndpointDataMessage_Bytes{bytes},
-		},
+		Data: &protocolv1.EndpointMessage_Message{
+			&protocolv1.EndpointDataMessage{
+				Type:  dataType,
+				Bytes: b,
+			}},
 	}
 
 	return endpointM, nil
 
-}
-
-func encode(message proto.Message) ([]byte, error) {
-
-	//message, ok := m.(proto.Message)
-
-	//if !ok {
-	//	panic("Non proto message")
-	//}
-
-	buf := &bytes.Buffer{}
-
-	var fields []encodeField
-	pRef := message.ProtoReflect()
-	mFields := pRef.Descriptor().Fields()
-	mOneOfs := pRef.Descriptor().Oneofs()
-
-	idx := make(map[protoreflect.FieldNumber]struct{})
-	for i := 0; i < mOneOfs.Len(); i++ {
-		fieldDescr := mOneOfs.Get(i)
-
-		descriptor := pRef.WhichOneof(fieldDescr)
-
-		for i := 0; i < fieldDescr.Fields().Len(); i++ {
-			idx[fieldDescr.Fields().Get(i).Number()] = struct{}{}
-		}
-
-		encoderOptions := proto.GetExtension(descriptor.Options(), extpb.E_Field).(*extpb.EncodingFieldOptions)
-		value := pRef.Get(descriptor)
-
-		fields = append(fields, encodeField{
-			fd:      descriptor,
-			order:   encoderOptions.GetOrder(),
-			encoder: encoderOptions.GetEncoder(),
-			value:   value,
-		})
-	}
-
-	for i := 0; i < mFields.Len(); i++ {
-		descriptor := mFields.Get(i)
-		if _, ok := idx[descriptor.Number()]; ok {
-			continue
-		}
-		value := pRef.Get(descriptor)
-		encoderOptions := proto.GetExtension(descriptor.Options(), extpb.E_Field).(*extpb.EncodingFieldOptions)
-
-		fields = append(fields, encodeField{
-			fd:      descriptor,
-			order:   encoderOptions.GetOrder(),
-			encoder: encoderOptions.GetEncoder(),
-			value:   value,
-		})
-	}
-
-	sort.Slice(fields, func(i, j int) bool {
-		return fields[i].order < fields[j].order
-	})
-
-	for _, field := range fields {
-
-		switch field.fd.Kind() {
-		case protoreflect.MessageKind:
-			i, err := encode(field.value.Message().Interface())
-			if err != nil {
-				return nil, err
-			}
-			buf.Write(i)
-		case protoreflect.EnumKind:
-
-			_, err := ras2.EncodeValue(field.encoder, buf, int32(field.value.Enum()))
-			if err != nil {
-				panic(err)
-			}
-
-		default:
-			_, err := ras2.EncodeValue(field.encoder, buf, field.value.Interface())
-			if err != nil {
-				panic(err)
-			}
-		}
-
-	}
-
-	return buf.Bytes(), nil
-}
-
-type encodeField struct {
-	order   int32
-	encoder string
-	value   protoreflect.Value
-	fd      protoreflect.FieldDescriptor
-	opts    *extpb.EncodingFieldOptions
 }
 
 func writeMessage(w io.WriteCloser, message []byte) error {

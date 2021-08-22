@@ -10,6 +10,7 @@ import "ras/protocol/v1/options.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/type.proto";
 import "ras/messages/v1/types.proto";
+import "ras/messages/v1/clusters.proto";
 
 option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
 
@@ -52,31 +53,13 @@ message EndpointMessage {
     order: 3,
     encoder: "byte",
   }];
-  EndpointDataMessage data = 4 [(ras.encoding.field).order = 4];
-}
-
-message EndpointMessageAck {
-  option (packet_type) = PACKET_TYPE_ENDPOINT_MESSAGE;
-  int32 endpoint_id = 1 [(ras.encoding.field) = {
-    order: 1,
-    encoder: "null-size",
-  }];
-  int32 format = 2 [(ras.encoding.field) = {
-    order: 2,
-    encoder: "short",
-  }];
-  EndpointDataType type = 3 [(ras.encoding.field) = {
-    order: 3,
-    encoder: "byte",
-  }];
   oneof data {
-    option (ras.encoding.oneof_field) = {
-      order: 4,
-      type_field: 3,
-    };
-    EndpointDataVoidMessage void_message = 4;
-    EndpointDataMessage message = 5;
-    EndpointFailureMessage failure = 6;
+    EndpointDataVoidMessage void_message = 4 [
+      (ras.encoding.field) = { order: 4, type_field: 3}];
+    EndpointDataMessage message = 5 [
+      (ras.encoding.field) = { order: 4, type_field: 3}];
+    EndpointFailureMessage failure = 6 [
+      (ras.encoding.field) = { order: 4, type_field: 3}];
   };
 }
 
@@ -106,18 +89,12 @@ message EndpointDataVoidMessage {
 
 message EndpointDataMessage {
   option (endpoint_data_type) = ENDPOINT_DATA_TYPE_MESSAGE;
-  ras.messages.v1.EndpointMessageType type = 1 [(ras.encoding.field) = {
+  ras.messages.v1.MessageType type = 1 [(ras.encoding.field) = {
     order: 1,
-    encoder:"byte",
+    encoder: "byte",
   }];
-  oneof data {
-    option (ras.encoding.oneof_field) = {
-      order: 2;
-      type_field: 1;
-    };
-    bytes bytes = 2 [(ras.encoding.field) = { ignore: true, type_field: 1}];
-    google.protobuf.Any value = 3 [(ras.encoding.field) = { ignore: true, type_field: 1}];
-  }
+
+  bytes bytes = 2 [(ras.encoding.field) = { order: 2 }];
 
 }
 

@@ -3,7 +3,7 @@ package ras
 import (
 	"bytes"
 	"fmt"
-	"github.com/v8platform/protos/example/ras/internal/set"
+	"github.com/v8platform/protos/encoding/ras/internal/set"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -125,7 +125,6 @@ func (d decoder) unmarshalMessage(m pref.Message, skipTypeURL bool) error {
 					d.err = fmt.Errorf("error decoding %s, oneof %v is already set", f.fd.FullName(), od.FullName())
 					return false
 				}
-				seenOneofs.Set(idx)
 			}
 
 			// Required or optional fields.
@@ -161,8 +160,22 @@ func (d decoder) unmarshalSingular(f field, m pref.Message, fd pref.FieldDescrip
 	var err error
 	switch fd.Kind() {
 	case pref.MessageKind, pref.GroupKind:
+
+		if f.TypeField != nil {
+			md := fd.Message()
+			fd2 := m.Descriptor().Fields().ByNumber(pref.FieldNumber(f.GetTypeField()))
+
+			val2 := m.Get(fd2)
+			val := findExtensionByFullname(md, string(fd2.Enum().FullName()))
+
+			if int32(val.Enum()) != int32(val2.Enum()) {
+				return nil
+			}
+		}
+
 		val = m.NewField(fd)
 		err = d.unmarshalMessage(val.Message(), false)
+
 	default:
 		val, err = d.unmarshalScalar(f, m, fd)
 	}
@@ -172,6 +185,20 @@ func (d decoder) unmarshalSingular(f field, m pref.Message, fd pref.FieldDescrip
 	}
 	m.Set(fd, val)
 	return nil
+}
+
+func findExtensionByFullname(md pref.Descriptor, fullname string) (val pref.Value) {
+	md.Options().ProtoReflect().Range(func(descriptor pref.FieldDescriptor, value pref.Value) bool {
+		typeFullName := descriptor.Enum().FullName()
+		if string(typeFullName) == fullname {
+
+			val = value
+			return false
+		}
+
+		return true
+	})
+	return
 }
 
 // unmarshalScalar unmarshals to a scalar/enum protoreflect.Value specified by

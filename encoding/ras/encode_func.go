@@ -142,6 +142,14 @@ func encodeUint16(w io.Writer, value interface{}) (int, error) {
 		val = uint16(*tVal)
 	case *uint32:
 		val = uint16(*tVal)
+	case int64:
+		val = uint16(tVal)
+	case uint64:
+		val = uint16(tVal)
+	case *int64:
+		val = uint16(*tVal)
+	case *uint64:
+		val = uint16(*tVal)
 	case *int16:
 		val = uint16(*tVal)
 	case *uint16:

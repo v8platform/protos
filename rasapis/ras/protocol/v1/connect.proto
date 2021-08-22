@@ -20,6 +20,7 @@ option (ras.encoding.options) = {
 
 message NegotiateMessage {
   option (packet_type) = PACKET_TYPE_NEGOTIATE;
+  option (type).packet_type = PACKET_TYPE_NEGOTIATE;
 
   int32 magic = 1 [(ras.encoding.tags) = "ras:\",1\"",
   (ras.encoding.field) = {

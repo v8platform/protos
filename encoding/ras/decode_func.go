@@ -3,7 +3,6 @@ package ras
 import (
 	"encoding/binary"
 	"fmt"
-	"github.com/k0kubun/pp"
 	uuid "github.com/satori/go.uuid"
 
 	pb "google.golang.org/protobuf/types/known/timestamppb"
@@ -74,13 +73,10 @@ func decodeBytes(r io.Reader, into interface{}, opts ...map[string]string) (int,
 			fmt.Sprintf("convert from <%s> unsupporsed", reflect.TypeOf(into))}
 	}
 
-	size := len(data)
-
 	readLength := 0
 	n := 0
 	var err error
 
-	pp.Println("size", size)
 	for readLength < len(data) {
 		n, err = r.Read(data[readLength:])
 		readLength += n

@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/v8platform/protos/example/ras"
+	ras2 "github.com/v8platform/protos/encoding/ras"
 	protocolv1 "github.com/v8platform/protos/gen/ras/protocol/v1"
 	"google.golang.org/protobuf/proto"
 	"io"
@@ -10,7 +10,7 @@ import (
 
 func writePacket(writer io.Writer, packet *protocolv1.Packet) (int, error) {
 
-	packetBytes, err := encode(packet)
+	packetBytes, err := ras2.Marshal(packet)
 
 	if err != nil {
 		return 0, err
@@ -23,7 +23,7 @@ func ReadPacket(reader io.Reader, unmarshalData bool) (*protocolv1.Packet, error
 
 	var packet protocolv1.Packet
 
-	u := ras.UnmarshalOptions{}
+	u := ras2.UnmarshalOptions{}
 
 	err := u.UnmarshalReader(reader, &packet)
 
@@ -44,7 +44,7 @@ func NewPacket(m proto.Message) (*protocolv1.Packet, error) {
 	}
 
 	packetType := proto.GetExtension(md.Options(), protocolv1.E_PacketType).(protocolv1.PacketType)
-	bytes, err := encode(m)
+	bytes, err := ras2.Marshal(m)
 
 	if err != nil {
 		return nil, err
@@ -52,7 +52,7 @@ func NewPacket(m proto.Message) (*protocolv1.Packet, error) {
 	packet := &protocolv1.Packet{
 		Type: packetType,
 		Size: int32(len(bytes)),
-		Data: &protocolv1.Packet_Bytes{Bytes: bytes},
+		Data: bytes,
 	}
 
 	return packet, nil

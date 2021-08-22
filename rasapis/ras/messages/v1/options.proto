@@ -8,5 +8,5 @@ import "ras/messages/v1/types.proto";
 option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
 
 extend google.protobuf.MessageOptions {
-  EndpointMessageType message_type = 475223891;
+  MessageType message_type = 475223891;
 }
