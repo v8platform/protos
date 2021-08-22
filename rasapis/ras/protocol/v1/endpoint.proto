@@ -8,6 +8,7 @@ import "ras/protocol/v1/types.proto";
 import "ras/protocol/v1/packet.proto";
 import "ras/protocol/v1/options.proto";
 import "google/protobuf/any.proto";
+import "google/protobuf/type.proto";
 import "ras/messages/v1/types.proto";
 
 option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
@@ -29,10 +30,10 @@ message EndpointOpen {
 message EndpointOpenAck {
   option (packet_type) = PACKET_TYPE_ENDPOINT_OPEN_ACK;
   string service_id = 1 [(ras.encoding.field).order = 1];
-  string Version = 2 [(ras.encoding.field).order = 2];
-  int32  enpoiont_id = 3 [(ras.encoding.field) = {
+  string version = 2 [(ras.encoding.field).order = 2];
+  int32 endpoint_id = 3 [(ras.encoding.field) = {
     order: 3,
-    encoder: "nullable-size",
+    encoder: "null-size",
   }];
   map<string, Param> params = 4 [(ras.encoding.field).order = 4];
 }
@@ -41,7 +42,7 @@ message EndpointMessage {
   option (packet_type) = PACKET_TYPE_ENDPOINT_MESSAGE;
   int32 endpoint_id = 1 [(ras.encoding.field) = {
     order: 1,
-    encoder: "nullable-size",
+    encoder: "null-size",
   }];
   int32 format = 2 [(ras.encoding.field) = {
     order: 2,
@@ -58,7 +59,7 @@ message EndpointMessageAck {
   option (packet_type) = PACKET_TYPE_ENDPOINT_MESSAGE;
   int32 endpoint_id = 1 [(ras.encoding.field) = {
     order: 1,
-    encoder: "nullable-size",
+    encoder: "null-size",
   }];
   int32 format = 2 [(ras.encoding.field) = {
     order: 2,
@@ -69,19 +70,13 @@ message EndpointMessageAck {
     encoder: "byte",
   }];
   oneof data {
-    option (ras.encoding.oneof_field).order = 4;
-    EndpointDataVoidMessage void_message = 4 [(field_dep) = {
-      type_field: 3;
-      type: ENDPOINT_DATA_TYPE_VOID_MESSAGE;
-    }];
-    EndpointDataMessage message = 5 [(field_dep) = {
-      type_field: 3;
-      type: ENDPOINT_DATA_TYPE_MESSAGE;
-    }];
-    EndpointFailureMessage failure = 6[(field_dep) = {
-      type_field: 3;
-      type: ENDPOINT_DATA_TYPE_EXCEPTION;
-    }];
+    option (ras.encoding.oneof_field) = {
+      order: 4,
+      type_field: 3,
+    };
+    EndpointDataVoidMessage void_message = 4;
+    EndpointDataMessage message = 5;
+    EndpointFailureMessage failure = 6;
   };
 }
 
@@ -115,7 +110,15 @@ message EndpointDataMessage {
     order: 1,
     encoder:"byte",
   }];
-  bytes data = 2 [(ras.encoding.field).order = 2];
+  oneof data {
+    option (ras.encoding.oneof_field) = {
+      order: 2;
+      type_field: 1;
+    };
+    bytes bytes = 2 [(ras.encoding.field) = { ignore: true, type_field: 1}];
+    google.protobuf.Any value = 3 [(ras.encoding.field) = { ignore: true, type_field: 1}];
+  }
+
 }
 
 message EndpointFailureMessage {

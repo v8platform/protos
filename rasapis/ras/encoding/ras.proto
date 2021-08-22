@@ -12,9 +12,6 @@ option go_package = "github.com/v8platform/ras";
 
 extend google.protobuf.MessageOptions {
   EncodingMessageOptions message_options = 475223888;
-  int32 packet_type = 475223889;
-  int32 endpoint_data_type = 475223890;
-  int32 endpoint_message_type = 475223891;
 }
 
 message EncodingMessageOptions {
@@ -55,14 +52,23 @@ extend google.protobuf.OneofOptions {
 
 message EncodingFieldOptions {
   optional string encoder = 1;
-  int32 order = 2;
+  optional int32 order = 2;
   optional int32 version = 3;
   map<string, string> opts = 4;
   bool no_marshal = 5;
   bool no_unmarshal = 6;
+  optional int32 type_field = 7;
+  string type_url = 8;
+  bool ignore = 9;
+  optional int32 size_field = 10;
+
 }
 
 extend google.protobuf.EnumValueOptions {
   // Ссылка на тип связанного сообщения
   string type_url = 475223891;
+}
+
+extend google.protobuf.EnumOptions {
+  int32 offset = 475223891;
 }

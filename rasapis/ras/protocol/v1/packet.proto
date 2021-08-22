@@ -19,20 +19,32 @@ option (ras.encoding.options) = {
 
 // Порядок кодирования/декодирования в формат RAS
 message Packet {
-  PacketType Type = 1 [(ras.encoding.tags) = "ras:\"byte,1\"",
+  PacketType type = 1 [(ras.encoding.tags) = "ras:\"byte,1\"",
     (ras.encoding.field) =  {
       encoder: "byte",
       order: 1,
     }
   ];
-  int32 Length = 2 [(ras.encoding.tags) = "ras:\"size,2\"",
-    (ras.encoding.field) =  {
+  int32 size = 2 [(ras.encoding.tags) = "ras:\"size,2\"",
+    (ras.encoding.field) = {
       encoder: "size",
       order: 2,
-    }];;
-  bytes Data = 3 [(ras.encoding.tags) = "ras:\"bytes,3\"",
-    (ras.encoding.field) =  {
-      encoder: "bytes",
-      order: 3,
     }];
+
+  oneof data {
+    option (ras.encoding.oneof_field) = {
+      order: 3;
+      type_field: 1;
+    };
+    bytes bytes = 3 [(ras.encoding.tags) = "ras:\"bytes,3\"",
+      (ras.encoding.field) = {
+        encoder: "bytes",
+        order: 3,
+        type_field: 1,
+        size_field: 2,
+        opts: [{key: "bytes_size_field", value: "2"}, { key: "read_chunk_size", value: "4096"}]
+      }];
+    google.protobuf.Any value = 4 [(ras.encoding.field) = {type_field: 1, order: 3, no_unmarshal: true}];
+  };
+
 }

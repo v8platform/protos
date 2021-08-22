@@ -1,4 +1,4 @@
-package main
+package ras
 
 import (
 	"encoding/binary"
@@ -31,6 +31,10 @@ func init() {
 	RegisterEncoderType("size", encodeSize)
 	RegisterEncoderType("uuid", encodeUuid)
 	RegisterEncoderType("bytes", encodeBytes)
+}
+func GetEncodeFunc(name string) (TypeEncoderFunc, bool) {
+	fn, ok := encoderFunc[name]
+	return fn, ok
 }
 
 func encodeBytes(r io.Writer, value interface{}) (int, error) {
@@ -363,7 +367,7 @@ func encodeByte(w io.Writer, value interface{}) (int, error) {
 	case *uint32:
 		val = byte(*tVal)
 	default:
-		return 0, &TypeEncoderError{"byte", "TODO"}
+		return 0, &TypeEncoderError{"byte", fmt.Sprintf("unknown type <%v>", tVal)}
 	}
 
 	if val == NULL_BYTE {

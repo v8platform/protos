@@ -1,51 +1,59 @@
 package main
 
-import "time"
-
-const (
-	UTF8_CHARSET   = "UTF-8"
-	SIZEOF_SHORT   = 2
-	SIZEOF_INT     = 4
-	SIZEOF_LONG    = 8
-	NULL_BYTE      = 0x80
-	TRUE_BYTE      = 1
-	FALSE_BYTE     = 0
-	MAX_SHIFT      = 7
-	NULL_SHIFT     = 6
-	BYTE_MASK      = 255
-	NEXT_MASK      = -128
-	NULL_NEXT_MASK = 64
-	LAST_MASK      = 0
-	NULL_LSB_MASK  = 63
-	LSB_MASK       = 127
-	TEMP_CAPACITY  = 256
+import (
+	"fmt"
+	"github.com/v8platform/protos/example/ras"
+	protocolv1 "github.com/v8platform/protos/gen/ras/protocol/v1"
+	"google.golang.org/protobuf/proto"
+	"io"
 )
 
-const AgeDelta = 621355968000000
+func writePacket(writer io.Writer, packet *protocolv1.Packet) (int, error) {
 
-func dateFromTicks(ticks int64) time.Time {
-	if ticks > 0 {
+	packetBytes, err := encode(packet)
 
-		timeT := (ticks - AgeDelta) / 10
-
-		t := time.Unix(0, timeT*int64(time.Millisecond))
-
-		return t
-
+	if err != nil {
+		return 0, err
 	}
-	return time.Time{}
+
+	return writer.Write(packetBytes)
 }
 
-func dateToTicks(date time.Time) (ticks int64) {
+func ReadPacket(reader io.Reader, unmarshalData bool) (*protocolv1.Packet, error) {
 
-	if !date.IsZero() {
+	var packet protocolv1.Packet
 
-		ticks = date.UnixNano() / int64(time.Millisecond)
+	u := ras.UnmarshalOptions{}
 
-		ticks = ticks*10 + AgeDelta
+	err := u.UnmarshalReader(reader, &packet)
 
-		return ticks
+	//pp.Println(packet)
 
+	return &packet, err
+
+}
+
+func NewPacket(m proto.Message) (*protocolv1.Packet, error) {
+
+	md := m.ProtoReflect().Descriptor()
+
+	isPacketMessage := proto.HasExtension(md.Options(), protocolv1.E_PacketType)
+
+	if !isPacketMessage {
+		return nil, fmt.Errorf("this is not packet message: <%s>", proto.MessageName(m))
 	}
-	return 0
+
+	packetType := proto.GetExtension(md.Options(), protocolv1.E_PacketType).(protocolv1.PacketType)
+	bytes, err := encode(m)
+
+	if err != nil {
+		return nil, err
+	}
+	packet := &protocolv1.Packet{
+		Type: packetType,
+		Size: int32(len(bytes)),
+		Data: &protocolv1.Packet_Bytes{Bytes: bytes},
+	}
+
+	return packet, nil
 }
