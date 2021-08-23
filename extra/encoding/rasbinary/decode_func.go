@@ -60,12 +60,12 @@ func DecodeValue(codec string, r io.Reader, into interface{}) (int, error) {
 }
 
 func decodeBytes(r io.Reader, into interface{}, opts ...map[string]string) (int, error) {
-	//chunkSize := 4096
+	// chunkSize := 4096
 
-	//options := map[string]string{}
-	//if len(opts) > 0 {
+	// options := map[string]string{}
+	// if len(opts) > 0 {
 	//	options = opts[0]
-	//}
+	// }
 
 	data, ok := into.([]byte)
 
@@ -73,12 +73,31 @@ func decodeBytes(r io.Reader, into interface{}, opts ...map[string]string) (int,
 		return 0, &TypeDecodeError{"bytes",
 			fmt.Sprintf("convert from <%s> unsupporsed", reflect.TypeOf(into))}
 	}
+	if len(data) == 0 {
+
+		for {
+			// if len(data) == cap(data) {
+			// 	// Add more capacity (let append pick how much).
+			// 	data = append(data, 0)[:len(data)]
+			// }
+			_, err := r.Read(data[len(data):cap(data)])
+			// data = data[:len(data)+n]
+			if err != nil {
+				if err == io.EOF {
+					return 0, nil
+				}
+				return 0, err
+			}
+		}
+
+	}
 
 	readLength := 0
 	n := 0
 	var err error
 
 	for readLength < len(data) {
+
 		n, err = r.Read(data[readLength:])
 		readLength += n
 

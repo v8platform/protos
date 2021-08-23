@@ -23,15 +23,17 @@ option (ras.encoding.options) = {
 message EndpointOpen {
   option (packet_type) = PACKET_TYPE_ENDPOINT_OPEN;
   string service = 1 [(ras.encoding.field).order = 1];
-  string encoding = 2 [(ras.encoding.field).order = 2];
-  string version = 3 [(ras.encoding.field).order = 3];
+  string version = 3 [(ras.encoding.field) = {
+    order: 3,
+    encoder: "string",
+  }];
   map<string, Param> params = 4 [(ras.encoding.field).order = 4];
 }
 
 message EndpointOpenAck {
   option (packet_type) = PACKET_TYPE_ENDPOINT_OPEN_ACK;
-  string service_id = 1 [(ras.encoding.field).order = 1];
-  int32 version = 2 [(ras.encoding.field) = {
+  string service = 1 [(ras.encoding.field).order = 1];
+  string version = 2 [(ras.encoding.field) = {
     order: 2,
     encoder: "string",
   }];
@@ -58,32 +60,57 @@ message EndpointMessage {
   }];
   oneof data {
     EndpointDataVoidMessage void_message = 4 [
-      (ras.encoding.field) = { order: 4, type_field: 3}];
+      (ras.encoding.field) = {order: 4, type_field: 3}];
     EndpointDataMessage message = 5 [
-      (ras.encoding.field) = { order: 4, type_field: 3}];
+      (ras.encoding.field) = {order: 4, type_field: 3}];
     EndpointFailureMessage failure = 6 [
-      (ras.encoding.field) = { order: 4, type_field: 3}];
+      (ras.encoding.field) = {order: 4, type_field: 3}];
   };
 }
 
 message EndpointFailureAck  {
   option (packet_type) = PACKET_TYPE_ENDPOINT_FAILURE;
-  string service_id = 2;
-  string version = 3;
-  int32 endpoint_id = 4;
-  string class_cause = 5;
-  string message = 6;
-  repeated string trace = 7;
-  optional CauseError cause = 8;
+  string service_id = 1 [(ras.encoding.field) = {
+    order: 1,
+  }];
+  string version = 2 [(ras.encoding.field) = {
+    order: 2,
+  }];
+  int32 endpoint_id = 3 [(ras.encoding.field) = {
+    order: 3,
+    encoder: "null-size",
+  }];
+  string class_cause = 4 [(ras.encoding.field) = {
+    order: 4,
+  }];
+  string message = 5 [(ras.encoding.field) = {
+    order: 5,
+  }];
+  repeated string trace = 6 [(ras.encoding.field) = {
+    order: 6,
+  }];
+  optional CauseError cause = 7 [(ras.encoding.field) = {
+    order: 7,
+  }];
 }
 
 message CauseError {
   option (ras.encoding.message_options) = {
     generate_marshaller: false,
   };
-  string service_id = 1;
-  string message = 2;
-  optional CauseError cause = 3;
+  string service_id = 1 [(ras.encoding.field) = {
+    order: 1,
+  }];
+  string message = 2 [(ras.encoding.field) = {
+    order: 2,
+  }];
+  //  int32 size = 3 [(ras.encoding.field) = {
+  //    order: 2,
+  //    encoder: "size",
+  //  }];
+  //  optional CauseError cause = 4 [(ras.encoding.field) = {
+  //    order: 4,
+  //  }];
 }
 
 message EndpointDataVoidMessage {
@@ -97,13 +124,19 @@ message EndpointDataMessage {
     encoder: "byte",
   }];
 
-  bytes bytes = 2 [(ras.encoding.field) = { order: 2 }];
+  bytes bytes = 2 [(ras.encoding.field) = {order: 2}];
 
 }
 
 message EndpointFailureMessage {
   option (endpoint_data_type) = ENDPOINT_DATA_TYPE_EXCEPTION;
-  string service_id = 1;
-  string message = 2;
-  optional CauseError cause = 3;
+  string service_id = 1 [(ras.encoding.field) = {
+    order: 1,
+  }];
+  string message = 2 [(ras.encoding.field) = {
+    order: 2,
+  }];
+  optional CauseError cause = 3 [(ras.encoding.field) = {
+    order: 3,
+  }];
 }

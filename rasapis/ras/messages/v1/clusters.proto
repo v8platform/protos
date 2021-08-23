@@ -22,31 +22,33 @@ message GetClustersRequest {
 
 message GetClustersResponse {
   option (message_type) = GET_CLUSTERS_RESPONSE;
-  repeated v8platform.serialize.v1.ClusterInfo clusters = 1 [(ras.encoding.tags) = "rasbinary:\",1\""];;
+  repeated v8platform.serialize.v1.ClusterInfo clusters = 1 [(ras.encoding.field) = {
+    order: 1,
+  }];;
 }
 
 message GetClusterInfoRequest {
-//  option (ras.encoding.endpoint_message_type) = GET_CLUSTER_INFO_REQUEST;
+  //  option (ras.encoding.endpoint_message_type) = GET_CLUSTER_INFO_REQUEST;
   string cluster_id = 1 [(ras.encoding.tags) = "rasbinary:\"uuid,1\""];
 }
 
 message GetClusterInfoResponse {
-//  option (ras.encoding.endpoint_message_type) = GET_CLUSTER_INFO_RESPONSE;
+  //  option (ras.encoding.endpoint_message_type) = GET_CLUSTER_INFO_RESPONSE;
   v8platform.serialize.v1.ClusterInfo cluster_info = 1 [(ras.encoding.tags) = "rasbinary:\",1\""];;
 }
 
 message RegClusterRequest {
-//  option (ras.encoding.endpoint_message_type) = REG_CLUSTER_REQUEST;
+  //  option (ras.encoding.endpoint_message_type) = REG_CLUSTER_REQUEST;
   v8platform.serialize.v1.ClusterInfo cluster_info = 1 [(ras.encoding.tags) = "rasbinary:\",1\""];;
 }
 
 message RegClusterResponse {
-//  option (ras.encoding.endpoint_message_type) = REG_CLUSTER_RESPONSE;
+  //  option (ras.encoding.endpoint_message_type) = REG_CLUSTER_RESPONSE;
   string cluster_id = 1 [(ras.encoding.tags) = "rasbinary:\"uuid,1\""];
 }
 
 message UnregClusterRequest  {
-//  option (ras.encoding.endpoint_message_type) = UNREG_CLUSTER_REQUEST;
+  //  option (ras.encoding.endpoint_message_type) = UNREG_CLUSTER_REQUEST;
   string cluster_id = 1 [(ras.encoding.tags) = "rasbinary:\"uuid,1\""];
 }
 

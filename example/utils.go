@@ -27,7 +27,7 @@ func ReadPacket(reader io.Reader, unmarshalData bool) (*protocolv1.Packet, error
 
 	err := u.UnmarshalReader(reader, &packet)
 
-	//pp.Println(packet)
+	// pp.Println(packet)
 
 	return &packet, err
 

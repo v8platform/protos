@@ -95,11 +95,12 @@ func (d decoder) unmarshalMessage(m pref.Message, skipTypeURL bool) error {
 
 	fields := getFields(m)
 
+	var dec_err error
+
 	Each(fields, func(f field) bool {
 		fd := f.fd
 
-		if f.GetVersion() > d.opts.ProtocolVersion ||
-			f.GetIgnore() || f.GetNoUnmarshal() {
+		if f.GetVersion() > d.opts.ProtocolVersion {
 			return true
 		}
 
@@ -107,14 +108,14 @@ func (d decoder) unmarshalMessage(m pref.Message, skipTypeURL bool) error {
 
 		case fd.IsList():
 			list := m.Mutable(fd).List()
-			if err := d.unmarshalList(f, list, fd); err != nil {
-				d.err = err
+			if err := d.unmarshalList(f, m, list, fd); err != nil {
+				dec_err = err
 				return false
 			}
 		case fd.IsMap():
 			mmap := m.Mutable(fd).Map()
 			if err := d.unmarshalMap(f, mmap, fd); err != nil {
-				d.err = err
+				dec_err = err
 				return false
 			}
 		default:
@@ -122,21 +123,21 @@ func (d decoder) unmarshalMessage(m pref.Message, skipTypeURL bool) error {
 			if od := fd.ContainingOneof(); od != nil {
 				idx := uint64(od.Index())
 				if seenOneofs.Has(idx) {
-					d.err = fmt.Errorf("error decoding %s, oneof %v is already set", f.fd.FullName(), od.FullName())
+					dec_err = fmt.Errorf("error decoding %s, oneof %v is already set", f.fd.FullName(), od.FullName())
 					return false
 				}
 			}
 
 			// Required or optional fields.
 			if err := d.unmarshalSingular(f, m, fd); err != nil {
-				d.err = err
+				dec_err = err
 				return false
 			}
 		}
 		return true
 	})
 
-	return d.err
+	return dec_err
 }
 
 type Unmarshaler interface {
@@ -296,14 +297,11 @@ func (d decoder) unmarshalScalar(f field, m pref.Message, fd pref.FieldDescripto
 		return pref.ValueOfString(val), err
 
 	case pref.BytesKind:
-		if v, ok := d.unmarshalBytes(f, m, fd); ok {
-			return v, nil
-		}
+
+		return d.unmarshalBytes(f, m, fd)
 
 	case pref.EnumKind:
-		if v, ok := d.unmarshalEnum(f, m, fd); ok {
-			return v, nil
-		}
+		return d.unmarshalEnum(f, m, fd)
 
 	default:
 		panic(fmt.Sprintf("unmarshalScalar: invalid scalar kind %v", kind))
@@ -312,7 +310,7 @@ func (d decoder) unmarshalScalar(f field, m pref.Message, fd pref.FieldDescripto
 	return pref.Value{}, fmt.Errorf("invalid value for <%v> field: %v", kind, f)
 }
 
-func (d decoder) unmarshalEnum(f field, m pref.Message, fd pref.FieldDescriptor) (pref.Value, bool) {
+func (d decoder) unmarshalEnum(f field, m pref.Message, fd pref.FieldDescriptor) (pref.Value, error) {
 
 	var number int32
 	decodeFn, _ := GetDecodeFunc(f.GetEncoder())
@@ -322,11 +320,10 @@ func (d decoder) unmarshalEnum(f field, m pref.Message, fd pref.FieldDescriptor)
 	n, err := decodeFn(d, &number, f.Opts)
 	d.n += n
 	if err != nil {
-		d.err = err
-		return pref.Value{}, false
+		return pref.Value{}, err
 	}
 
-	return pref.ValueOfEnum(pref.EnumNumber(number)), true
+	return pref.ValueOfEnum(pref.EnumNumber(number)), nil
 }
 
 func (d decoder) decodeValue(fn TypeDecoderFunc, into interface{}, opts ...map[string]string) (int, error) {
@@ -335,32 +332,69 @@ func (d decoder) decodeValue(fn TypeDecoderFunc, into interface{}, opts ...map[s
 
 }
 
-func (d decoder) unmarshalBytes(f field, m pref.Message, fd pref.FieldDescriptor) (pref.Value, bool) {
+func (d decoder) unmarshalBytes(f field, m pref.Message, fd pref.FieldDescriptor) (pref.Value, error) {
 
-	var b []byte
+	b := make([]byte, 0, 512)
+
 	decodeFn, _ := GetDecodeFunc(f.GetEncoder())
-	if decodeFn == nil {
-		decodeFn = decodeBytes
-	}
+
 	if f.SizeField != nil {
 		size := getFieldValueOfNumber(m, f.GetSizeField()).(int32)
 		b = make([]byte, size)
 	}
 
+	if decodeFn == nil && f.SizeField != nil {
+		decodeFn = decodeBytes
+	}
+
+	if decodeFn == nil {
+		all, err := io.ReadAll(d)
+		if err != nil {
+			return pref.Value{}, err
+		}
+		return pref.ValueOfBytes(all), nil
+	}
+
 	n, err := decodeFn(d, b, f.Opts)
 	d.n += n
 	if err != nil {
-		d.err = err
-		return pref.Value{}, false
+		return pref.Value{}, err
 	}
 
-	return pref.ValueOfBytes(b), true
+	return pref.ValueOfBytes(b), nil
 }
 
 func (d decoder) unmarshalMap(f field, mmap pref.Map, fd pref.FieldDescriptor) error {
 	return nil
 }
 
-func (d decoder) unmarshalList(f field, list pref.List, fd pref.FieldDescriptor) error {
+func (d decoder) unmarshalList(f field, m pref.Message, list pref.List, fd pref.FieldDescriptor) error {
+
+	var size int
+	_, err := decodeSize(d, &size)
+	if err != nil {
+		return err
+	}
+	switch fd.Kind() {
+	case pref.MessageKind, pref.GroupKind:
+		for i := 0; i < size; i++ {
+
+			val := list.NewElement()
+			if err := d.unmarshalMessage(val.Message(), false); err != nil {
+				return err
+			}
+			list.Append(val)
+		}
+	default:
+		for i := 0; i < size; i++ {
+
+			val, err := d.unmarshalScalar(f, m, fd)
+			if err != nil {
+				return err
+			}
+			list.Append(val)
+		}
+	}
+
 	return nil
 }

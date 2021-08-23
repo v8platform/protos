@@ -23,10 +23,10 @@ message NegotiateMessage {
   option (type).packet_type = PACKET_TYPE_NEGOTIATE;
 
   int32 magic = 1 [(ras.encoding.tags) = "rasbinary:\",1\"",
-  (ras.encoding.field) = {
-    order: 1,
-    encoder: "int32",
-  }];      // Use only one value `475223888`
+    (ras.encoding.field) = {
+      order: 1,
+      encoder: "int32",
+    }];      // Use only one value `475223888`
   int32 protocol = 2 [(ras.encoding.tags) = "rasbinary:\"short,2\"",
     (ras.encoding.field) = {
       order: 2,
@@ -34,25 +34,28 @@ message NegotiateMessage {
     }];
   int32 version = 3 [(ras.encoding.tags) = "rasbinary:\"short,3\"",
     (ras.encoding.field) = {
-    order: 3,
-    encoder: "short",
-  }];
+      order: 3,
+      encoder: "short",
+    }];
 }
 
 message ConnectMessage {
   option (packet_type) = PACKET_TYPE_CONNECT;
+
+  // Известные параметры
+  // "connect.timeout" = 2000
   map<string, Param> params = 2 [(ras.encoding.tags) = "rasbinary:\",1\"",
     (ras.encoding.field).order = 1
   ];
 }
 
 message DisconnectMessage {
-//  option (ras.encoding.packet_type) = PACKET_TYPE_DISCONNECT;
+  option (packet_type) = PACKET_TYPE_DISCONNECT;
   map<string, Param> params = 2 [(ras.encoding.tags) = "rasbinary:\",1\"",
     (ras.encoding.field).order = 1
   ];
 }
 
 message ConnectMessageAck {
-//  option (ras.encoding.packet_type) = PACKET_TYPE_CONNECT_ACK;
+  option (packet_type) = PACKET_TYPE_CONNECT_ACK;
 }

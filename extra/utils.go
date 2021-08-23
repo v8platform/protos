@@ -1,4 +1,4 @@
-package types
+package extra
 
 import (
 	"fmt"
@@ -8,78 +8,8 @@ import (
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
+	"io"
 )
-
-type Endpoint struct {
-	*protocolv1.EndpointOpenAck
-}
-
-func (e *Endpoint) Message(m proto.Message) (*protocolv1.EndpointMessage, error) {
-
-	switch t := m.(type) {
-
-	case *protocolv1.Packet:
-		switch t.Type {
-		case protocolv1.PacketType_PACKET_TYPE_ENDPOINT_MESSAGE:
-			var data protocolv1.EndpointMessage
-			err := UnpackPacketDataTo(t, &data)
-			if err != nil {
-				return nil, err
-			}
-			return &data, nil
-		case protocolv1.PacketType_PACKET_TYPE_ENDPOINT_FAILURE:
-
-			var failure protocolv1.EndpointFailureAck
-			err := UnpackPacketDataTo(t, &failure)
-			if err != nil {
-				return nil, err
-			}
-			return nil, fmt.Errorf(failure.String())
-		}
-	}
-
-	isTypeMessage := proto.HasExtension(m.ProtoReflect().Descriptor().Options(), messagesv1.E_MessageType)
-
-	if !isTypeMessage {
-
-		messageType := proto.GetExtension(m.ProtoReflect().Descriptor().Options(), messagesv1.E_MessageType).(messagesv1.MessageType)
-
-		enc := rasbinary.MarshalOptions{ProtocolVersion: e.Version}
-		bytesData, err := enc.Marshal(m)
-		if err != nil {
-			return nil, err
-		}
-		return &protocolv1.EndpointMessage{
-			EndpointId: e.EndpointId,
-			Format:     255,
-			Type:       protocolv1.EndpointDataType_ENDPOINT_DATA_TYPE_MESSAGE,
-			Data: &protocolv1.EndpointMessage_Message{Message: &protocolv1.EndpointDataMessage{
-				Type:  messageType,
-				Bytes: bytesData,
-			}},
-		}, nil
-	}
-
-	return nil, fmt.Errorf("no type message")
-}
-
-func NewEndpointFromPacket(p *protocolv1.Packet) (*Endpoint, error) {
-
-	var openAck protocolv1.EndpointOpenAck
-
-	err := UnpackPacketDataTo(p, &openAck)
-	if err != nil {
-		return nil, err
-	}
-	return NewEndpoint(&openAck)
-}
-
-func NewEndpoint(p *protocolv1.EndpointOpenAck) (*Endpoint, error) {
-
-	return &Endpoint{
-		p,
-	}, nil
-}
 
 func UnpackPacketDataNew(p *protocolv1.Packet) (proto.Message, error) {
 
@@ -181,16 +111,26 @@ func UnpackPacketDataTo(p *protocolv1.Packet, m proto.Message) error {
 
 	packetType := proto.GetExtension(md.Options(), protocolv1.E_PacketType).(protocolv1.PacketType)
 
-	if p.Type != packetType {
+	switch p.Type {
+	case packetType:
+		err := rasbinary.Unmarshal(p.Data, m)
+		if err != nil {
+			return err
+		}
+	case protocolv1.PacketType_PACKET_TYPE_ENDPOINT_FAILURE:
+
+		var failure protocolv1.EndpointFailureAck
+		err := rasbinary.Unmarshal(p.Data, &failure)
+		if err != nil {
+			return err
+		}
+		return fmt.Errorf("endpoint error <%s>", &failure)
+	default:
 		return fmt.Errorf("this is not packet message: <%s>", proto.MessageName(m))
 	}
 
-	err := rasbinary.Unmarshal(p.Data, m)
-	if err != nil {
-		return err
-	}
-
 	return nil
+
 }
 
 func NewPacket(m proto.Message) (*protocolv1.Packet, error) {
@@ -216,4 +156,52 @@ func NewPacket(m proto.Message) (*protocolv1.Packet, error) {
 	}
 
 	return packet, nil
+}
+
+func WritePacketMessage(writer io.Writer, m proto.Message) (int, error) {
+
+	p, err := NewPacket(m)
+
+	if err != nil {
+		return 0, err
+	}
+	return WritePacket(writer, p)
+}
+
+func WritePacket(writer io.Writer, p *protocolv1.Packet) (int, error) {
+
+	b, err := rasbinary.Marshal(p)
+	if err != nil {
+		return 0, err
+	}
+	return writer.Write(b)
+}
+
+func ReadPacket(reader io.Reader) (*protocolv1.Packet, error) {
+
+	var packet protocolv1.Packet
+
+	u := rasbinary.UnmarshalOptions{}
+
+	err := u.UnmarshalReader(reader, &packet)
+	if err != nil {
+		return nil, err
+	}
+
+	return &packet, nil
+}
+
+func ReadPacketMessage(reader io.Reader, m proto.Message) error {
+
+	packet, err := ReadPacket(reader)
+	if err != nil {
+		return err
+	}
+
+	err = UnpackPacketDataTo(packet, m)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

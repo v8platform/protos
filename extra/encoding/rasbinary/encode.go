@@ -123,9 +123,19 @@ func (e encoder) marshalMessage(m pref.Message, typeURL string) error {
 			return true
 		}
 
-		switch fd.Kind() {
+		switch {
+		case fd.IsList():
+			if err = e.marshalList(f, v.List(), fd); err != nil {
+				return false
+			}
 
-		case pref.MessageKind, pref.GroupKind:
+		case fd.IsMap():
+
+			if err = e.marshalMap(v.Map(), fd); err != nil {
+				return false
+			}
+
+		case fd.Kind() == pref.MessageKind, fd.Kind() == pref.GroupKind:
 
 			if f.TypeField != nil {
 				md := fd.Message()
@@ -143,7 +153,7 @@ func (e encoder) marshalMessage(m pref.Message, typeURL string) error {
 				return false
 			}
 		default:
-			if err = e.marshalValue(f, v, fd); err != nil {
+			if err = e.marshalSingular(f, v, fd); err != nil {
 				return false
 			}
 		}
@@ -153,17 +163,17 @@ func (e encoder) marshalMessage(m pref.Message, typeURL string) error {
 	return err
 }
 
-// marshalValue marshals the given protoreflect.Value.
-func (e encoder) marshalValue(f field, val pref.Value, fd pref.FieldDescriptor) error {
-	switch {
-	case fd.IsList():
-		return e.marshalList(f, val.List(), fd)
-	case fd.IsMap():
-		return e.marshalMap(val.Map(), fd)
-	default:
-		return e.marshalSingular(f, val, fd)
-	}
-}
+// // marshalValue marshals the given protoreflect.Value.
+// func (e encoder) marshalValue(f field, val pref.Value, fd pref.FieldDescriptor) error {
+// 	switch {
+// 	case fd.IsList():
+// 		return e.marshalList(f, val.List(), fd)
+// 	case fd.IsMap():
+// 		return e.marshalMap(val.Map(), fd)
+// 	default:
+// 		return e.marshalSingular(f, val, fd)
+// 	}
+// }
 
 // marshalSingular marshals the given non-repeated field value. This includes
 // all scalar types, enums, messages, and groups.
@@ -274,6 +284,10 @@ func (e encoder) marshalSingular(f field, val pref.Value, fd pref.FieldDescripto
 // marshalList marshals the given protoreflect.List.
 func (e encoder) marshalList(f field, list pref.List, fd pref.FieldDescriptor) error {
 
+	_, err := encodeSize(e, list.Len())
+	if err != nil {
+		return err
+	}
 	for i := 0; i < list.Len(); i++ {
 		item := list.Get(i)
 		if err := e.marshalSingular(f, item, fd); err != nil {
@@ -286,20 +300,27 @@ func (e encoder) marshalList(f field, list pref.List, fd pref.FieldDescriptor) e
 // marshalMap marshals given protoreflect.Map.
 func (e encoder) marshalMap(mmap pref.Map, fd pref.FieldDescriptor) error {
 
-	panic("TODO marshalMap")
+	_, err := encodeSize(e, mmap.Len())
+	if err != nil {
+		return err
+	}
 
-	//e.StartObject()
-	//defer e.EndObject()
+	// panic("TODO marshalMap")
+
+	// e.StartObject()
+	// defer e.EndObject()
 	//
-	//var err error
-	//order.RangeEntries(mmap, order.GenericKeyOrder, func(k pref.MapKey, v pref.Value) bool {
-	//	if err = e.WriteName(k.String()); err != nil {
-	//		return false
-	//	}
-	//	if err = e.marshalSingular(v, fd.MapValue()); err != nil {
-	//		return false
-	//	}
-	//	return true
-	//})
-	//return err
+	// var err error
+	// order.RangeEntries(mmap, order.GenericKeyOrder, func(k pref.MapKey, v pref.Value) bool {
+	// 	if err = e.WriteName(k.String()); err != nil {
+	// 		return false
+	// 	}
+	// 	if err = e.marshalSingular(v, fd.MapValue()); err != nil {
+	// 		return false
+	// 	}
+	// 	return true
+	// })
+	// return err
+
+	return nil
 }
