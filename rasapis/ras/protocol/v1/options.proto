@@ -4,21 +4,10 @@ package ras.protocol.v1;
 
 import "google/protobuf/descriptor.proto";
 import "ras/protocol/v1/types.proto";
-//import "ras/protocol/v1/param.proto";
-//import "ras/protocol/v1/types.proto";
-//import "ras/messages/v1/types.proto";
 
 option go_package = "github.com/v8platform/protos/gen/rasbinary/protocol/v1";
 
 extend google.protobuf.MessageOptions {
   PacketType packet_type = 475223889;
   EndpointDataType endpoint_data_type = 475223890;
-  Type type = 475223893;
-}
-
-message Type {
-  oneof kind {
-    PacketType packet_type = 1;
-    EndpointDataType endpoint_data_type = 2;
-  }
 }

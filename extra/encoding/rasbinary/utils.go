@@ -1,6 +1,9 @@
 package rasbinary
 
 import (
+	messagesv1 "github.com/v8platform/protos/gen/ras/messages/v1"
+	protocolv1 "github.com/v8platform/protos/gen/ras/protocol/v1"
+	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"time"
 )
@@ -56,4 +59,37 @@ func dateToTicks(date time.Time) (ticks int64) {
 func getFieldValueOfNumber(m pref.Message, number int32) interface{} {
 	fd := m.Descriptor().Fields().ByNumber(pref.FieldNumber(number))
 	return m.Get(fd).Interface()
+}
+
+func GetMessageType(m proto.Message) (messagesv1.MessageType, bool) {
+
+	val, ok := getExtension(m, messagesv1.E_MessageType)
+	return val.(messagesv1.MessageType), ok
+
+}
+
+func GetPacketType(m proto.Message) (protocolv1.PacketType, bool) {
+
+	val, ok := getExtension(m, protocolv1.E_PacketType)
+	return val.(protocolv1.PacketType), ok
+
+}
+
+func GetEndpointMessageType(m proto.Message) (protocolv1.PacketType, bool) {
+
+	val, ok := getExtension(m, protocolv1.E_EndpointDataType)
+	return val.(protocolv1.PacketType), ok
+
+}
+
+func getExtension(m proto.Message, ext pref.ExtensionType) (interface{}, bool) {
+	opts := m.ProtoReflect().Descriptor().Options()
+
+	if !proto.HasExtension(opts, ext) {
+		return nil, false
+	}
+
+	val := proto.GetExtension(opts, ext)
+
+	return val, true
 }
