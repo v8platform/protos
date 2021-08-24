@@ -154,25 +154,9 @@ func (e encoder) marshalMessage(m pref.Message, mopts *extpb.EncodingFieldOption
 	return err
 }
 
-// // marshalValue marshals the given protoreflect.Value.
-// func (e encoder) marshalValue(f field, val pref.Value, fd pref.FieldDescriptor) error {
-// 	switch {
-// 	case fd.IsList():
-// 		return e.marshalList(f, val.List(), fd)
-// 	case fd.IsMap():
-// 		return e.marshalMap(val.Map(), fd)
-// 	default:
-// 		return e.marshalSingular(f, val, fd)
-// 	}
-// }
-
 // marshalSingular marshals the given non-repeated field value. This includes
 // all scalar types, enums, messages, and groups.
 func (e encoder) marshalSingular(val pref.Value, fd pref.FieldDescriptor, opts *extpb.EncodingFieldOptions) error {
-
-	// if !val.IsValid() {
-	// 	return nil
-	// }
 
 	encodeFunc, _ := GetEncodeFunc(opts.GetEncoder())
 
