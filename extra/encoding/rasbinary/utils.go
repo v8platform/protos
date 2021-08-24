@@ -1,6 +1,9 @@
 package rasbinary
 
 import (
+	"fmt"
+	"github.com/v8platform/protos/gen/ras/encoding"
+	extpb "github.com/v8platform/protos/gen/ras/encoding"
 	messagesv1 "github.com/v8platform/protos/gen/ras/messages/v1"
 	protocolv1 "github.com/v8platform/protos/gen/ras/protocol/v1"
 	"google.golang.org/protobuf/proto"
@@ -63,27 +66,40 @@ func getFieldValueOfNumber(m pref.Message, number int32) interface{} {
 
 func GetMessageType(m proto.Message) (messagesv1.MessageType, bool) {
 
-	val, ok := getExtension(m, messagesv1.E_MessageType)
-	return val.(messagesv1.MessageType), ok
-
+	if val, ok := getExtension(m.ProtoReflect().Descriptor().Options(), messagesv1.E_MessageType); ok {
+		return val.(messagesv1.MessageType), true
+	}
+	return 0, false
 }
 
 func GetPacketType(m proto.Message) (protocolv1.PacketType, bool) {
 
-	val, ok := getExtension(m, protocolv1.E_PacketType)
-	return val.(protocolv1.PacketType), ok
+	if val, ok := getExtension(m.ProtoReflect().Descriptor().Options(), protocolv1.E_PacketType); ok {
+		return val.(protocolv1.PacketType), true
+	}
+	return 0, false
 
 }
 
-func GetEndpointMessageType(m proto.Message) (protocolv1.PacketType, bool) {
+func GetEncodingFieldOptions(fd pref.FieldDescriptor) (*extpb.EncodingFieldOptions, bool) {
 
-	val, ok := getExtension(m, protocolv1.E_EndpointDataType)
-	return val.(protocolv1.PacketType), ok
+	if val, ok := getExtension(fd.Options(), encoding.E_Field); ok {
+		return val.(*extpb.EncodingFieldOptions), true
+	}
+	return nil, false
 
 }
 
-func getExtension(m proto.Message, ext pref.ExtensionType) (interface{}, bool) {
-	opts := m.ProtoReflect().Descriptor().Options()
+func GetEndpointDataType(m proto.Message) (protocolv1.EndpointDataType, bool) {
+
+	if val, ok := getExtension(m.ProtoReflect().Descriptor().Options(), protocolv1.E_EndpointDataType); ok {
+		return val.(protocolv1.EndpointDataType), true
+	}
+	return 0, false
+
+}
+
+func getExtension(opts pref.ProtoMessage, ext pref.ExtensionType) (interface{}, bool) {
 
 	if !proto.HasExtension(opts, ext) {
 		return nil, false
@@ -92,4 +108,86 @@ func getExtension(m proto.Message, ext pref.ExtensionType) (interface{}, bool) {
 	val := proto.GetExtension(opts, ext)
 
 	return val, true
+}
+
+type unmarshalFunc func(d decoder, message pref.Message, opts *extpb.EncodingFieldOptions) error
+
+func unmarshalTimestamp(d decoder, message pref.Message, opts *extpb.EncodingFieldOptions) error {
+	var decodeFn TypeDecoderFunc
+	var err error
+	if opts != nil {
+		decodeFn, err = GetDecodeFunc(opts.GetEncoder())
+		if err != nil {
+			return err
+		}
+	}
+	if decodeFn == nil {
+		decodeFn = decodeTime
+	}
+
+	var val time.Time
+
+	_, err = decodeFn(d, &val, opts.Opts)
+	if err != nil {
+		return err
+	}
+
+	secs := val.Unix()
+	if secs < minTimestampSeconds || secs > maxTimestampSeconds {
+		return fmt.Errorf("%v value out of range: %v", Timestamp_message_fullname, val)
+	}
+
+	fds := message.Descriptor().Fields()
+	fdSeconds := fds.ByNumber(pref.FieldNumber(1))
+	fdNanos := fds.ByNumber(pref.FieldNumber(2))
+
+	message.Set(fdSeconds, pref.ValueOfInt64(secs))
+	message.Set(fdNanos, pref.ValueOfInt32(int32(val.Nanosecond())))
+
+	return nil
+}
+
+// Names for google.protobuf.Timestamp.
+const (
+	Timestamp_message_name     pref.Name     = "Timestamp"
+	Timestamp_message_fullname pref.FullName = "google.protobuf.Timestamp"
+)
+
+const (
+	maxTimestampSeconds = 253402300799
+	minTimestampSeconds = -62135596800
+)
+
+// wellKnownTypeUnmarshaler returns a unmarshal function if the message type
+// has specialized serialization behavior. It returns nil otherwise.
+func wellKnownTypeUnmarshaler(name pref.FullName) unmarshalFunc {
+	switch name {
+	// case genid.Any_message_name:
+	// 	return decoder.unmarshalAny
+	case Timestamp_message_fullname:
+		return unmarshalTimestamp
+		// 	case genid.Duration_message_name:
+		// 		return decoder.unmarshalDuration
+		// 	case genid.BoolValue_message_name,
+		// 		genid.Int32Value_message_name,
+		// 		genid.Int64Value_message_name,
+		// 		genid.UInt32Value_message_name,
+		// 		genid.UInt64Value_message_name,
+		// 		genid.FloatValue_message_name,
+		// 		genid.DoubleValue_message_name,
+		// 		genid.StringValue_message_name,
+		// 		genid.BytesValue_message_name:
+		// 		return decoder.unmarshalWrapperType
+		// 	case genid.Struct_message_name:
+		// 		return decoder.unmarshalStruct
+		// 	case genid.ListValue_message_name:
+		// 		return decoder.unmarshalListValue
+		// 	case genid.Value_message_name:
+		// 		return decoder.unmarshalKnownValue
+		// 	case genid.FieldMask_message_name:
+		// 		return decoder.unmarshalFieldMask
+		// 	case genid.Empty_message_name:
+		// 		return decoder.unmarshalEmpty
+	}
+	return nil
 }

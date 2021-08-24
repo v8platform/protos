@@ -44,9 +44,13 @@ func RegisterDecoderType(name string, dec TypeDecoderFunc) {
 	}
 }
 
-func GetDecodeFunc(name string) (TypeDecoderFunc, bool) {
+func GetDecodeFunc(name string) (TypeDecoderFunc, error) {
 	fn, ok := decoderFunc[name]
-	return fn, ok
+
+	if ok {
+		return fn, nil
+	}
+	return nil, &TypeDecodeError{name, "unknown decoder"}
 }
 
 func DecodeValue(codec string, r io.Reader, into interface{}) (int, error) {
@@ -632,7 +636,7 @@ func decodeSize(r io.Reader, into interface{}, opts ...map[string]string) (int, 
 }
 
 type TypeDecodeError struct {
-	Mame string
+	Name string
 	Msg  string
 }
 
@@ -644,5 +648,5 @@ func (e *TypeDecodeError) Error() string {
 	// if e.Type.Kind() != reflect.Ptr {
 	// 	return "rasbinary: Decode(non-pointer " + e.Type.String() + ")"
 	// }
-	return "rasbinary: (decoderFunc " + e.Mame + ") " + e.Msg + ""
+	return "rasbinary: (decoderFunc " + e.Name + ") " + e.Msg + ""
 }

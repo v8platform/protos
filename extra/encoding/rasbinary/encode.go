@@ -3,6 +3,7 @@ package rasbinary
 import (
 	"bytes"
 	"fmt"
+	extpb "github.com/v8platform/protos/gen/ras/encoding"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -55,7 +56,7 @@ func (o MarshalOptions) marshal(m proto.Message) ([]byte, error) {
 	buf := &bytes.Buffer{}
 
 	enc := encoder{buf, o}
-	if err := enc.marshalMessage(m.ProtoReflect(), ""); err != nil {
+	if err := enc.marshalMessage(m.ProtoReflect(), nil); err != nil {
 		return nil, err
 	}
 	return buf.Bytes(), proto.CheckInitialized(m)
@@ -103,43 +104,33 @@ func hasMarshaller(m pref.Message) Marshaller {
 // marshalMessage marshals the fields in the given protoreflect.Message.
 // If the typeURL is non-empty, then a synthetic "@type" field is injected
 // containing the URL as the value.
-func (e encoder) marshalMessage(m pref.Message, typeURL string) error {
+func (e encoder) marshalMessage(m pref.Message, mopts *extpb.EncodingFieldOptions) error {
 
 	if marshaller := hasMarshaller(m); marshaller != nil {
 		_, err := marshaller.MarshalRAS(e, e.opts.ProtocolVersion)
 		return err
 	}
 
-	fields := getFields(m)
-
 	var err error
-	Each(fields, func(f field) bool {
-
-		fd := f.fd
-		v := f.value
-
-		if f.GetVersion() > e.opts.ProtocolVersion ||
-			f.GetIgnore() || f.GetNoMarshal() {
-			return true
-		}
+	RangeFields(m, e.opts.ProtocolVersion, func(fd pref.FieldDescriptor, value pref.Value, opts *extpb.EncodingFieldOptions) bool {
 
 		switch {
 		case fd.IsList():
-			if err = e.marshalList(f, v.List(), fd); err != nil {
+			if err = e.marshalList(value.List(), fd, opts); err != nil {
 				return false
 			}
 
 		case fd.IsMap():
 
-			if err = e.marshalMap(v.Map(), fd); err != nil {
+			if err = e.marshalMap(value.Map(), fd, opts); err != nil {
 				return false
 			}
 
 		case fd.Kind() == pref.MessageKind, fd.Kind() == pref.GroupKind:
 
-			if f.TypeField != nil {
+			if opts.TypeField != nil {
 				md := fd.Message()
-				fd2 := m.Descriptor().Fields().ByNumber(pref.FieldNumber(f.GetTypeField()))
+				fd2 := m.Descriptor().Fields().ByNumber(pref.FieldNumber(opts.GetTypeField()))
 
 				val2 := m.Get(fd2)
 				val := findExtensionByFullname(md, string(fd2.Enum().FullName()))
@@ -149,11 +140,11 @@ func (e encoder) marshalMessage(m pref.Message, typeURL string) error {
 				}
 			}
 
-			if err = e.marshalMessage(v.Message(), ""); err != nil {
+			if err = e.marshalMessage(value.Message(), opts); err != nil {
 				return false
 			}
 		default:
-			if err = e.marshalSingular(f, v, fd); err != nil {
+			if err = e.marshalSingular(value, fd, opts); err != nil {
 				return false
 			}
 		}
@@ -177,13 +168,13 @@ func (e encoder) marshalMessage(m pref.Message, typeURL string) error {
 
 // marshalSingular marshals the given non-repeated field value. This includes
 // all scalar types, enums, messages, and groups.
-func (e encoder) marshalSingular(f field, val pref.Value, fd pref.FieldDescriptor) error {
+func (e encoder) marshalSingular(val pref.Value, fd pref.FieldDescriptor, opts *extpb.EncodingFieldOptions) error {
 
-	if !val.IsValid() {
-		return nil
-	}
+	// if !val.IsValid() {
+	// 	return nil
+	// }
 
-	encodeFunc, _ := GetEncodeFunc(f.GetEncoder())
+	encodeFunc, _ := GetEncodeFunc(opts.GetEncoder())
 
 	switch kind := fd.Kind(); kind {
 	case pref.BoolKind:
@@ -282,7 +273,7 @@ func (e encoder) marshalSingular(f field, val pref.Value, fd pref.FieldDescripto
 }
 
 // marshalList marshals the given protoreflect.List.
-func (e encoder) marshalList(f field, list pref.List, fd pref.FieldDescriptor) error {
+func (e encoder) marshalList(list pref.List, fd pref.FieldDescriptor, opts *extpb.EncodingFieldOptions) error {
 
 	_, err := encodeSize(e, list.Len())
 	if err != nil {
@@ -290,7 +281,7 @@ func (e encoder) marshalList(f field, list pref.List, fd pref.FieldDescriptor) e
 	}
 	for i := 0; i < list.Len(); i++ {
 		item := list.Get(i)
-		if err := e.marshalSingular(f, item, fd); err != nil {
+		if err := e.marshalSingular(item, fd, opts); err != nil {
 			return err
 		}
 	}
@@ -298,7 +289,7 @@ func (e encoder) marshalList(f field, list pref.List, fd pref.FieldDescriptor) e
 }
 
 // marshalMap marshals given protoreflect.Map.
-func (e encoder) marshalMap(mmap pref.Map, fd pref.FieldDescriptor) error {
+func (e encoder) marshalMap(mmap pref.Map, fd pref.FieldDescriptor, opts *extpb.EncodingFieldOptions) error {
 
 	_, err := encodeSize(e, mmap.Len())
 	if err != nil {

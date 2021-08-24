@@ -89,7 +89,7 @@ func UnpackEndpointMessageNew(m *protocolv1.EndpointMessage, version int32) (pro
 func UnpackMessageDataTo(p *protocolv1.EndpointDataMessage, m proto.Message, v int32) error {
 
 	// TODO Проверка на соответсвие типов
-	enc := rasbinary.UnmarshalOptions{ProtocolVersion: v}
+	enc := rasbinary.UnmarshalOptions{ServiceVersion: v}
 	err := enc.Unmarshal(p.Bytes, m)
 	if err != nil {
 		return err
@@ -101,15 +101,11 @@ func UnpackMessageDataTo(p *protocolv1.EndpointDataMessage, m proto.Message, v i
 
 func UnpackPacketDataTo(p *protocolv1.Packet, m proto.Message) error {
 
-	md := m.ProtoReflect().Descriptor()
+	packetType, ok := rasbinary.GetPacketType(m)
 
-	isPacketMessage := proto.HasExtension(md.Options(), protocolv1.E_PacketType)
-
-	if !isPacketMessage {
+	if !ok {
 		return fmt.Errorf("this is not packet message: <%s>", proto.MessageName(m))
 	}
-
-	packetType := proto.GetExtension(md.Options(), protocolv1.E_PacketType).(protocolv1.PacketType)
 
 	switch p.Type {
 	case packetType:
@@ -135,15 +131,12 @@ func UnpackPacketDataTo(p *protocolv1.Packet, m proto.Message) error {
 
 func NewPacket(m proto.Message) (*protocolv1.Packet, error) {
 
-	md := m.ProtoReflect().Descriptor()
+	packetType, ok := rasbinary.GetPacketType(m)
 
-	isPacketMessage := proto.HasExtension(md.Options(), protocolv1.E_PacketType)
-
-	if !isPacketMessage {
+	if !ok {
 		return nil, fmt.Errorf("this is not packet message: <%s>", proto.MessageName(m))
 	}
 
-	packetType := proto.GetExtension(md.Options(), protocolv1.E_PacketType).(protocolv1.PacketType)
 	bytes, err := rasbinary.Marshal(m)
 
 	if err != nil {
@@ -181,9 +174,7 @@ func ReadPacket(reader io.Reader) (*protocolv1.Packet, error) {
 
 	var packet protocolv1.Packet
 
-	u := rasbinary.UnmarshalOptions{}
-
-	err := u.UnmarshalReader(reader, &packet)
+	err := rasbinary.UnmarshalReader(reader, &packet)
 	if err != nil {
 		return nil, err
 	}

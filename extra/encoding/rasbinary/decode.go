@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"github.com/v8platform/protos/extra/encoding/rasbinary/internal/set"
+	extpb "github.com/v8platform/protos/gen/ras/encoding"
 	"google.golang.org/protobuf/proto"
 	pref "google.golang.org/protobuf/reflect/protoreflect"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -16,11 +17,17 @@ func Unmarshal(b []byte, m proto.Message) error {
 	return UnmarshalOptions{}.Unmarshal(b, m)
 }
 
+// Unmarshal reads the given []byte into the given proto.Message.
+// The provided message must be mutable (e.g., a non-nil pointer to a message).
+func UnmarshalReader(r io.Reader, m proto.Message) error {
+	return UnmarshalOptions{}.UnmarshalReader(r, m)
+}
+
 // UnmarshalOptions is a configurable RAS format parser.
 type UnmarshalOptions struct {
 
-	// ProtocolVersion uses to decode field.
-	ProtocolVersion int32
+	// ServiceVersion uses to decode field.
+	ServiceVersion int32
 
 	// Resolver is used for looking up types when unmarshaling
 	// google.protobuf.Any messages or extension fields.
@@ -67,7 +74,7 @@ func (o UnmarshalOptions) unmarshalReader(r io.Reader, m proto.Message) error {
 	}
 
 	dec := decoder{Reader: r, opts: o}
-	if err := dec.unmarshalMessage(m.ProtoReflect(), false); err != nil {
+	if err := dec.unmarshalMessage(m.ProtoReflect(), nil); err != nil {
 		return err
 	}
 
@@ -82,40 +89,32 @@ type decoder struct {
 }
 
 // unmarshalMessage unmarshals a message into the given protoreflect.Message.
-func (d decoder) unmarshalMessage(m pref.Message, skipTypeURL bool) error {
+func (d decoder) unmarshalMessage(m pref.Message, opts *extpb.EncodingFieldOptions) error {
+
+	if unmarshal := wellKnownTypeUnmarshaler(m.Descriptor().FullName()); unmarshal != nil {
+		return unmarshal(d, m, opts)
+	}
 
 	if unmarshal := hasUnmarshaler(m); unmarshal != nil {
-
-		n, err := unmarshal.UnmarshalRAS(d, d.opts.ProtocolVersion)
-		d.n += n
+		_, err := unmarshal.UnmarshalRAS(d, d.opts.ServiceVersion)
 		return err
 	}
 
 	var seenOneofs set.Ints
+	var err error
 
-	fields := getFields(m)
-
-	var dec_err error
-
-	Each(fields, func(f field) bool {
-		fd := f.fd
-
-		if f.GetVersion() > d.opts.ProtocolVersion {
-			return true
-		}
+	RangeFields(m, d.opts.ServiceVersion, func(fd pref.FieldDescriptor, value pref.Value, opts *extpb.EncodingFieldOptions) bool {
 
 		switch {
 
 		case fd.IsList():
 			list := m.Mutable(fd).List()
-			if err := d.unmarshalList(f, m, list, fd); err != nil {
-				dec_err = err
+			if err = d.unmarshalList(m, list, fd, opts); err != nil {
 				return false
 			}
 		case fd.IsMap():
 			mmap := m.Mutable(fd).Map()
-			if err := d.unmarshalMap(f, mmap, fd); err != nil {
-				dec_err = err
+			if err = d.unmarshalMap(m, mmap, fd, opts); err != nil {
 				return false
 			}
 		default:
@@ -123,21 +122,24 @@ func (d decoder) unmarshalMessage(m pref.Message, skipTypeURL bool) error {
 			if od := fd.ContainingOneof(); od != nil {
 				idx := uint64(od.Index())
 				if seenOneofs.Has(idx) {
-					dec_err = fmt.Errorf("error decoding %s, oneof %v is already set", f.fd.FullName(), od.FullName())
+					err = fmt.Errorf("error decoding %s, oneof %v is already set", fd.FullName(), od.FullName())
 					return false
 				}
 			}
 
 			// Required or optional fields.
-			if err := d.unmarshalSingular(f, m, fd); err != nil {
-				dec_err = err
+			if err = d.unmarshalSingular(m, fd, opts); err != nil {
 				return false
 			}
 		}
 		return true
 	})
 
-	return dec_err
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 type Unmarshaler interface {
@@ -156,15 +158,15 @@ func hasUnmarshaler(m pref.Message) Unmarshaler {
 
 // unmarshalSingular unmarshals to the non-repeated field specified
 // by the given FieldDescriptor.
-func (d decoder) unmarshalSingular(f field, m pref.Message, fd pref.FieldDescriptor) error {
+func (d decoder) unmarshalSingular(m pref.Message, fd pref.FieldDescriptor, opts *extpb.EncodingFieldOptions) error {
 	var val pref.Value
 	var err error
 	switch fd.Kind() {
 	case pref.MessageKind, pref.GroupKind:
 
-		if f.TypeField != nil {
+		if opts.TypeField != nil {
 			md := fd.Message()
-			fd2 := m.Descriptor().Fields().ByNumber(pref.FieldNumber(f.GetTypeField()))
+			fd2 := m.Descriptor().Fields().ByNumber(pref.FieldNumber(opts.GetTypeField()))
 
 			val2 := m.Get(fd2)
 			val := findExtensionByFullname(md, string(fd2.Enum().FullName()))
@@ -175,10 +177,11 @@ func (d decoder) unmarshalSingular(f field, m pref.Message, fd pref.FieldDescrip
 		}
 
 		val = m.NewField(fd)
-		err = d.unmarshalMessage(val.Message(), false)
+
+		err = d.unmarshalMessage(val.Message(), opts)
 
 	default:
-		val, err = d.unmarshalScalar(f, m, fd)
+		val, err = d.unmarshalScalar(m, fd, opts)
 	}
 
 	if err != nil {
@@ -189,8 +192,13 @@ func (d decoder) unmarshalSingular(f field, m pref.Message, fd pref.FieldDescrip
 }
 
 func findExtensionByFullname(md pref.Descriptor, fullname string) (val pref.Value) {
-	md.Options().ProtoReflect().Range(func(descriptor pref.FieldDescriptor, value pref.Value) bool {
-		typeFullName := descriptor.Enum().FullName()
+	md.Options().ProtoReflect().Range(func(fd pref.FieldDescriptor, value pref.Value) bool {
+
+		if !fd.IsExtension() {
+			return true
+		}
+
+		typeFullName := fd.Enum().FullName()
 		if string(typeFullName) == fullname {
 
 			val = value
@@ -204,10 +212,10 @@ func findExtensionByFullname(md pref.Descriptor, fullname string) (val pref.Valu
 
 // unmarshalScalar unmarshals to a scalar/enum protoreflect.Value specified by
 // the given FieldDescriptor.
-func (d decoder) unmarshalScalar(f field, m pref.Message, fd pref.FieldDescriptor) (pref.Value, error) {
+func (d decoder) unmarshalScalar(m pref.Message, fd pref.FieldDescriptor, opts *extpb.EncodingFieldOptions) (pref.Value, error) {
 
 	kind := fd.Kind()
-	decodeFn, _ := GetDecodeFunc(f.GetEncoder())
+	decodeFn, _ := GetDecodeFunc(opts.GetEncoder())
 
 	switch kind {
 
@@ -218,7 +226,7 @@ func (d decoder) unmarshalScalar(f field, m pref.Message, fd pref.FieldDescripto
 			decodeFn = decodeBool
 		}
 
-		n, err := decodeFn(d, &val, f.Opts)
+		n, err := decodeFn(d, &val, opts.Opts)
 		d.n += n
 		return pref.ValueOfBool(val), err
 
@@ -229,7 +237,7 @@ func (d decoder) unmarshalScalar(f field, m pref.Message, fd pref.FieldDescripto
 			decodeFn = decodeUint32
 		}
 
-		n, err := decodeFn(d, &val, f.Opts)
+		n, err := decodeFn(d, &val, opts.Opts)
 		d.n += n
 		return pref.ValueOfInt32(val), err
 
@@ -240,7 +248,7 @@ func (d decoder) unmarshalScalar(f field, m pref.Message, fd pref.FieldDescripto
 			decodeFn = decodeUint64
 		}
 
-		n, err := decodeFn(d, &val, f.Opts)
+		n, err := decodeFn(d, &val, opts.Opts)
 		d.n += n
 		return pref.ValueOfInt64(val), err
 
@@ -249,7 +257,7 @@ func (d decoder) unmarshalScalar(f field, m pref.Message, fd pref.FieldDescripto
 		if decodeFn == nil {
 			decodeFn = decodeUint32
 		}
-		n, err := decodeFn(d, &val, f.Opts)
+		n, err := decodeFn(d, &val, opts.Opts)
 
 		d.n += n
 		return pref.ValueOfUint32(val), err
@@ -259,7 +267,7 @@ func (d decoder) unmarshalScalar(f field, m pref.Message, fd pref.FieldDescripto
 		if decodeFn == nil {
 			decodeFn = decodeUint64
 		}
-		n, err := decodeFn(d, &val, f.Opts)
+		n, err := decodeFn(d, &val, opts.Opts)
 		d.n += n
 		return pref.ValueOfUint64(val), err
 
@@ -270,7 +278,7 @@ func (d decoder) unmarshalScalar(f field, m pref.Message, fd pref.FieldDescripto
 			decodeFn = decodeFloat32
 		}
 
-		n, err := decodeFn(d, &val, f.Opts)
+		n, err := decodeFn(d, &val, opts.Opts)
 		d.n += n
 		return pref.ValueOfFloat32(val), err
 
@@ -282,7 +290,7 @@ func (d decoder) unmarshalScalar(f field, m pref.Message, fd pref.FieldDescripto
 			decodeFn = decodeFloat64
 		}
 
-		n, err := decodeFn(d, &val, f.Opts)
+		n, err := decodeFn(d, &val, opts.Opts)
 		d.n += n
 		return pref.ValueOfFloat64(val), err
 
@@ -292,33 +300,31 @@ func (d decoder) unmarshalScalar(f field, m pref.Message, fd pref.FieldDescripto
 		if decodeFn == nil {
 			decodeFn = decodeString
 		}
-		n, err := decodeFn(d, &val, f.Opts)
+		n, err := decodeFn(d, &val, opts.Opts)
 		d.n += n
 		return pref.ValueOfString(val), err
 
 	case pref.BytesKind:
 
-		return d.unmarshalBytes(f, m, fd)
+		return d.unmarshalBytes(m, fd, opts)
 
 	case pref.EnumKind:
-		return d.unmarshalEnum(f, m, fd)
+		return d.unmarshalEnum(m, fd, opts)
 
 	default:
-		panic(fmt.Sprintf("unmarshalScalar: invalid scalar kind %v", kind))
+		panic(fmt.Errorf("invalid value for <%v> field: %v", kind, opts))
 	}
 
-	return pref.Value{}, fmt.Errorf("invalid value for <%v> field: %v", kind, f)
 }
 
-func (d decoder) unmarshalEnum(f field, m pref.Message, fd pref.FieldDescriptor) (pref.Value, error) {
+func (d decoder) unmarshalEnum(m pref.Message, fd pref.FieldDescriptor, opts *extpb.EncodingFieldOptions) (pref.Value, error) {
 
 	var number int32
-	decodeFn, _ := GetDecodeFunc(f.GetEncoder())
+	decodeFn, _ := GetDecodeFunc(opts.GetEncoder())
 	if decodeFn == nil {
 		decodeFn = decodeByte
 	}
-	n, err := decodeFn(d, &number, f.Opts)
-	d.n += n
+	_, err := decodeFn(d, &number, opts.Opts)
 	if err != nil {
 		return pref.Value{}, err
 	}
@@ -326,24 +332,18 @@ func (d decoder) unmarshalEnum(f field, m pref.Message, fd pref.FieldDescriptor)
 	return pref.ValueOfEnum(pref.EnumNumber(number)), nil
 }
 
-func (d decoder) decodeValue(fn TypeDecoderFunc, into interface{}, opts ...map[string]string) (int, error) {
-
-	return fn(d, into, opts...)
-
-}
-
-func (d decoder) unmarshalBytes(f field, m pref.Message, fd pref.FieldDescriptor) (pref.Value, error) {
+func (d decoder) unmarshalBytes(m pref.Message, fd pref.FieldDescriptor, opts *extpb.EncodingFieldOptions) (pref.Value, error) {
 
 	b := make([]byte, 0, 512)
 
-	decodeFn, _ := GetDecodeFunc(f.GetEncoder())
+	decodeFn, _ := GetDecodeFunc(opts.GetEncoder())
 
-	if f.SizeField != nil {
-		size := getFieldValueOfNumber(m, f.GetSizeField()).(int32)
+	if opts.SizeField != nil {
+		size := getFieldValueOfNumber(m, opts.GetSizeField()).(int32)
 		b = make([]byte, size)
 	}
 
-	if decodeFn == nil && f.SizeField != nil {
+	if decodeFn == nil && opts.SizeField != nil {
 		decodeFn = decodeBytes
 	}
 
@@ -355,7 +355,7 @@ func (d decoder) unmarshalBytes(f field, m pref.Message, fd pref.FieldDescriptor
 		return pref.ValueOfBytes(all), nil
 	}
 
-	n, err := decodeFn(d, b, f.Opts)
+	n, err := decodeFn(d, b, opts.Opts)
 	d.n += n
 	if err != nil {
 		return pref.Value{}, err
@@ -364,23 +364,25 @@ func (d decoder) unmarshalBytes(f field, m pref.Message, fd pref.FieldDescriptor
 	return pref.ValueOfBytes(b), nil
 }
 
-func (d decoder) unmarshalMap(f field, mmap pref.Map, fd pref.FieldDescriptor) error {
+func (d decoder) unmarshalMap(m pref.Message, mmap pref.Map, fd pref.FieldDescriptor, opts *extpb.EncodingFieldOptions) error {
 	return nil
 }
 
-func (d decoder) unmarshalList(f field, m pref.Message, list pref.List, fd pref.FieldDescriptor) error {
+func (d decoder) unmarshalList(m pref.Message, list pref.List, fd pref.FieldDescriptor, opts *extpb.EncodingFieldOptions) error {
 
 	var size int
 	_, err := decodeSize(d, &size)
 	if err != nil {
 		return err
 	}
+
 	switch fd.Kind() {
 	case pref.MessageKind, pref.GroupKind:
 		for i := 0; i < size; i++ {
 
 			val := list.NewElement()
-			if err := d.unmarshalMessage(val.Message(), false); err != nil {
+			if err := d.unmarshalMessage(val.Message(), opts); err != nil {
+				fmt.Println(err.Error())
 				return err
 			}
 			list.Append(val)
@@ -388,7 +390,7 @@ func (d decoder) unmarshalList(f field, m pref.Message, list pref.List, fd pref.
 	default:
 		for i := 0; i < size; i++ {
 
-			val, err := d.unmarshalScalar(f, m, fd)
+			val, err := d.unmarshalScalar(m, fd, opts)
 			if err != nil {
 				return err
 			}

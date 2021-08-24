@@ -104,6 +104,24 @@ func (e *Endpoint) ReadMessage(reader io.Reader, m proto.Message) error {
 	return e.UnpackMessage(em, m)
 }
 
+func (e *Endpoint) ReadVoidMessage(reader io.Reader) error {
+
+	p, err := ReadPacket(reader)
+	if err != nil {
+		return err
+	}
+	em, err := e.NewMessage(p)
+	if err != nil {
+		return err
+	}
+
+	if em.GetVoidMessage() != nil {
+		return nil
+	}
+
+	return fmt.Errorf("is not void message %s", em.String())
+}
+
 func (e *Endpoint) UnpackMessage(em *protocolv1.EndpointMessage, to proto.Message) error {
 
 	if err := em.GetFailure(); err != nil {
@@ -124,7 +142,7 @@ func (e *Endpoint) UnpackMessage(em *protocolv1.EndpointMessage, to proto.Messag
 	if mType != messageData.Type {
 		return fmt.Errorf("unpack message type <%s> to <%s> mismatch ", messageData.String(), mType.String())
 	}
-	enc := rasbinary.UnmarshalOptions{ProtocolVersion: e.ServiceVersion}
+	enc := rasbinary.UnmarshalOptions{ServiceVersion: e.ServiceVersion}
 	err := enc.Unmarshal(messageData.GetBytes(), to)
 	if err != nil {
 		return err
@@ -228,7 +246,7 @@ func Connect(conn net.Conn) error {
 
 func NewEndpoint(p *protocolv1.EndpointOpenAck) (*Endpoint, error) {
 
-	serviceVersion, _ := strconv.ParseInt(p.Version, 10, 64)
+	serviceVersion, _ := strconv.ParseFloat(p.Version, 64)
 
 	return &Endpoint{
 		0,
