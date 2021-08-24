@@ -3,7 +3,6 @@ package extra
 import (
 	"fmt"
 	"github.com/v8platform/protos/extra/encoding/rasbinary"
-	messagesv1 "github.com/v8platform/protos/gen/ras/messages/v1"
 	protocolv1 "github.com/v8platform/protos/gen/ras/protocol/v1"
 	"google.golang.org/protobuf/proto"
 	"io"
@@ -50,13 +49,11 @@ func (e *Endpoint) NewMessage(m proto.Message) (*protocolv1.EndpointMessage, err
 		}
 	}
 
-	isTypeMessage := proto.HasExtension(m.ProtoReflect().Descriptor().Options(), messagesv1.E_MessageType)
+	messageType, ok := rasbinary.GetMessageType(m)
 
-	if isTypeMessage {
+	if ok {
 
-		messageType := proto.GetExtension(m.ProtoReflect().Descriptor().Options(), messagesv1.E_MessageType).(messagesv1.MessageType)
-
-		enc := rasbinary.MarshalOptions{ProtocolVersion: e.ServiceVersion}
+		enc := rasbinary.MarshalOptions{ServiceVersion: e.ServiceVersion}
 		bytesData, err := enc.Marshal(m)
 		if err != nil {
 			return nil, err
@@ -131,16 +128,16 @@ func (e *Endpoint) UnpackMessage(em *protocolv1.EndpointMessage, to proto.Messag
 	if void := em.GetVoidMessage(); void != nil {
 		return fmt.Errorf("can not unpack void message")
 	}
-	isPacketMessage := proto.HasExtension(to.ProtoReflect().Descriptor().Options(), messagesv1.E_MessageType)
 
-	if !isPacketMessage {
+	messageType, ok := rasbinary.GetMessageType(to)
+
+	if !ok {
 		return fmt.Errorf("can not unpack message unknown type")
 	}
 
-	mType := proto.GetExtension(to.ProtoReflect().Descriptor().Options(), messagesv1.E_MessageType).(messagesv1.MessageType)
 	messageData := em.GetMessage()
-	if mType != messageData.Type {
-		return fmt.Errorf("unpack message type <%s> to <%s> mismatch ", messageData.String(), mType.String())
+	if messageType != messageData.Type {
+		return fmt.Errorf("unpack message type <%s> to <%s> mismatch ", messageData.String(), messageType.String())
 	}
 	enc := rasbinary.UnmarshalOptions{ServiceVersion: e.ServiceVersion}
 	err := enc.Unmarshal(messageData.GetBytes(), to)

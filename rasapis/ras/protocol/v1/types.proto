@@ -8,25 +8,24 @@ option csharp_namespace = "ras.protocol.v1";
 option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
 
 enum EndpointDataType {
-  option (ras.encoding.offset) = 1;
 
-  ENDPOINT_DATA_TYPE_VOID_MESSAGE = 0 [(ras.encoding.type_url) = "rasbinary.protocol.v1.EndpointVoidDataMessage"];
-  ENDPOINT_DATA_TYPE_MESSAGE = 1 [(ras.encoding.type_url) = "rasbinary.protocol.v1.EndpointDataMessage"];
-  ENDPOINT_DATA_TYPE_EXCEPTION = 255 [(ras.encoding.type_url) = "rasbinary.protocol.v1.EndpointFailureMessage"];
+  ENDPOINT_DATA_TYPE_VOID_MESSAGE = 0 [(ras.encoding.type_url) = "ras.protocol.v1.EndpointVoidDataMessage"];
+  ENDPOINT_DATA_TYPE_MESSAGE = 1 [(ras.encoding.type_url) = "ras.protocol.v1.EndpointDataMessage"];
+  ENDPOINT_DATA_TYPE_EXCEPTION = 255 [(ras.encoding.type_url) = "ras.protocol.v1.EndpointFailureMessage"];
 }
 
 enum PacketType {
-  PACKET_TYPE_NEGOTIATE = 0 [(ras.encoding.type_url) = "rasbinary.protocol.v1.NegotiateMessage"];
-  PACKET_TYPE_CONNECT = 1 [(ras.encoding.type_url) = "rasbinary.protocol.v1.ConnectMessage"];
-  PACKET_TYPE_CONNECT_ACK = 2 [(ras.encoding.type_url) = "rasbinary.protocol.v1.ConnectMessageAck"];
-  PACKET_TYPE_DISCONNECT = 4 [(ras.encoding.type_url) = "rasbinary.protocol.v1.DisconnectMessage"];
+  PACKET_TYPE_NEGOTIATE = 0 [(ras.encoding.type_url) = "ras.protocol.v1.NegotiateMessage"];
+  PACKET_TYPE_CONNECT = 1 [(ras.encoding.type_url) = "ras.protocol.v1.ConnectMessage"];
+  PACKET_TYPE_CONNECT_ACK = 2 [(ras.encoding.type_url) = "ras.protocol.v1.ConnectMessageAck"];
+  PACKET_TYPE_DISCONNECT = 4 [(ras.encoding.type_url) = "ras.protocol.v1.DisconnectMessage"];
   reserved 3, 5 to 10;
   reserved "PACKET_TYPE_START_TLS", "PACKET_TYPE_SASL_NEGOTIATE", "PACKET_TYPE_SASL_AUTH", "PACKET_TYPE_SASL_CHALLENGE";
   reserved "PACKET_TYPE_SASL_SUCCESS", "PACKET_TYPE_SASL_FAILURE", "PACKET_TYPE_SASL_ABORT";
-  PACKET_TYPE_ENDPOINT_OPEN = 11 [(ras.encoding.type_url) = "rasbinary.protocol.v1.EndpointOpen"];
-  PACKET_TYPE_ENDPOINT_OPEN_ACK = 12 [(ras.encoding.type_url) = "rasbinary.protocol.v1.EndpointOpenAck"];
-  PACKET_TYPE_ENDPOINT_CLOSE = 13 [(ras.encoding.type_url) = "rasbinary.protocol.v1.EndpointOClose"];
-  PACKET_TYPE_ENDPOINT_MESSAGE = 14 [(ras.encoding.type_url) = "rasbinary.protocol.v1.EndpointMessage"];
-  PACKET_TYPE_ENDPOINT_FAILURE = 15 [(ras.encoding.type_url) = "rasbinary.protocol.v1.EndpointFailure"];
+  PACKET_TYPE_ENDPOINT_OPEN = 11 [(ras.encoding.type_url) = "ras.protocol.v1.EndpointOpen"];
+  PACKET_TYPE_ENDPOINT_OPEN_ACK = 12 [(ras.encoding.type_url) = "ras.protocol.v1.EndpointOpenAck"];
+  PACKET_TYPE_ENDPOINT_CLOSE = 13 [(ras.encoding.type_url) = "ras.protocol.v1.EndpointOClose"];
+  PACKET_TYPE_ENDPOINT_MESSAGE = 14 [(ras.encoding.type_url) = "ras.protocol.v1.EndpointMessage"];
+  PACKET_TYPE_ENDPOINT_FAILURE = 15 [(ras.encoding.type_url) = "ras.protocol.v1.EndpointFailure"];
   PACKET_TYPE_KEEP_ALIVE = 16;
 }

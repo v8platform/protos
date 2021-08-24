@@ -20,8 +20,8 @@ func Marshal(m proto.Message) ([]byte, error) {
 // MarshalOptions is a configurable RAS format marshaler.
 type MarshalOptions struct {
 
-	// ProtocolVersion uses to encode field.
-	ProtocolVersion int32
+	// ServiceVersion uses to encode field.
+	ServiceVersion int32
 
 	// Resolver is used for looking up types when expanding google.protobuf.Any
 	// messages. If nil, this defaults to using protoregistry.GlobalTypes.
@@ -107,12 +107,12 @@ func hasMarshaller(m pref.Message) Marshaller {
 func (e encoder) marshalMessage(m pref.Message, mopts *extpb.EncodingFieldOptions) error {
 
 	if marshaller := hasMarshaller(m); marshaller != nil {
-		_, err := marshaller.MarshalRAS(e, e.opts.ProtocolVersion)
+		_, err := marshaller.MarshalRAS(e, e.opts.ServiceVersion)
 		return err
 	}
 
 	var err error
-	RangeFields(m, e.opts.ProtocolVersion, func(fd pref.FieldDescriptor, value pref.Value, opts *extpb.EncodingFieldOptions) bool {
+	RangeFields(m, e.opts.ServiceVersion, func(fd pref.FieldDescriptor, value pref.Value, opts *extpb.EncodingFieldOptions) bool {
 
 		switch {
 		case fd.IsList():

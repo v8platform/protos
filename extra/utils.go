@@ -11,7 +11,62 @@ import (
 	"io"
 )
 
+func findMessageTypeByExtension(t protocolv1.PacketType) (packetType protoreflect.MessageType, ok bool) {
+
+	protoregistry.GlobalTypes.RangeMessages(func(messageType protoreflect.MessageType) bool {
+
+		isPacketMessage := proto.HasExtension(messageType.Descriptor().Options(), protocolv1.E_PacketType)
+
+		if !isPacketMessage {
+			return true
+		}
+
+		mPacketType := proto.GetExtension(messageType.Descriptor().Options(), protocolv1.E_PacketType).(protocolv1.PacketType)
+
+		if mPacketType == t {
+			ok = true
+			packetType = messageType
+			return false
+		}
+
+		return true
+	})
+
+	return
+}
+
+func getMessageByTypeUrl(m proto.Message) (proto.Message, error) {
+
+	// log.Print(proto.MessageName(m))
+
+	extensionType, err := protoregistry.GlobalTypes.FindExtensionByNumber(proto.MessageName(m), protoreflect.FieldNumber(475223891))
+	if err != nil {
+		return nil, err
+	}
+
+	typeUrl := proto.GetExtension(m, extensionType).(string)
+
+	messageType, err := protoregistry.GlobalTypes.FindMessageByURL(typeUrl)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Print(typeUrl)
+
+	return messageType.New().Interface(), nil
+
+}
+
 func UnpackPacketDataNew(p *protocolv1.Packet) (proto.Message, error) {
+
+	// fmt.Println(protoimpl.X.MessageDescriptorOf(p).FullName())
+	//
+	// url, err := getMessageByTypeUrl(p.Type.Descriptor().Values().ByNumber(p.Type.Number()).Options())
+	// if err != nil {
+	// 	return nil, err
+	// }
+	//
+	// fmt.Println(url)
 
 	var packetType protoreflect.MessageType
 
