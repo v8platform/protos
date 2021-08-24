@@ -15,14 +15,17 @@ plugins:
   - name: go-grpc
     out: ./gen
     opt: paths=source_relative,require_unimplemented_servers=false
-  #  - name: grpc-gateway
+  - name: grpc-gateway
+    out: ./gen
+    opt:
+      - paths=source_relative
+      - generate_unbound_methods=true
+      - grpc_api_configuration=rasapis/grpc-rest-bindings.yml
+  #  - name: gotag
   #    out: .
   #    opt:
   #      - paths=source_relative
-  #      - generate_unbound_methods=true
-  #      - grpc_api_configuration=sources/v8platform/rasapis/grpc-rest-bindings.yml
-#  - name: gotag
-#    out: .
-#    opt:
-#      - paths=source_relative
-#      - outdir=./gen
+  #      - outdir=./gen
+  - name: csharp
+    out: ./csharp
+#    opt: paths=source_relative

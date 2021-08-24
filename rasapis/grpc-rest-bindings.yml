@@ -2,7 +2,7 @@
 type: google.api.Service
 config_version: 3
 
-name: rasbinary.api.v1
+name: ras.api.v1
 title: RAS API v1
 
 apis:
@@ -12,38 +12,38 @@ apis:
 http:
   rules:
     # Clusters
-    - selector: rasbinary.api.v1.ClustersService.Clusters
-      get: '/clusters'
-    - selector: rasbinary.api.v1.ClustersService.GetCluster
-      get: '/clusters/{cluster.id}'
-    - selector: rasbinary.api.v1.ClustersService.AddCluster
-      post: '/clusters'
+    - selector: ras.api.v1.ClustersService.Clusters
+      get: '/api/v1/clusters'
+    - selector: ras.api.v1.ClustersService.GetCluster
+      get: '/api/v1/clusters/{cluster.id}'
+    - selector: ras.api.v1.ClustersService.AddCluster
+      post: '/api/v1/clusters'
       body: '*'
-    - selector: rasbinary.api.v1.ClustersService.DeleteCluster
-      delete: '/clusters/{cluster.id}'
+    - selector: ras.api.v1.ClustersService.DeleteCluster
+      delete: '/api/v1/clusters/{cluster.id}'
 
     # Cluster admin
-    - selector: rasbinary.api.v1.ClusterAdminService.Admins
+    - selector: ras.api.v1.ClusterAdminService.Admins
       get: '/clusters/{cluster.id}/admins'
       additional_bindings:
         - get: "/admins"
-    - selector: rasbinary.api.v1.ClusterAdminService.AddAdmin
+    - selector: ras.api.v1.ClusterAdminService.AddAdmin
       post: '/clusters/{cluster.id}/admins'
       body: 'admin_info'
       additional_bindings:
         - post: "/admins"
           body: 'admin_info'
-    - selector: rasbinary.api.v1.ClusterAdminService.DeleteAdmin
+    - selector: ras.api.v1.ClusterAdminService.DeleteAdmin
       delete: '/clusters/{cluster.id}/admins/{admin_name}'
       additional_bindings:
         - delete: "/admins/{admin_name}"
 
     # Infobases
-    - selector: rasbinary.api.v1.InfobasesService.Infobases
+    - selector: ras.api.v1.InfobasesService.Infobases
       get: '/infobases'
       additional_bindings:
         - get: '/clusters/{cluster.id}/infobases'
-    - selector: rasbinary.api.v1.InfobasesService.LookupInfobase
+    - selector: ras.api.v1.InfobasesService.LookupInfobase
       get: "/infobases/lookup"
       additional_bindings:
         - get: '/clusters/{cluster.id}/infobases/lookup'

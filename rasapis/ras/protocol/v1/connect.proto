@@ -10,8 +10,9 @@ import "ras/protocol/v1/packet.proto";
 import "ras/encoding/ras.proto";
 import "ras/protocol/v1/options.proto";
 
+option csharp_namespace = "ras.protocol.v1";
+option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
 
-option go_package = "github.com/v8platform/protos/gen/rasbinary/protocol/v1";
 option (ras.encoding.options) = {
   generate_unmarshal: true,
   generate_marshaller: true,

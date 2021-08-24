@@ -8,8 +8,8 @@ import "ras/protocol/v1/param.proto";
 import "ras/protocol/v1/types.proto";
 import "ras/encoding/ras.proto";
 
-
-option go_package = "github.com/v8platform/protos/gen/rasbinary/protocol/v1";
+option csharp_namespace = "ras.protocol.v1";
+option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
 option (ras.encoding.options) = {
   generate_unmarshal: true,
   generate_marshaller: true,
@@ -21,7 +21,7 @@ option (ras.encoding.options) = {
 message Packet {
 
   PacketType type = 1 [(ras.encoding.tags) = "rasbinary:\"byte,1\"",
-    (ras.encoding.field) =  {
+    (ras.encoding.field) = {
       encoder: "byte",
       order: 1,
     }

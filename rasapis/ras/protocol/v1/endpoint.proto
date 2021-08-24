@@ -9,10 +9,11 @@ import "ras/protocol/v1/packet.proto";
 import "ras/protocol/v1/options.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/type.proto";
-import "ras/messages/v1/types.proto";
-import "ras/messages/v1/clusters.proto";
+import "ras/messages/v1/messages_types.proto";
+import "ras/messages/v1/clusters_messages.proto";
 
-option go_package = "github.com/v8platform/protos/gen/rasbinary/protocol/v1";
+option csharp_namespace = "ras.protocol.v1";
+option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
 
 option (ras.encoding.options) = {
   generate_unmarshal: true,
