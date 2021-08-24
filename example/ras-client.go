@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/k0kubun/pp"
 	"github.com/v8platform/protos/extra"
 	messagesv1 "github.com/v8platform/protos/gen/ras/messages/v1"
 	"log"
@@ -77,6 +78,13 @@ func main() {
 		panic(err)
 	}
 
+	fmt.Println("Список полученных сессий")
+	// pp.SetDefaultMaxDepth(1)
+	// pp.Println(resp.Sessions)
+	for _, session := range resp.Sessions {
+
+		pp.Println("->", session.String())
+	}
 }
 
 func connect(ctx context.Context, addr string) (net.Conn, error) {
