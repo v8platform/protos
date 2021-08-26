@@ -21,11 +21,14 @@ plugins:
       - paths=source_relative
       - generate_unbound_methods=true
       - grpc_api_configuration=rasapis/grpc-rest-bindings.yml
+  #  - name: go-ras
+  #    opt: paths=source_relative
+  #    out: ./gen
   #  - name: gotag
   #    out: .
   #    opt:
   #      - paths=source_relative
   #      - outdir=./gen
-  - name: csharp
-    out: ./csharp
+#  - name: csharp
+#    out: ./csharp
 #    opt: paths=source_relative

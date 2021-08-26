@@ -2,12 +2,14 @@ syntax = "proto3";
 
 package ras.protocol.v1;
 
+import "ras/encoding/ras.proto";
+
 option csharp_namespace = "ras.protocol.v1";
 option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
 
 message Param {
-  ParamType type = 1;
-  bytes value = 2;
+  ParamType type = 1 [(ras.encoding.field) = {order: 1, encoder: "byte"}];
+  bytes value = 2 [(ras.encoding.field) = {order: 2, encoder: "type"}];
 }
 
 enum ParamType {

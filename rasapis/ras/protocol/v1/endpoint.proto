@@ -15,12 +15,6 @@ import "ras/messages/v1/clusters_messages.proto";
 option csharp_namespace = "ras.protocol.v1";
 option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
 
-option (ras.encoding.options) = {
-  generate_unmarshal: true,
-  generate_marshaller: true,
-  generate_tags: true,
-};
-
 message EndpointOpen {
   option (packet_type) = PACKET_TYPE_ENDPOINT_OPEN;
   string service = 1 [(ras.encoding.field).order = 1];

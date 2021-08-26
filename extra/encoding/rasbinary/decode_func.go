@@ -78,7 +78,6 @@ func decodeBytes(r io.Reader, into interface{}, opts ...map[string]string) (int,
 			fmt.Sprintf("convert from <%s> unsupporsed", reflect.TypeOf(into))}
 	}
 	if len(data) == 0 {
-
 		for {
 			// if len(data) == cap(data) {
 			// 	// Add more capacity (let append pick how much).
