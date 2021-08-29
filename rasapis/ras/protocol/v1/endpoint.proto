@@ -42,7 +42,7 @@ message Endpoint {
   string service = 1;
   string version = 2;
   int32 endpoint_id = 3;
-  int32 format = 4
+  int32 format = 4;
   map<string, Param> params = 5;
 }
 
