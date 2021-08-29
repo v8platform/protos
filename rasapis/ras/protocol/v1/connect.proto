@@ -8,19 +8,13 @@ import "ras/protocol/v1/param.proto";
 import "ras/protocol/v1/types.proto";
 import "ras/protocol/v1/packet.proto";
 import "ras/encoding/ras.proto";
-import "ras/protocol/v1/options.proto";
+
 
 option csharp_namespace = "ras.protocol.v1";
 option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
 
-option (ras.encoding.options) = {
-  generate_unmarshal: true,
-  generate_marshaller: true,
-  generate_tags: true,
-};
-
 message NegotiateMessage {
-  option (packet_type) = PACKET_TYPE_NEGOTIATE;
+  option (ras.encoding.options).packet_type = "PACKET_TYPE_NEGOTIATE";
 
   int32 magic = 1 [(ras.encoding.field) = {
     order: 1,
@@ -37,7 +31,7 @@ message NegotiateMessage {
 }
 
 message ConnectMessage {
-  option (packet_type) = PACKET_TYPE_CONNECT;
+  option (ras.encoding.options).packet_type = "PACKET_TYPE_CONNECT";
 
   // Известные параметры
   // "connect.timeout" = 2000
@@ -45,10 +39,11 @@ message ConnectMessage {
 }
 
 message DisconnectMessage {
-  option (packet_type) = PACKET_TYPE_DISCONNECT;
+  option (ras.encoding.options).packet_type = "PACKET_TYPE_DISCONNECT";
   map<string, Param> params = 1 [(ras.encoding.field).order = 1];
 }
 
 message ConnectMessageAck {
-  option (packet_type) = PACKET_TYPE_CONNECT_ACK;
+  option (ras.encoding.options).packet_type = "PACKET_TYPE_CONNECT_ACK";
+  option (ras.encoding.options).generate_empty = true;
 }

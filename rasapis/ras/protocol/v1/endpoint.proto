@@ -6,7 +6,6 @@ import "ras/protocol/v1/param.proto";
 import "ras/encoding/ras.proto";
 import "ras/protocol/v1/types.proto";
 import "ras/protocol/v1/packet.proto";
-import "ras/protocol/v1/options.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/type.proto";
 import "ras/messages/v1/messages_types.proto";
@@ -16,7 +15,7 @@ option csharp_namespace = "ras.protocol.v1";
 option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
 
 message EndpointOpen {
-  option (packet_type) = PACKET_TYPE_ENDPOINT_OPEN;
+  option (encoding.options).packet_type = "PACKET_TYPE_ENDPOINT_OPEN";
   string service = 1 [(ras.encoding.field).order = 1];
   string version = 3 [(ras.encoding.field) = {
     order: 3,
@@ -26,7 +25,7 @@ message EndpointOpen {
 }
 
 message EndpointOpenAck {
-  option (packet_type) = PACKET_TYPE_ENDPOINT_OPEN_ACK;
+  option (encoding.options).packet_type = "PACKET_TYPE_ENDPOINT_OPEN_ACK";
   string service = 1 [(ras.encoding.field).order = 1];
   string version = 2 [(ras.encoding.field) = {
     order: 2,
@@ -34,16 +33,24 @@ message EndpointOpenAck {
   }];
   int32 endpoint_id = 3 [(ras.encoding.field) = {
     order: 3,
-    encoder: "null-size",
+    encoder: "nullable",
   }];
   map<string, Param> params = 4 [(ras.encoding.field).order = 4];
 }
 
+message Endpoint {
+  string service = 1;
+  string version = 2;
+  int32 endpoint_id = 3;
+  int32 format = 4
+  map<string, Param> params = 5;
+}
+
 message EndpointMessage {
-  option (packet_type) = PACKET_TYPE_ENDPOINT_MESSAGE;
+  option (encoding.options).packet_type = "PACKET_TYPE_ENDPOINT_MESSAGE";
   int32 endpoint_id = 1 [(ras.encoding.field) = {
     order: 1,
-    encoder: "null-size",
+    encoder: "nullable",
   }];
   int32 format = 2 [(ras.encoding.field) = {
     order: 2,
@@ -64,7 +71,8 @@ message EndpointMessage {
 }
 
 message EndpointFailureAck  {
-  option (packet_type) = PACKET_TYPE_ENDPOINT_FAILURE;
+  option (encoding.options).packet_type = "PACKET_TYPE_ENDPOINT_FAILURE";
+  option (encoding.options).generate_error_fn = true;
   string service_id = 1 [(ras.encoding.field) = {
     order: 1,
   }];
@@ -73,7 +81,7 @@ message EndpointFailureAck  {
   }];
   int32 endpoint_id = 3 [(ras.encoding.field) = {
     order: 3,
-    encoder: "null-size",
+    encoder: "nullable",
   }];
   string class_cause = 4 [(ras.encoding.field) = {
     order: 4,
@@ -84,15 +92,13 @@ message EndpointFailureAck  {
   repeated string trace = 6 [(ras.encoding.field) = {
     order: 6,
   }];
-  optional CauseError cause = 7 [(ras.encoding.field) = {
+  CauseError cause = 7 [(ras.encoding.field) = {
     order: 7,
   }];
 }
 
 message CauseError {
-  option (ras.encoding.message_options) = {
-    generate_marshaller: false,
-  };
+  option (encoding.options).generate_error_fn = true;
   string service_id = 1 [(ras.encoding.field) = {
     order: 1,
   }];
@@ -109,11 +115,12 @@ message CauseError {
 }
 
 message EndpointDataVoidMessage {
-  option (endpoint_data_type) = ENDPOINT_DATA_TYPE_VOID_MESSAGE;
+  option (encoding.options).endpoint_data_type = "ENDPOINT_DATA_TYPE_VOID_MESSAGE";
+  option (encoding.options).generate_empty = true;
 }
 
 message EndpointDataMessage {
-  option (endpoint_data_type) = ENDPOINT_DATA_TYPE_MESSAGE;
+  option (encoding.options).endpoint_data_type = "ENDPOINT_DATA_TYPE_MESSAGE";
   ras.messages.v1.MessageType type = 1 [(ras.encoding.field) = {
     order: 1,
     encoder: "byte",
@@ -124,14 +131,15 @@ message EndpointDataMessage {
 }
 
 message EndpointFailureMessage {
-  option (endpoint_data_type) = ENDPOINT_DATA_TYPE_EXCEPTION;
+  option (encoding.options).endpoint_data_type = "ENDPOINT_DATA_TYPE_EXCEPTION";
+  option (encoding.options).generate_error_fn = true;
   string service_id = 1 [(ras.encoding.field) = {
     order: 1,
   }];
   string message = 2 [(ras.encoding.field) = {
     order: 2,
   }];
-  optional CauseError cause = 3 [(ras.encoding.field) = {
+  CauseError cause = 3 [(ras.encoding.field) = {
     order: 3,
   }];
 }

@@ -11,23 +11,7 @@ import "google/protobuf/descriptor.proto";
 option go_package = "github.com/v8platform/rasbinary";
 
 extend google.protobuf.MessageOptions {
-  EncodingMessageOptions message_options = 475223888;
-}
-
-message EncodingMessageOptions {
-  bool generate_marshaller = 1;
-  bool generate_unmarshal = 2;
-  bool generate_tags = 3;
-}
-
-extend google.protobuf.FileOptions {
-  EncodingFileOptions options = 475223888;
-}
-
-message EncodingFileOptions {
-  bool generate_marshaller = 1;
-  bool generate_unmarshal = 2;
-  bool generate_tags = 3;
+  EncodingMessageOptions options = 475223889;
 }
 
 // Tags are applied at the field level
@@ -36,9 +20,18 @@ extend google.protobuf.FieldOptions {
   string tags = 847939;
 }
 
-extend google.protobuf.OneofOptions {
-  // Multiple Tags can be spcified.
-  string oneof_tags = 847939;
+
+message EncodingMessageOptions  {
+  bool generate_empty = 1;
+  bool generate_packet_helpers = 2;
+  bool generate_endpoint_message_helpers = 3;
+  bool generate_message_helpers = 4;
+  oneof type {
+    string packet_type = 5;
+    string endpoint_data_type = 6;
+    string message_type = 7;
+  }
+  bool generate_error_fn = 8;
 }
 
 extend google.protobuf.FieldOptions {
@@ -46,17 +39,12 @@ extend google.protobuf.FieldOptions {
   EncodingFieldOptions field = 475223888;
 }
 
-extend google.protobuf.OneofOptions {
-  EncodingFieldOptions oneof_field = 475223888;
-}
 
 message EncodingFieldOptions {
   optional string encoder = 1;
   optional int32 order = 2;
   optional int32 version = 3;
   map<string, string> opts = 4;
-  bool no_marshal = 5;
-  bool no_unmarshal = 6;
   optional int32 type_field = 7;
   string type_url = 8;
   bool ignore = 9;
@@ -67,4 +55,9 @@ message EncodingFieldOptions {
 extend google.protobuf.EnumValueOptions {
   // Ссылка на тип связанного сообщения
   string type_url = 475223891;
+}
+
+extend google.protobuf.EnumOptions {
+  // Название опции в message
+  string message_option = 475223891;
 }

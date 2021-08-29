@@ -8,10 +8,6 @@ import "google/protobuf/descriptor.proto";
 option csharp_namespace = "ras.messages.v1";
 option go_package = "github.com/v8platform/protos/gen/rsa/messages/v1";
 
-extend google.protobuf.MessageOptions {
-  MessageType message_type = 475223891;
-}
-
 enum MessageType {
   GET_AGENT_ADMINS_REQUEST = 0;
   GET_AGENT_ADMINS_RESPONSE = 1;

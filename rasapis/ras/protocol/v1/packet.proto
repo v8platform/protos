@@ -10,35 +10,25 @@ import "ras/encoding/ras.proto";
 
 option csharp_namespace = "ras.protocol.v1";
 option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
-option (ras.encoding.options) = {
-  generate_unmarshal: true,
-  generate_marshaller: true,
-  generate_tags: true,
-};
-
 
 // Порядок кодирования/декодирования в формат RAS
 message Packet {
-
-  PacketType type = 1 [(ras.encoding.tags) = "rasbinary:\"byte,1\"",
-    (ras.encoding.field) = {
+  option (ras.encoding.options).generate_packet_helpers = true;
+  PacketType type = 1 [(ras.encoding.field) = {
       encoder: "byte",
       order: 1,
     }
   ];
 
-  int32 size = 2 [(ras.encoding.tags) = "rasbinary:\"size,2\"",
-    (ras.encoding.field) = {
+  int32 size = 2 [(ras.encoding.field) = {
       encoder: "size",
       order: 2,
     }];
 
-  bytes data = 3 [(ras.encoding.tags) = "rasbinary:\"bytes,3\"",
-    (ras.encoding.field) = {
+  bytes data = 3 [(ras.encoding.field) = {
       encoder: "bytes",
       order: 3,
       type_field: 1,
       size_field: 2,
     }];
-
 }
