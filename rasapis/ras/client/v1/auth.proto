@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package ras.client.v1;
+import "google/protobuf/empty.proto";
+import "ras/protocol/v1/endpoint.proto"
+option go_package = "github.com/v8platform/ras/client/v1";
+
+service AuthService {
+  rpc Cluster(protocol.v1.EndpointOpen) returns (protocol.v1.EndpointOpenAck) {};
+  rpc EndpointClose(protocol.v1.EndpointClose) returns (google.protobuf.Empty) {};
+  rpc Message(protocol.v1.EndpointMessage) returns (protocol.v1.EndpointMessage) {};
+}

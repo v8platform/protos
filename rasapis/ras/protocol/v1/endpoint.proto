@@ -46,6 +46,10 @@ message Endpoint {
   map<string, Param> params = 5;
 }
 
+message EndpointClose {
+
+}
+
 message EndpointMessage {
   option (encoding.options).packet_type = "PACKET_TYPE_ENDPOINT_MESSAGE";
   int32 endpoint_id = 1 [(ras.encoding.field) = {
