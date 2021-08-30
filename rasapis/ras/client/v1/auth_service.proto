@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package ras.client.v1;
+import "google/protobuf/empty.proto";
+import "ras/protocol/v1/endpoint.proto";
+import "ras/messages/v1/auth_messages.proto"
+option go_package = "github.com/v8platform/ras/client/v1";
+
+service EndpointAuthService {
+  rpc AuthenticateCluster(messages.v1.ClusterAuthenticateRequest) returns (protocol.v1.EndpointDataVoidMessage) {};
+  rpc AuthenticateInfobase(messages.v1.AuthenticateInfobaseRequest) returns (protocol.v1.EndpointDataVoidMessage) {};
+  rpc AuthenticateAgent(messages.v1.AuthenticateAgentRequest) returns (protocol.v1.EndpointDataVoidMessage) {};
+}
