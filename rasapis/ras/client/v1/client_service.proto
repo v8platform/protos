@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package ras.client.v1;
+import "google/protobuf/empty.proto";
+import "ras/protocol/v1/connect.proto";
+import "ras/protocol/v1/endpoint.proto";
+option go_package = "github.com/v8platform/ras/client/v1";
+
+
+service ClientService {
+
+  rpc Negotiate(protocol.v1.NegotiateMessage) returns (google.protobuf.Empty) {};
+  rpc Connect(protocol.v1.ConnectMessage) returns (protocol.v1.ConnectMessageAck) {};
+  rpc Disconnect(protocol.v1.DisconnectMessage) returns (google.protobuf.Empty) {};
+
+  rpc EndpointOpen(protocol.v1.EndpointOpen) returns (protocol.v1.EndpointOpenAck) {};
+  rpc EndpointClose(protocol.v1.EndpointClose) returns (google.protobuf.Empty) {};
+  rpc EndpointMessage(protocol.v1.EndpointMessage) returns (protocol.v1.EndpointMessage) {};
+
+  // Вспомогательный вызов для создания точки из ответа
+  // TODO Сделать пометку для генератора
+  // Переход к EndpointService
+  rpc EndpointCreate(protocol.v1.EndpointOpenAck) returns (protocol.v1.Endpoint) {};
+}
