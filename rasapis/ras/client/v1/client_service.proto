@@ -4,12 +4,16 @@ package ras.client.v1;
 import "google/protobuf/empty.proto";
 import "ras/protocol/v1/connect.proto";
 import "ras/protocol/v1/endpoint.proto";
-option go_package = "github.com/v8platform/ras/client/v1";
-
+import "ras/encoding/client.proto";
+option go_package = "github.com/v8platform/protos/gen/ras/client/clientv1";
 
 service ClientService {
 
-  rpc Negotiate(protocol.v1.NegotiateMessage) returns (google.protobuf.Empty) {};
+  option(client).is_client = true;
+
+  rpc Negotiate(protocol.v1.NegotiateMessage) returns (google.protobuf.Empty) {
+    option(method).no_packet_pack = true;
+  };
   rpc Connect(protocol.v1.ConnectMessage) returns (protocol.v1.ConnectMessageAck) {};
   rpc Disconnect(protocol.v1.DisconnectMessage) returns (google.protobuf.Empty) {};
 
@@ -17,8 +21,21 @@ service ClientService {
   rpc EndpointClose(protocol.v1.EndpointClose) returns (google.protobuf.Empty) {};
   rpc EndpointMessage(protocol.v1.EndpointMessage) returns (protocol.v1.EndpointMessage) {};
 
-  // Вспомогательный вызов для создания точки из ответа
-  // TODO Сделать пометку для генератора
-  // Переход к EndpointService
-  rpc EndpointCreate(protocol.v1.EndpointOpenAck) returns (protocol.v1.Endpoint) {};
+  rpc NewEndpoint(protocol.v1.EndpointOpenAck) returns (protocol.v1.Endpoint) {
+    option(method).new_endpoint_func = true;
+  };
+
 }
+
+service EndpointService {
+
+  option(client).is_endpoint = true;
+
+  rpc Request(protocol.v1.EndpointMessage) returns (protocol.v1.EndpointMessage) {
+    option(method).ignore_empty = true;
+    option(method).param = {key: "req", value: "EndpointMessageFormatter"};
+    option(method).param = {key: "resp", value: "EndpointMessageParser"};
+  };
+
+}
+

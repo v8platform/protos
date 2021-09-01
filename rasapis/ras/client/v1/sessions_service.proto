@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package ras.client.v1;
+import "google/protobuf/empty.proto";
+import "ras/protocol/v1/endpoint.proto";
+import "ras/messages/v1/sessions_messages.proto";
+import "ras/encoding/client.proto";
+
+option go_package = "github.com/v8platform/protos/gen/ras/client/clientv1";
+
+service SessionsService {
+  option(client).is_request_service = true;
+  rpc GetSessions(messages.v1.GetSessionsRequest) returns (messages.v1.GetSessionsResponse) {};
+}
+

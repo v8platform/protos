@@ -4,7 +4,6 @@ package ras.messages.v1;
 
 //import "ras/protocol/v1/param.proto";
 import "ras/encoding/ras.proto";
-import "ras/messages/v1/messages_types.proto";
 import "google/protobuf/any.proto";
 
 option csharp_namespace = "ras.messages.v1";

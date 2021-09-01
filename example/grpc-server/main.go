@@ -4,9 +4,10 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"github.com/v8platform/protos/example/ras-client/simpleClient"
-	messagesv1 "github.com/v8platform/protos/gen/ras/messages/v1"
-	serializev1 "github.com/v8platform/protos/gen/v8platform/serialize/v1"
+	"github.com/v8platform/protos/gen/ras/client/v1"
+	"github.com/v8platform/protos/gen/ras/messages/v1"
+	"github.com/v8platform/protos/gen/ras/protocol/v1"
+	"github.com/v8platform/protos/gen/v8platform/serialize/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -35,7 +36,8 @@ func run() error {
 	if err != nil {
 		return fmt.Errorf("failed to listen on %s: %w", listenOn, err)
 	}
-	srv := &rasClusterServiceServer{Host: host}
+
+	srv := &rasClusterServiceServer{Host: host, ClientServiceImpl: clientv1.NewClientService(host)}
 	server := grpc.NewServer()
 	apiv1.RegisterClustersServiceServer(server, srv)
 	RunGW(srv)
@@ -50,39 +52,57 @@ func run() error {
 
 type rasClusterServiceServer struct {
 	apiv1.UnimplementedClustersServiceServer
+	clientv1.ClientServiceImpl
 
-	Host string
+	endpoint clientv1.EndpointServiceImpl
+	Host     string
+}
+
+func (s rasClusterServiceServer) init() error {
+	_, err := s.Negotiate(protocolv1.NewNegotiateMessage())
+	if err != nil {
+		return err
+	}
+
+	_, err = s.Connect(&protocolv1.ConnectMessage{})
+	if err != nil {
+		return err
+	}
+
+	endpointOpenAck, err := s.EndpointOpen(&protocolv1.EndpointOpen{
+		Service: "v8.service.Admin.Cluster",
+		Version: "10.0",
+	})
+	if err != nil {
+		return err
+	}
+
+	endpoint, err := s.NewEndpoint(endpointOpenAck)
+	if err != nil {
+		return err
+	}
+
+	s.endpoint = clientv1.NewEndpointService(s, endpoint)
+
+	return nil
+
 }
 
 func (s rasClusterServiceServer) Clusters(ctx context.Context, req *apiv1.GetClustersRequest) (*apiv1.GetClustersResponse, error) {
-	client := simpleClient.NewClient(s.Host)
 
-	err := client.Connect(ctx)
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, err.Error())
+	if err := s.init(); err != nil {
+		return nil, err
 	}
 
-	endpoint, err := client.Open("10.0")
+	clustersService := clientv1.NewClustersService(s.endpoint)
+
+	resp, err := clustersService.GetClusters(&messagesv1.GetClustersRequest{})
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, err.Error())
+		return nil, err
 	}
-
-	err = endpoint.SendMessage(client, &messagesv1.GetClustersRequest{})
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, err.Error())
-	}
-
-	var Response messagesv1.GetClustersResponse
-
-	err = endpoint.ReadMessage(client, &Response)
-	if err != nil {
-		return nil, status.Errorf(codes.Internal, err.Error())
-	}
-
-	log.Println(Response.Clusters)
 
 	return &apiv1.GetClustersResponse{
-		Items: Response.Clusters,
+		Items: resp.Clusters,
 	}, nil
 }
 func (rasClusterServiceServer) GetCluster(ctx context.Context, req *apiv1.GetClusterRequest) (*serializev1.ClusterInfo, error) {

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package ras.client.v1;
+import "google/protobuf/empty.proto";
+import "ras/protocol/v1/endpoint.proto";
+import "ras/messages/v1/infobases_messages.proto";
+import "ras/encoding/client.proto";
+
+option go_package = "github.com/v8platform/protoc-gen-go-ras/tests/gen/ras/client/v1";
+
+service InfobasesService {
+  option(client).is_request_service = true;
+
+  rpc GetShortInfobases(messages.v1.GetInfobasesShortRequest) returns (messages.v1.GetInfobasesShortResponse) {};
+}
+

@@ -2,11 +2,10 @@ syntax = "proto3";
 
 package ras.messages.v1;
 
-import "ras/encoding/ras.proto";
-import "google/protobuf/descriptor.proto";
+import "google/protobuf/any.proto";
 
 option csharp_namespace = "ras.messages.v1";
-option go_package = "github.com/v8platform/protos/gen/rsa/messages/v1";
+option go_package = "github.com/v8platform/protos/gen/ras/messages/v1";
 
 enum MessageType {
   GET_AGENT_ADMINS_REQUEST = 0;

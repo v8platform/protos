@@ -11,10 +11,11 @@ import "ras/encoding/ras.proto";
 
 
 option csharp_namespace = "ras.protocol.v1";
-option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
+option go_package = "github.com/v8platform/protos/gen/ras/protocol/protocolv1";
 
 message NegotiateMessage {
   option (ras.encoding.options).packet_type = "PACKET_TYPE_NEGOTIATE";
+  option (ras.encoding.options).is_negotiate = true;
 
   int32 magic = 1 [(ras.encoding.field) = {
     order: 1,

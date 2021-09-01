@@ -5,7 +5,7 @@ package ras.protocol.v1;
 import "ras/encoding/ras.proto";
 
 option csharp_namespace = "ras.protocol.v1";
-option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
+option go_package = "github.com/v8platform/protos/gen/ras/protocol/protocolv1";
 
 message Param {
   ParamType type = 1 [(ras.encoding.field) = {order: 1, encoder: "byte"}];

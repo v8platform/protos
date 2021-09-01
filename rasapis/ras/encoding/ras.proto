@@ -4,22 +4,25 @@ package ras.encoding;
 
 import "google/protobuf/descriptor.proto";
 
-//import "ras/protocol/v1/param.proto";
-//import "ras/protocol/v1/types.proto";
-//import "ras/messages/v1/types.proto";
 
-option go_package = "github.com/v8platform/rasbinary";
+option go_package = "github.com/v8platform/protoc-gen-go-ras/plugin";
+
+extend google.protobuf.FieldOptions {
+  EncodingFieldOptions field = 475223888;
+}
+
+extend google.protobuf.OneofOptions {
+  EncodingFieldOptions oneof_field = 475223888;
+}
 
 extend google.protobuf.MessageOptions {
   EncodingMessageOptions options = 475223889;
+  ClientMessageOptions client_options = 475223890;
 }
 
-// Tags are applied at the field level
-extend google.protobuf.FieldOptions {
-  // Multiple Tags can be spcified.
-  string tags = 847939;
+message ClientMessageOptions {
+  bool impl = 1; // Указания на интерфейс
 }
-
 
 message EncodingMessageOptions  {
   bool generate_empty = 1;
@@ -32,19 +35,15 @@ message EncodingMessageOptions  {
     string message_type = 7;
   }
   bool generate_error_fn = 8;
+  bool generate_endpoint_helpers = 9;
+  bool generate_io_write_to = 10;
+  bool is_negotiate = 11;
 }
-
-extend google.protobuf.FieldOptions {
-  // Multiple Tags can be spcified.
-  EncodingFieldOptions field = 475223888;
-}
-
 
 message EncodingFieldOptions {
   optional string encoder = 1;
   optional int32 order = 2;
   optional int32 version = 3;
-  map<string, string> opts = 4;
   optional int32 type_field = 7;
   string type_url = 8;
   bool ignore = 9;
@@ -52,12 +51,12 @@ message EncodingFieldOptions {
 
 }
 
-extend google.protobuf.EnumValueOptions {
-  // Ссылка на тип связанного сообщения
-  string type_url = 475223891;
-}
 
 extend google.protobuf.EnumOptions {
   // Название опции в message
   string message_option = 475223891;
+}
+
+extend google.protobuf.EnumValueOptions {
+  string type_url = 475223891;
 }

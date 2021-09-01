@@ -5,7 +5,7 @@ package ras.protocol.v1;
 import "ras/encoding/ras.proto";
 
 option csharp_namespace = "ras.protocol.v1";
-option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1";
+option go_package = "github.com/v8platform/protos/gen/ras/protocol/protocolv1";
 
 enum EndpointDataType {
 
