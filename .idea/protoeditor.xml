@@ -16,6 +16,12 @@
         <ImportPathEntry>
           <option name="location" value="file://$PROJECT_DIR$/rasapis" />
         </ImportPathEntry>
+        <ImportPathEntry>
+          <option name="location" value="file://$PROJECT_DIR$/third_party/encodingapis" />
+        </ImportPathEntry>
+        <ImportPathEntry>
+          <option name="location" value="file://$PROJECT_DIR$/rasserverapis" />
+        </ImportPathEntry>
       </list>
     </option>
     <option name="descriptorPath" value="google/protobuf/descriptor.proto" />

@@ -11,7 +11,7 @@ import "ras/encoding/ras.proto";
 
 
 option csharp_namespace = "ras.protocol.v1";
-option go_package = "github.com/v8platform/protos/gen/ras/protocol/protocolv1";
+option go_package = "github.com/v8platform/protos/gen/ras/protocol/v1;protocolv1";
 
 message NegotiateMessage {
   option (ras.encoding.options).packet_type = "PACKET_TYPE_NEGOTIATE";

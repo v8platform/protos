@@ -8,7 +8,8 @@ import "v8platform/serialize/v1/sessions.proto";
 
 
 option csharp_namespace = "ras.messages.v1";
-option go_package = "github.com/v8platform/protos/gen/ras/messages/v1";
+option go_package = "github.com/v8platform/protos/gen/ras/messages/v1;messagesv1";
+
 
 message GetSessionsRequest {
   option (encoding.options).message_type = "GET_SESSIONS_REQUEST";

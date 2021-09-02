@@ -17,6 +17,13 @@ deps:
     create_time: 2021-09-02T12:20:10.287435Z
   - remote: buf.build
     owner: v8platform
+    repository: rasapis
+    branch: main
+    commit: 2acc6cd2e6a44c0d8c940f019b8d6a38
+    digest: b1-RRbo_cKkbttPYpdAcbDh1PdzvJJ1htZdG2nEHAnLkY8=
+    create_time: 2021-09-02T11:22:36.776644Z
+  - remote: buf.build
+    owner: v8platform
     repository: serializeapis
     branch: main
     commit: c6777970f4f748cdbf4d2e08f3ddb7f6

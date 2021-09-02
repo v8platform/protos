@@ -4,9 +4,9 @@ package ras.client.v1;
 import "google/protobuf/empty.proto";
 import "ras/protocol/v1/endpoint.proto";
 import "ras/messages/v1/auth_messages.proto";
-import "ras/encoding/client.proto";
+import "ras/client/client.proto";
 
-option go_package = "github.com/v8platform/protos/gen/ras/client/clientv1";
+option go_package = "github.com/v8platform/protos/gen/ras/client/v1;clientv1";
 
 service AuthService {
   option(client).is_request_service = true;

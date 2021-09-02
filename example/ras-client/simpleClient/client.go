@@ -2,17 +2,16 @@ package simpleClient
 
 import (
 	"context"
-	"github.com/v8platform/protos/extra"
-	"net"
+	clientv1 "go.buf.build/v8platform/go-gen-ras/v8platform/rasapis/ras/client/v1"
+	protocolv1 "go.buf.build/v8platform/go-gen-ras/v8platform/rasapis/ras/protocol/v1"
 )
 
 var defaultVersion = "10.0"
 
 type Client struct {
-	host string
-	net.Conn
-	endpoint *extra.Endpoint
-	version  string
+	host    string
+	client  clientv1.ClientServiceImpl
+	version string
 }
 
 func NewClient(host string) *Client {
@@ -26,39 +25,45 @@ func NewClient(host string) *Client {
 
 func (c *Client) Connect(ctx context.Context) (err error) {
 
-	if c.Conn, err = c.dial(ctx); err != nil {
-		return err
-	}
+	c.client = clientv1.NewClientService(c.host)
+	client := c.client
 
-	err = extra.Connect(c)
+	_, err = client.Negotiate(protocolv1.NewNegotiateMessage())
 	if err != nil {
 		return err
 	}
+
+	_, err = client.Connect(&protocolv1.ConnectMessage{})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
-func (c *Client) Open(version string) (endpoint *extra.Endpoint, err error) {
-	c.endpoint, err = extra.OpenEndpoint(c, version)
+func (c *Client) Open(version string) (endpoint clientv1.EndpointServiceImpl, err error) {
+
+	EndpointOpenAck, err := c.client.EndpointOpen(&protocolv1.EndpointOpen{
+		Service: "v8.service.Admin.Cluster",
+		Version: version,
+	})
+
+	if err != nil {
+		if version := c.client.DetectSupportedVersion(err); len(version) == 0 {
+			return nil, err
+		}
+		if EndpointOpenAck, err = c.client.EndpointOpen(&protocolv1.EndpointOpen{
+			Service: "v8.service.Admin.Cluster",
+			Version: version,
+		}); err != nil {
+			return nil, err
+		}
+	}
+
+	end, err := c.client.NewEndpoint(EndpointOpenAck)
 	if err != nil {
 		return nil, err
 	}
 
-	return c.endpoint, nil
-}
-
-func (c *Client) dial(ctx context.Context) (net.Conn, error) {
-
-	_, err := net.ResolveTCPAddr("tcp", c.host)
-	if err != nil {
-		return nil, err
-	}
-
-	var dialer net.Dialer
-
-	conn, err := dialer.DialContext(ctx, "tcp", c.host)
-	if err != nil {
-		return nil, err
-	}
-
-	return conn, nil
+	return clientv1.NewEndpointService(c.client, end), nil
 }

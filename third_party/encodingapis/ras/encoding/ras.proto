@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package ras.encoding;
+
+import "google/protobuf/descriptor.proto";
+
+
+option go_package = "github.com/v8platform/protoc-gen-go-ras/plugin/ras/encoding";
+
+extend google.protobuf.FieldOptions {
+  EncodingFieldOptions field = 475223888;
+}
+
+extend google.protobuf.OneofOptions {
+  EncodingFieldOptions oneof_field = 475223888;
+}
+
+extend google.protobuf.MessageOptions {
+  EncodingMessageOptions options = 475223889;
+  ClientMessageOptions client_options = 475223890;
+}
+
+message ClientMessageOptions {
+  bool impl = 1; // Указания на интерфейс
+}
+
+message EncodingMessageOptions  {
+  bool generate_empty = 1;
+  bool generate_packet_helpers = 2;
+  bool generate_endpoint_message_helpers = 3;
+  bool generate_message_helpers = 4;
+  oneof type {
+    string packet_type = 5;
+    string endpoint_data_type = 6;
+    string message_type = 7;
+  }
+  bool generate_error_fn = 8;
+  bool generate_endpoint_helpers = 9;
+  bool generate_io_write_to = 10;
+  bool is_negotiate = 11;
+}
+
+message EncodingFieldOptions {
+  optional string encoder = 1;
+  optional int32 order = 2;
+  optional int32 version = 3;
+  optional int32 type_field = 7;
+  string type_url = 8;
+  bool ignore = 9;
+  optional int32 size_field = 10;
+
+}
+
+
+extend google.protobuf.EnumOptions {
+  // Название опции в message
+  string message_option = 475223891;
+}
+
+extend google.protobuf.EnumValueOptions {
+  string type_url = 475223891;
+}

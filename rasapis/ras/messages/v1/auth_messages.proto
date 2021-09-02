@@ -6,8 +6,7 @@ import "ras/encoding/ras.proto";
 import "google/protobuf/any.proto";
 
 option csharp_namespace = "ras.messages.v1";
-option go_package = "github.com/v8platform/protos/gen/ras/messages/v1";
-
+option go_package = "github.com/v8platform/protos/gen/ras/messages/v1;messagesv1";
 
 message AuthenticateAgentRequest {
   option (encoding.options).message_type = "AUTHENTICATE_AGENT_REQUEST";

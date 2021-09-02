@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package ras.api.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+option go_package = "github.com/v8platform/protos/gen/ras/api/v1;apiv1";
+
+message Cluster {
+
+  string id = 1;
+
+  optional string usr = 2;
+  optional string pwd = 3;
+
+}

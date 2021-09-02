@@ -9,7 +9,8 @@ import "v8platform/serialize/v1/sessions.proto";
 
 
 option csharp_namespace = "ras.messages.v1";
-option go_package = "github.com/v8platform/protos/gen/ras/messages/v1";
+option go_package = "github.com/v8platform/protos/gen/ras/messages/v1;messagesv1";
+
 
 message GetInfobasesShortRequest {
   option (encoding.options).message_type = "GET_INFOBASES_SHORT_REQUEST";
@@ -32,5 +33,5 @@ message GetInfobaseSessionsRequest {
 
 message GetInfobaseSessionsResponse {
   option (encoding.options).message_type = "GET_INFOBASE_SESSIONS_RESPONSE";
-  repeated v8platform.serialize.v1.SessionInfo sessions = 1 [(ras.encoding.field).order = 1];
+  repeated v8platform.serialize.v1.SessionInfo infobases = 1 [(ras.encoding.field).order = 1];
 }

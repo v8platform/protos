@@ -5,7 +5,8 @@ import (
 	"flag"
 	"fmt"
 	"github.com/v8platform/protos/example/ras-client/simpleClient"
-	messagesv1 "github.com/v8platform/protos/gen/ras/messages/v1"
+	clientv1 "go.buf.build/v8platform/go-gen-ras/v8platform/rasapis/ras/client/v1"
+	messagesv1 "go.buf.build/v8platform/go-gen-ras/v8platform/rasapis/ras/messages/v1"
 	"log"
 )
 
@@ -25,57 +26,26 @@ func main() {
 		panic(err)
 	}
 
-	endpoint, err := client.Open("10.0")
+	endpointService, err := client.Open("10.0")
 	if err != nil {
 		panic(err)
 	}
 
-	log.Printf("%v", endpoint)
-
-	err = endpoint.SendMessage(client, &messagesv1.GetClustersRequest{})
+	ras := clientv1.NewRasService(endpointService)
+	clusters, err := ras.GetClusters(&messagesv1.GetClustersRequest{})
 	if err != nil {
-		panic(err)
-	}
-
-	var Response messagesv1.GetClustersResponse
-
-	err = endpoint.ReadMessage(client, &Response)
-	if err != nil {
-		panic(err)
-	}
-
-	log.Println(Response.Clusters)
-
-	err = endpoint.SendMessage(client, &messagesv1.ClusterAuthenticateRequest{
-		ClusterId: Response.Clusters[0].Uuid,
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	err = endpoint.ReadVoidMessage(client)
-	if err != nil {
-		panic(err)
-	}
-
-	err = endpoint.SendMessage(client, &messagesv1.GetSessionsRequest{
-		ClusterId: Response.Clusters[0].Uuid,
-	})
-	if err != nil {
-		panic(err)
-	}
-
-	var resp messagesv1.GetSessionsResponse
-
-	err = endpoint.ReadMessage(client, &resp)
-	if err != nil {
-		panic(err)
+		return
 	}
 
 	fmt.Println("Список полученных сессий")
+
+	sessions, err := ras.GetSessions(&messagesv1.GetSessionsRequest{ClusterId: clusters.Clusters[0].Uuid})
+	if err != nil {
+		return
+	}
 	// pp.SetDefaultMaxDepth(1)
 	// pp.Println(resp.Sessions)
-	for _, session := range resp.Sessions {
+	for _, session := range sessions.Sessions {
 
 		log.Println(session.String())
 	}

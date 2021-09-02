@@ -1,9 +1,10 @@
 version: v1
-name: buf.build/v8platform/rasapis
+name: buf.build/v8platform/rasserverapis
 deps:
   - buf.build/googleapis/googleapis
   - buf.build/v8platform/encodingapis
   - buf.build/v8platform/serializeapis
+  - buf.build/v8platform/rasapis
 
 lint:
   use:

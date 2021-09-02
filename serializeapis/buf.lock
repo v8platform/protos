@@ -2,9 +2,9 @@
 version: v1
 deps:
   - remote: buf.build
-    owner: googleapis
-    repository: googleapis
+    owner: v8platform
+    repository: encodingapis
     branch: main
-    commit: 84c3cad756d2435982d9e3b72680fa96
-    digest: b1-GVZocI28gwtZCKNAO4Jd83jaE_XMjcAuEBtjnWvybO0=
-    create_time: 2021-08-17T15:06:58.03881Z
+    commit: ed9a75c1223f43759e3c7be9067aa8ac
+    digest: b1-kAStsQhzYGPt2Wk8ZNCl6KYUNoKQS1JwwwgpEXLPyZs=
+    create_time: 2021-09-02T12:20:10.287435Z

@@ -6,7 +6,8 @@ import "ras/encoding/ras.proto";
 import "v8platform/serialize/v1/clusters.proto";
 
 option csharp_namespace = "ras.messages.v1";
-option go_package = "github.com/v8platform/protos/gen/ras/messages/v1";
+option go_package = "github.com/v8platform/protos/gen/ras/messages/v1;messagesv1";
+
 
 message GetClustersRequest {
   option (ras.encoding.options).message_type = "GET_CLUSTERS_REQUEST";
