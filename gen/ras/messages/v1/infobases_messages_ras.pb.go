@@ -73,3 +73,73 @@ func (x *GetInfobasesShortResponse) Formatter(writer io.Writer, version int32) e
 	}
 	return nil
 }
+func (x *GetInfobaseSessionsRequest) GetMessageType() MessageType {
+	return MessageType_GET_INFOBASE_SESSIONS_REQUEST
+}
+
+func (x *GetInfobaseSessionsRequest) Parse(reader io.Reader, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
+		return err
+	}
+	// decode x.InfobaseId opts: encoder:"uuid"  order:2
+	if err := codec256.ParseUUID(reader, &x.InfobaseId); err != nil {
+		return err
+	}
+	return nil
+}
+func (x *GetInfobaseSessionsRequest) Formatter(writer io.Writer, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
+		return err
+	}
+	// decode x.InfobaseId opts: encoder:"uuid"  order:2
+	if err := codec256.FormatUuid(writer, x.InfobaseId); err != nil {
+		return err
+	}
+	return nil
+}
+func (x *GetInfobaseSessionsResponse) GetMessageType() MessageType {
+	return MessageType_GET_INFOBASE_SESSIONS_RESPONSE
+}
+
+func (x *GetInfobaseSessionsResponse) Parse(reader io.Reader, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.Sessions opts: order:1
+	var size_Sessions int
+	if err := codec256.ParseSize(reader, &size_Sessions); err != nil {
+		return err
+	}
+	for i := 0; i < size_Sessions; i++ {
+		val := &v1.SessionInfo{}
+		if err := val.Parse(reader, version); err != nil {
+			return err
+		}
+
+		x.Sessions = append(x.Sessions, val)
+	}
+	return nil
+}
+func (x *GetInfobaseSessionsResponse) Formatter(writer io.Writer, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.Sessions opts: order:1
+	if err := codec256.FormatSize(writer, len(x.Sessions)); err != nil {
+		return err
+	}
+	for i := 0; i < len(x.Sessions); i++ {
+		if err := x.Sessions[i].Formatter(writer, version); err != nil {
+			return err
+		}
+	}
+	return nil
+}

@@ -7,10 +7,13 @@ package clientv1
 
 import (
 	v1 "github.com/v8platform/protos/gen/ras/messages/v1"
+	proto "google.golang.org/protobuf/proto"
+	anypb "google.golang.org/protobuf/types/known/anypb"
 )
 
 type InfobasesServiceImpl interface {
 	GetShortInfobases(*v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error)
+	GetSessions(*v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error)
 }
 
 func NewInfobasesService(endpointService EndpointServiceImpl) InfobasesServiceImpl {
@@ -25,8 +28,58 @@ type InfobasesService struct {
 }
 
 func (x *InfobasesService) GetShortInfobases(req *v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error) {
+
 	var resp v1.GetInfobasesShortResponse
-	if err := x.e.Request(req, &resp); err != nil {
+
+	anyRequest, err := anypb.New(req)
+	if err != nil {
+		return nil, err
+	}
+
+	anyRespond, err := anypb.New(&resp)
+	if err != nil {
+		return nil, err
+	}
+
+	endpointRequest := &EndpointRequest{
+		Request: anyRequest,
+		Respond: anyRespond,
+	}
+	response, err := x.e.Request(endpointRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (x *InfobasesService) GetSessions(req *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error) {
+
+	var resp v1.GetInfobaseSessionsResponse
+
+	anyRequest, err := anypb.New(req)
+	if err != nil {
+		return nil, err
+	}
+
+	anyRespond, err := anypb.New(&resp)
+	if err != nil {
+		return nil, err
+	}
+
+	endpointRequest := &EndpointRequest{
+		Request: anyRequest,
+		Respond: anyRespond,
+	}
+	response, err := x.e.Request(endpointRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
 		return nil, err
 	}
 	return &resp, nil

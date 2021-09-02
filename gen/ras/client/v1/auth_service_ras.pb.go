@@ -7,6 +7,8 @@ package clientv1
 
 import (
 	v1 "github.com/v8platform/protos/gen/ras/messages/v1"
+	proto "google.golang.org/protobuf/proto"
+	anypb "google.golang.org/protobuf/types/known/anypb"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -28,22 +30,87 @@ type AuthService struct {
 }
 
 func (x *AuthService) AuthenticateCluster(req *v1.ClusterAuthenticateRequest) (*emptypb.Empty, error) {
+
 	var resp emptypb.Empty
-	if err := x.e.Request(req, nil); err != nil {
+
+	anyRequest, err := anypb.New(req)
+	if err != nil {
+		return nil, err
+	}
+
+	anyRespond, err := anypb.New(&resp)
+	if err != nil {
+		return nil, err
+	}
+
+	endpointRequest := &EndpointRequest{
+		Request: anyRequest,
+		Respond: anyRespond,
+	}
+	response, err := x.e.Request(endpointRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
 		return nil, err
 	}
 	return &resp, nil
 }
+
 func (x *AuthService) AuthenticateInfobase(req *v1.AuthenticateInfobaseRequest) (*emptypb.Empty, error) {
+
 	var resp emptypb.Empty
-	if err := x.e.Request(req, nil); err != nil {
+
+	anyRequest, err := anypb.New(req)
+	if err != nil {
+		return nil, err
+	}
+
+	anyRespond, err := anypb.New(&resp)
+	if err != nil {
+		return nil, err
+	}
+
+	endpointRequest := &EndpointRequest{
+		Request: anyRequest,
+		Respond: anyRespond,
+	}
+	response, err := x.e.Request(endpointRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
 		return nil, err
 	}
 	return &resp, nil
 }
+
 func (x *AuthService) AuthenticateAgent(req *v1.AuthenticateAgentRequest) (*emptypb.Empty, error) {
+
 	var resp emptypb.Empty
-	if err := x.e.Request(req, nil); err != nil {
+
+	anyRequest, err := anypb.New(req)
+	if err != nil {
+		return nil, err
+	}
+
+	anyRespond, err := anypb.New(&resp)
+	if err != nil {
+		return nil, err
+	}
+
+	endpointRequest := &EndpointRequest{
+		Request: anyRequest,
+		Respond: anyRespond,
+	}
+	response, err := x.e.Request(endpointRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
 		return nil, err
 	}
 	return &resp, nil

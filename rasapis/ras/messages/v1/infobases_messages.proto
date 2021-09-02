@@ -4,6 +4,7 @@ package ras.messages.v1;
 
 import "ras/encoding/ras.proto";
 import "v8platform/serialize/v1/infobases.proto";
+import "v8platform/serialize/v1/sessions.proto";
 
 
 
@@ -21,4 +22,15 @@ message GetInfobasesShortResponse {
   repeated v8platform.serialize.v1.InfobaseSummaryInfo sessions = 1 [(ras.encoding.field) = {
     order: 1,
   }];;
+}
+
+message GetInfobaseSessionsRequest {
+  option (encoding.options).message_type = "GET_INFOBASE_SESSIONS_REQUEST";
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"}];
+  string infobase_id = 2 [(ras.encoding.field) = {order: 2, encoder: "uuid"}];
+}
+
+message GetInfobaseSessionsResponse {
+  option (encoding.options).message_type = "GET_INFOBASE_SESSIONS_RESPONSE";
+  repeated v8platform.serialize.v1.SessionInfo sessions = 1 [(ras.encoding.field).order = 1];
 }

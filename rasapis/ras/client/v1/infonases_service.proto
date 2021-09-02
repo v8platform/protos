@@ -11,6 +11,12 @@ option go_package = "github.com/v8platform/protoc-gen-go-ras/tests/gen/ras/clien
 service InfobasesService {
   option(client).is_request_service = true;
 
+  // GetInfobasesShortRequest
   rpc GetShortInfobases(messages.v1.GetInfobasesShortRequest) returns (messages.v1.GetInfobasesShortResponse) {};
+  // GetInfobaseSessionsRequest
+  rpc GetSessions(messages.v1.GetInfobaseSessionsRequest) returns (messages.v1.GetInfobaseSessionsResponse) {
+    option(method).proxy_name = "GetInfobaseSessions";
+  };
+
 }
 

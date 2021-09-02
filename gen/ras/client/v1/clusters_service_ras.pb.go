@@ -7,6 +7,8 @@ package clientv1
 
 import (
 	v1 "github.com/v8platform/protos/gen/ras/messages/v1"
+	proto "google.golang.org/protobuf/proto"
+	anypb "google.golang.org/protobuf/types/known/anypb"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -29,29 +31,116 @@ type ClustersService struct {
 }
 
 func (x *ClustersService) GetClusters(req *v1.GetClustersRequest) (*v1.GetClustersResponse, error) {
+
 	var resp v1.GetClustersResponse
-	if err := x.e.Request(req, &resp); err != nil {
+
+	anyRequest, err := anypb.New(req)
+	if err != nil {
+		return nil, err
+	}
+
+	anyRespond, err := anypb.New(&resp)
+	if err != nil {
+		return nil, err
+	}
+
+	endpointRequest := &EndpointRequest{
+		Request: anyRequest,
+		Respond: anyRespond,
+	}
+	response, err := x.e.Request(endpointRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
 		return nil, err
 	}
 	return &resp, nil
 }
+
 func (x *ClustersService) GetClusterInfo(req *v1.GetClusterInfoRequest) (*v1.GetClusterInfoResponse, error) {
+
 	var resp v1.GetClusterInfoResponse
-	if err := x.e.Request(req, &resp); err != nil {
+
+	anyRequest, err := anypb.New(req)
+	if err != nil {
+		return nil, err
+	}
+
+	anyRespond, err := anypb.New(&resp)
+	if err != nil {
+		return nil, err
+	}
+
+	endpointRequest := &EndpointRequest{
+		Request: anyRequest,
+		Respond: anyRespond,
+	}
+	response, err := x.e.Request(endpointRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
 		return nil, err
 	}
 	return &resp, nil
 }
+
 func (x *ClustersService) RegCluster(req *v1.RegClusterRequest) (*v1.RegClusterResponse, error) {
+
 	var resp v1.RegClusterResponse
-	if err := x.e.Request(req, &resp); err != nil {
+
+	anyRequest, err := anypb.New(req)
+	if err != nil {
+		return nil, err
+	}
+
+	anyRespond, err := anypb.New(&resp)
+	if err != nil {
+		return nil, err
+	}
+
+	endpointRequest := &EndpointRequest{
+		Request: anyRequest,
+		Respond: anyRespond,
+	}
+	response, err := x.e.Request(endpointRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
 		return nil, err
 	}
 	return &resp, nil
 }
+
 func (x *ClustersService) UnregCluster(req *v1.UnregClusterRequest) (*emptypb.Empty, error) {
+
 	var resp emptypb.Empty
-	if err := x.e.Request(req, nil); err != nil {
+
+	anyRequest, err := anypb.New(req)
+	if err != nil {
+		return nil, err
+	}
+
+	anyRespond, err := anypb.New(&resp)
+	if err != nil {
+		return nil, err
+	}
+
+	endpointRequest := &EndpointRequest{
+		Request: anyRequest,
+		Respond: anyRespond,
+	}
+	response, err := x.e.Request(endpointRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
 		return nil, err
 	}
 	return &resp, nil

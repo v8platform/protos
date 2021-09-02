@@ -8,6 +8,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	anypb "google.golang.org/protobuf/types/known/anypb"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -320,7 +321,7 @@ var ClientService_ServiceDesc = grpc.ServiceDesc{
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type EndpointServiceClient interface {
-	Request(ctx context.Context, in *v1.EndpointMessage, opts ...grpc.CallOption) (*v1.EndpointMessage, error)
+	Request(ctx context.Context, in *EndpointRequest, opts ...grpc.CallOption) (*anypb.Any, error)
 }
 
 type endpointServiceClient struct {
@@ -331,8 +332,8 @@ func NewEndpointServiceClient(cc grpc.ClientConnInterface) EndpointServiceClient
 	return &endpointServiceClient{cc}
 }
 
-func (c *endpointServiceClient) Request(ctx context.Context, in *v1.EndpointMessage, opts ...grpc.CallOption) (*v1.EndpointMessage, error) {
-	out := new(v1.EndpointMessage)
+func (c *endpointServiceClient) Request(ctx context.Context, in *EndpointRequest, opts ...grpc.CallOption) (*anypb.Any, error) {
+	out := new(anypb.Any)
 	err := c.cc.Invoke(ctx, "/ras.client.v1.EndpointService/Request", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -344,14 +345,14 @@ func (c *endpointServiceClient) Request(ctx context.Context, in *v1.EndpointMess
 // All implementations should embed UnimplementedEndpointServiceServer
 // for forward compatibility
 type EndpointServiceServer interface {
-	Request(context.Context, *v1.EndpointMessage) (*v1.EndpointMessage, error)
+	Request(context.Context, *EndpointRequest) (*anypb.Any, error)
 }
 
 // UnimplementedEndpointServiceServer should be embedded to have forward compatible implementations.
 type UnimplementedEndpointServiceServer struct {
 }
 
-func (UnimplementedEndpointServiceServer) Request(context.Context, *v1.EndpointMessage) (*v1.EndpointMessage, error) {
+func (UnimplementedEndpointServiceServer) Request(context.Context, *EndpointRequest) (*anypb.Any, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Request not implemented")
 }
 
@@ -367,7 +368,7 @@ func RegisterEndpointServiceServer(s grpc.ServiceRegistrar, srv EndpointServiceS
 }
 
 func _EndpointService_Request_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v1.EndpointMessage)
+	in := new(EndpointRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -379,7 +380,7 @@ func _EndpointService_Request_Handler(srv interface{}, ctx context.Context, dec 
 		FullMethod: "/ras.client.v1.EndpointService/Request",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EndpointServiceServer).Request(ctx, req.(*v1.EndpointMessage))
+		return srv.(EndpointServiceServer).Request(ctx, req.(*EndpointRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

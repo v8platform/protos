@@ -15,8 +15,9 @@ func (x *NegotiateMessage) GetPacketType() PacketType {
 }
 
 const (
-	Magic           int32 = 475223888
-	ProtocolVersion int32 = 256
+	Magic           int32  = 475223888
+	ProtocolVersion int32  = 256
+	ServiceName     string = "v8.service.Admin.Cluster"
 )
 
 func NewNegotiateMessage() *NegotiateMessage {

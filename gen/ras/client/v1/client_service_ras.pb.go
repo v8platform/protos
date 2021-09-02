@@ -6,9 +6,12 @@
 package clientv1
 
 import (
+	fmt "fmt"
 	cast "github.com/spf13/cast"
 	codec256 "github.com/v8platform/encoder/ras/codec256"
 	v1 "github.com/v8platform/protos/gen/ras/protocol/v1"
+	proto "google.golang.org/protobuf/proto"
+	anypb "google.golang.org/protobuf/types/known/anypb"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	net "net"
 	regexp "regexp"
@@ -25,23 +28,24 @@ type ClientServiceImpl interface {
 	EndpointClose(*v1.EndpointClose) (*emptypb.Empty, error)
 	EndpointMessage(*v1.EndpointMessage) (*v1.EndpointMessage, error)
 	NewEndpoint(*v1.EndpointOpenAck) (*v1.Endpoint, error)
+	DetectSupportedVersion(err error) string
 }
 
-func NewClientService(host string, opts ...Option) ClientServiceImpl {
-	options := &Options{}
+func NewClientService(host string, opts ...ClientServiceOption) ClientServiceImpl {
+	options := &ClientServiceOptions{timeout: 5 * time.Second}
 	for _, opt := range opts {
 		opt(options)
 	}
-	return &ClientService{
-		host:    host,
-		Options: options,
-		mu:      &sync.Mutex{},
+	return &clientService{
+		host:                 host,
+		ClientServiceOptions: options,
+		mu:                   &sync.Mutex{},
 	}
 }
 
 // ClientService is the client for RAS service.
-type ClientService struct {
-	*Options
+type clientService struct {
+	*ClientServiceOptions
 	host string
 	conn net.Conn
 	mu   *sync.Mutex
@@ -51,7 +55,7 @@ var serviceVersions = []string{"3.0", "4.0", "5.0", "6.0", "7.0", "8.0", "9.0", 
 
 var re = regexp.MustCompile(`(?m)supported=(.*?)]`)
 
-func (x *ClientService) DetectSupportedVersion(err error) string {
+func (x *clientService) DetectSupportedVersion(err error) string {
 
 	fail, ok := err.(*v1.EndpointFailureAck)
 	if !ok {
@@ -79,16 +83,21 @@ func (x *ClientService) DetectSupportedVersion(err error) string {
 	return ""
 }
 
-type Option func(*Options)
+type ClientServiceOption func(*ClientServiceOptions)
 
-type Options struct {
-	dialer *net.Dialer
+type ClientServiceOptions struct {
+	dialer  *net.Dialer
+	timeout time.Duration
 }
 
-func WithDialer(dialer *net.Dialer) Option {
-	return func(o *Options) { o.dialer = dialer }
+func WithDialer(dialer *net.Dialer) ClientServiceOption {
+	return func(o *ClientServiceOptions) { o.dialer = dialer }
 }
-func (x *ClientService) dial() error {
+
+func SetTimeout(timeout time.Duration) ClientServiceOption {
+	return func(o *ClientServiceOptions) { o.timeout = timeout }
+}
+func (x *clientService) dial() error {
 	if x.conn != nil {
 		return nil
 	}
@@ -105,19 +114,18 @@ func (x *ClientService) dial() error {
 	return err
 }
 
-func (x *ClientService) Negotiate(req *v1.NegotiateMessage) (*emptypb.Empty, error) {
+func (x *clientService) Negotiate(req *v1.NegotiateMessage) (*emptypb.Empty, error) {
 	if err := x.dial(); err != nil {
 		return nil, err
 	}
 	x.mu.Lock()
 	defer x.mu.Unlock()
-	// TODO convert to formatter
 	if err := req.Formatter(x.conn, 0); err != nil {
 		return nil, err
 	}
 	return new(emptypb.Empty), nil
 }
-func (x *ClientService) Connect(req *v1.ConnectMessage) (*v1.ConnectMessageAck, error) {
+func (x *clientService) Connect(req *v1.ConnectMessage) (*v1.ConnectMessageAck, error) {
 	if err := x.dial(); err != nil {
 		return nil, err
 	}
@@ -130,7 +138,7 @@ func (x *ClientService) Connect(req *v1.ConnectMessage) (*v1.ConnectMessageAck, 
 	if _, err := packet.WriteTo(x.conn); err != nil {
 		return nil, err
 	}
-	if err := x.conn.SetReadDeadline(time.Now().Add(5 * time.Second)); err != nil {
+	if err := x.conn.SetReadDeadline(time.Now().Add(x.timeout)); err != nil {
 		return nil, err
 	}
 	ackPacket, err := v1.NewPacket(x.conn)
@@ -141,7 +149,7 @@ func (x *ClientService) Connect(req *v1.ConnectMessage) (*v1.ConnectMessageAck, 
 	return resp, ackPacket.Unpack(resp)
 }
 
-func (x *ClientService) Disconnect(req *v1.DisconnectMessage) (*emptypb.Empty, error) {
+func (x *clientService) Disconnect(req *v1.DisconnectMessage) (*emptypb.Empty, error) {
 	if err := x.dial(); err != nil {
 		return nil, err
 	}
@@ -156,7 +164,7 @@ func (x *ClientService) Disconnect(req *v1.DisconnectMessage) (*emptypb.Empty, e
 	}
 	return new(emptypb.Empty), nil
 }
-func (x *ClientService) EndpointOpen(req *v1.EndpointOpen) (*v1.EndpointOpenAck, error) {
+func (x *clientService) EndpointOpen(req *v1.EndpointOpen) (*v1.EndpointOpenAck, error) {
 	if err := x.dial(); err != nil {
 		return nil, err
 	}
@@ -169,7 +177,7 @@ func (x *ClientService) EndpointOpen(req *v1.EndpointOpen) (*v1.EndpointOpenAck,
 	if _, err := packet.WriteTo(x.conn); err != nil {
 		return nil, err
 	}
-	if err := x.conn.SetReadDeadline(time.Now().Add(5 * time.Second)); err != nil {
+	if err := x.conn.SetReadDeadline(time.Now().Add(x.timeout)); err != nil {
 		return nil, err
 	}
 	ackPacket, err := v1.NewPacket(x.conn)
@@ -180,7 +188,7 @@ func (x *ClientService) EndpointOpen(req *v1.EndpointOpen) (*v1.EndpointOpenAck,
 	return resp, ackPacket.Unpack(resp)
 }
 
-func (x *ClientService) EndpointClose(req *v1.EndpointClose) (*emptypb.Empty, error) {
+func (x *clientService) EndpointClose(req *v1.EndpointClose) (*emptypb.Empty, error) {
 	if err := x.dial(); err != nil {
 		return nil, err
 	}
@@ -195,7 +203,7 @@ func (x *ClientService) EndpointClose(req *v1.EndpointClose) (*emptypb.Empty, er
 	}
 	return new(emptypb.Empty), nil
 }
-func (x *ClientService) EndpointMessage(req *v1.EndpointMessage) (*v1.EndpointMessage, error) {
+func (x *clientService) EndpointMessage(req *v1.EndpointMessage) (*v1.EndpointMessage, error) {
 	if err := x.dial(); err != nil {
 		return nil, err
 	}
@@ -208,7 +216,7 @@ func (x *ClientService) EndpointMessage(req *v1.EndpointMessage) (*v1.EndpointMe
 	if _, err := packet.WriteTo(x.conn); err != nil {
 		return nil, err
 	}
-	if err := x.conn.SetReadDeadline(time.Now().Add(5 * time.Second)); err != nil {
+	if err := x.conn.SetReadDeadline(time.Now().Add(x.timeout)); err != nil {
 		return nil, err
 	}
 	ackPacket, err := v1.NewPacket(x.conn)
@@ -219,7 +227,7 @@ func (x *ClientService) EndpointMessage(req *v1.EndpointMessage) (*v1.EndpointMe
 	return resp, ackPacket.Unpack(resp)
 }
 
-func (x *ClientService) NewEndpoint(req *v1.EndpointOpenAck) (*v1.Endpoint, error) {
+func (x *clientService) NewEndpoint(req *v1.EndpointOpenAck) (*v1.Endpoint, error) {
 	return &v1.Endpoint{
 		Service: req.GetService(),
 		Version: cast.ToInt32(cast.ToFloat32(req.GetVersion())),
@@ -229,29 +237,56 @@ func (x *ClientService) NewEndpoint(req *v1.EndpointOpenAck) (*v1.Endpoint, erro
 }
 
 type EndpointServiceImpl interface {
-	Request(req v1.EndpointMessageFormatter, resp v1.EndpointMessageParser) error
+	Request(*EndpointRequest) (*anypb.Any, error)
 }
 
 func NewEndpointService(clientService ClientServiceImpl, endpoint v1.EndpointImpl) EndpointServiceImpl {
-	return &EndpointService{
+	return &endpointService{
 		endpoint,
 		clientService,
 	}
 }
 
 // EndpointService is the endpoint service for RAS service.
-type EndpointService struct {
+type endpointService struct {
 	v1.EndpointImpl
 	client ClientServiceImpl
 }
 
-func (x *EndpointService) Request(req v1.EndpointMessageFormatter, resp v1.EndpointMessageParser) error {
-	reqMessage, err := x.NewMessage(req)
+func (x *endpointService) Request(req *EndpointRequest) (*anypb.Any, error) {
+	message, err := anypb.UnmarshalNew(req.GetRequest(), proto.UnmarshalOptions{})
 	if err != nil {
-		return err
+		return nil, err
 	}
-	if respMessage, err := x.client.EndpointMessage(reqMessage); err == nil {
-		return x.UnpackMessage(respMessage, resp)
+
+	reqMessage, err := x.NewMessage(message)
+	if err != nil {
+		return nil, err
 	}
-	return err
+
+	respMessage, err := x.client.EndpointMessage(reqMessage)
+	if err != nil {
+		return nil, err
+	}
+
+	respProtoMessage, err := anypb.UnmarshalNew(req.GetRespond(), proto.UnmarshalOptions{})
+	if err != nil {
+		return nil, err
+	}
+
+	if _, ok := respProtoMessage.(*emptypb.Empty); ok {
+		if err := x.UnpackMessage(respMessage, nil); err != nil {
+			return nil, err
+		}
+		return anypb.New(respProtoMessage)
+	}
+
+	messageParser, ok := respProtoMessage.(v1.EndpointMessageParser)
+	if !ok {
+		return nil, fmt.Errorf("not parser interface")
+	}
+	if err := x.UnpackMessage(respMessage, messageParser); err != nil {
+		return nil, err
+	}
+	return anypb.New(respProtoMessage)
 }

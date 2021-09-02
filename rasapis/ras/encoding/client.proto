@@ -14,6 +14,7 @@ message ClientOptions {
   bool is_client = 1;
   bool is_endpoint = 2;
   bool is_request_service = 3;
+  bool is_ras_service = 4;
 }
 
 
@@ -27,5 +28,7 @@ message ClientMethodOptions {
   map<string, string> param = 2;
   bool ignore_empty = 3;
   bool new_endpoint_func = 4;
+  string proxy_name = 5;
+
 
 }

@@ -7,6 +7,8 @@ package clientv1
 
 import (
 	v1 "github.com/v8platform/protos/gen/ras/messages/v1"
+	proto "google.golang.org/protobuf/proto"
+	anypb "google.golang.org/protobuf/types/known/anypb"
 )
 
 type SessionsServiceImpl interface {
@@ -25,8 +27,29 @@ type SessionsService struct {
 }
 
 func (x *SessionsService) GetSessions(req *v1.GetSessionsRequest) (*v1.GetSessionsResponse, error) {
+
 	var resp v1.GetSessionsResponse
-	if err := x.e.Request(req, &resp); err != nil {
+
+	anyRequest, err := anypb.New(req)
+	if err != nil {
+		return nil, err
+	}
+
+	anyRespond, err := anypb.New(&resp)
+	if err != nil {
+		return nil, err
+	}
+
+	endpointRequest := &EndpointRequest{
+		Request: anyRequest,
+		Respond: anyRespond,
+	}
+	response, err := x.e.Request(endpointRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
 		return nil, err
 	}
 	return &resp, nil

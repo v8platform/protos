@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package ras.client.v1;
 import "google/protobuf/empty.proto";
+import "google/protobuf/any.proto";
 import "ras/protocol/v1/connect.proto";
 import "ras/protocol/v1/endpoint.proto";
 import "ras/encoding/client.proto";
@@ -31,11 +32,13 @@ service EndpointService {
 
   option(client).is_endpoint = true;
 
-  rpc Request(protocol.v1.EndpointMessage) returns (protocol.v1.EndpointMessage) {
-    option(method).ignore_empty = true;
-    option(method).param = {key: "req", value: "EndpointMessageFormatter"};
-    option(method).param = {key: "resp", value: "EndpointMessageParser"};
-  };
+  rpc Request(EndpointRequest) returns (google.protobuf.Any) {};
 
 }
+
+message EndpointRequest {
+  google.protobuf.Any request = 1;
+  google.protobuf.Any respond = 2;
+}
+
 
