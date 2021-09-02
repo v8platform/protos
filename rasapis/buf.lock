@@ -19,6 +19,6 @@ deps:
     owner: v8platform
     repository: serializeapis
     branch: main
-    commit: c6777970f4f748cdbf4d2e08f3ddb7f6
-    digest: b1-0kju0o3NVuhTey-B952lNBq43-ioLojNsMebUwZUG_k=
-    create_time: 2021-09-02T11:18:48.395721Z
+    commit: a6246712ab2d4c7c9d39db56af30c29f
+    digest: b1-POYK5yqMR2XramkW0fhT3tgaMai5H3QVonnMsFn1mqc=
+    create_time: 2021-09-02T14:45:14.885435Z

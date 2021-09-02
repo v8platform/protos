@@ -5,6 +5,9 @@ package v8platform.serialize.v1;
 import "google/protobuf/timestamp.proto";
 import "ras/encoding/ras.proto";
 
+option go_package = "github.com/v8platform/protos/gen/v8platform/serialize/v1;serializev1";
+
+
 message ClusterInfo {
 
 

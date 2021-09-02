@@ -1,5 +1,5 @@
 version: v1
 directories:
-  - serializeapis
-  - rasapis
+  #  - serializeapis
+  #  - rasapis
   - rasserverapis
