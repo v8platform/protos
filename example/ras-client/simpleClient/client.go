@@ -67,3 +67,12 @@ func (c *Client) Open(version string) (endpoint clientv1.EndpointServiceImpl, er
 
 	return clientv1.NewEndpointService(c.client, end), nil
 }
+
+func (c *Client) Close() error {
+	_, err := c.client.Disconnect(&protocolv1.DisconnectMessage{})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

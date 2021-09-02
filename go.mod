@@ -4,7 +4,7 @@ go 1.17
 
 require go.buf.build/v8platform/go-gen-ras/v8platform/rasapis v1.2.1
 
-replace github.com/v8platform/encoder v0.0.0-20210827151227-b5d3b2e92f77 => ../encoder
+replace github.com/v8platform/encoder v0.0.1 => ../encoder
 
 require (
 	github.com/google/go-cmp v0.5.6 // indirect
