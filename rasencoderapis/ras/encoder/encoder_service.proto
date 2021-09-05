@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package ras.encoder;
+import "google/protobuf/any.proto";
+import "google/protobuf/wrappers.proto";
+import "ras/protocol/v1/packet.proto"
+
+option go_package = "github.com/v8platform/protos/gen/ras/encoder;encoder";
+
+service EncoderService {
+  //codec debug func
+  rpc Encode(EncodeRequest) returns (google.protobuf.BytesValue) {};
+  rpc Decode(DecodeRequest) returns (google.protobuf.Any) {};
+
+  //packet debug func
+  rpc PacketEncode(ras.protocol.v1.Packet) returns (google.protobuf.BytesValue);
+  rpc PacketDecode(google.protobuf.BytesValue) returns (ras.protocol.v1.Packet);
+
+  // Конвертирует любой сообщение в пакет
+  // Сообщение должно реализовавать интерфейс пакета
+  // * PacketType()
+  // * Format()
+  rpc NewPacket(google.protobuf.Any) returns (ras.protocol.v1.Packet);
+  // Аналог NewPacket только еще сразу кодирует пакет в байты
+  rpc NewPacketBytes(google.protobuf.Any) returns (google.protobuf.BytesValue);
+
+  // Выполняет распаковку пакета в полученное сообщение
+  // Распаковывает 1 уровень данных
+  // Возможные значения
+  // * ras.protocol.v1.ConnectMessageAck
+  // * ras.protocol.v1.EndpointFailureAck
+  // * ras.protocol.v1.EndpointOpenAck
+  // * ras.protocol.v1.EndpointMessage
+  rpc UnpackPacket(ras.protocol.v1.Packet) returns (google.protobuf.Any);
+
+}
+
+message DecodeRequest {
+  int32 version = 1;
+  bytes data = 2;
+}
+
+message EncodeRequest {
+  int32 version = 1;
+  google.protobuf.Any data = 2;
+}

@@ -1,0 +1,13 @@
+version: v1
+name: buf.build/v8platform/rasclientapis
+deps:
+  - buf.build/v8platform/encodingapis
+  - buf.build/v8platform/serializeapis
+  - buf.build/v8platform/rasapis
+
+lint:
+  use:
+    - DEFAULT
+breaking:
+  use:
+    - FILE
