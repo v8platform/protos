@@ -20,7 +20,13 @@
           <option name="location" value="file://$PROJECT_DIR$/third_party/encodingapis" />
         </ImportPathEntry>
         <ImportPathEntry>
-          <option name="location" value="file://$PROJECT_DIR$/rasserverapis" />
+          <option name="location" value="file://$PROJECT_DIR$/rasclientapis" />
+        </ImportPathEntry>
+        <ImportPathEntry>
+          <option name="location" value="file://$PROJECT_DIR$/rasprotocolapis" />
+        </ImportPathEntry>
+        <ImportPathEntry>
+          <option name="location" value="file://$PROJECT_DIR$/rasserviceapis" />
         </ImportPathEntry>
       </list>
     </option>

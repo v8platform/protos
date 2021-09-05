@@ -5,10 +5,10 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/any.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
-import "ras/protocol/v1/connect.proto";
-import "ras/protocol/v1/packet.proto";
-import "ras/protocol/v1/endpoint.proto";
-import "ras/client/client.proto";
+import "ras/protocol/connect.proto";
+import "ras/protocol/packet.proto";
+import "ras/protocol/endpoint.proto";
+
 option go_package = "github.com/v8platform/protos/gen/ras/client/v1;clientv1";
 
 service ClientService {
@@ -18,23 +18,30 @@ service ClientService {
   // Возвращает состояние клиента
   rpc Status(google.protobuf.Empty) returns (StatusInfo) {};
   // Открытие новой точки работы с RAS
-  rpc NewEndpoint(NewEndpointRequest) returns (protocol.v1.Endpoint) {};
+  rpc NewEndpoint(NewEndpointRequest) returns (protocol.Endpoint) {};
   // Закрытие точки работы с RAS
-  rpc CloseEndpoint(protocol.v1.Endpoint) returns (google.protobuf.Empty) {};
+  rpc CloseEndpoint(protocol.Endpoint) returns (google.protobuf.Empty) {};
+
+  // Поток запросов
+  // EndpointRequest.value должно реализовавать интерфейс сообщения точки работы
+  // * MessageType()
+  // * Format()
+  rpc Requests(stream EndpointRequest) returns (stream EndpointResponse) {};
+
   // Основное метод раборы с запросами к RAS
   // EndpointRequest должно реализовавать интерфейс сообщения точки работы
   // * MessageType()
   // * Format()
-  rpc Requests(stream EndpointRequest) returns (stream google.protobuf.Any) {};
+  rpc Request(EndpointRequest) returns (EndpointResponse) {};
 
   // Низкоуровневые методы клиента
   // Для ручного использования
-  rpc Negotiate(protocol.v1.NegotiateMessage) returns (google.protobuf.Empty);
-  rpc Connect(protocol.v1.ConnectMessage) returns (protocol.v1.ConnectMessageAck) {};
-  rpc Disconnect(protocol.v1.DisconnectMessage) returns (google.protobuf.Empty) {};
-  rpc EndpointOpen(protocol.v1.EndpointOpen) returns (protocol.v1.EndpointOpenAck) {};
-  rpc EndpointClose(protocol.v1.EndpointClose) returns (google.protobuf.Empty) {};
-  rpc EndpointMessage(protocol.v1.EndpointMessage) returns (protocol.v1.EndpointMessage) {};
+  rpc Negotiate(protocol.NegotiateMessage) returns (google.protobuf.Empty);
+  rpc Connect(protocol.ConnectMessage) returns (protocol.ConnectMessageAck) {};
+  rpc Disconnect(protocol.DisconnectMessage) returns (google.protobuf.Empty) {};
+  rpc EndpointOpen(protocol.EndpointOpen) returns (protocol.EndpointOpenAck) {};
+  rpc EndpointClose(protocol.EndpointClose) returns (google.protobuf.Empty) {};
+  rpc EndpointMessage(protocol.EndpointMessage) returns (protocol.EndpointMessage) {};
 
 }
 
@@ -53,7 +60,7 @@ message NewEndpointRequest {
   oneof request {
     google.protobuf.Empty auto = 1;
     EndpointOptions options = 2;
-    protocol.v1.EndpointOpen open = 3;
+    protocol.EndpointOpen open = 3;
   }
 
 }
@@ -64,7 +71,7 @@ message StatusInfo {
   bool ready = 2;
   reserved 3;
   int32 service_version = 4;
-  repeated protocol.v1.Endpoint endpoints = 5;
+  repeated protocol.Endpoint endpoints = 5;
   google.protobuf.Timestamp last_used = 6;
   PacketStat packet_stat = 7;
 }
@@ -77,9 +84,9 @@ message PacketStat {
 
 message LazyInitOptions {
 
-  protocol.v1.NegotiateMessage negotiate = 1;
-  protocol.v1.ConnectMessage connect = 2;
-  optional protocol.v1.EndpointOpen open_endpoint = 3;
+  protocol.NegotiateMessage negotiate = 1;
+  protocol.ConnectMessage connect = 2;
+  optional protocol.EndpointOpen open_endpoint = 3;
 
 }
 

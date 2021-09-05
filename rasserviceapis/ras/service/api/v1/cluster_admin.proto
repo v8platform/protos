@@ -3,7 +3,7 @@ syntax = "proto3";
 package ras.service.api.v1;
 
 import "ras/service/api/v1/helpers.proto";
-import "ras/messages/v1/admin_messages.proto";
+import "ras/protocol/messages/admin_messages.proto";
 import "google/protobuf/empty.proto";
 
 option go_package = "github.com/v8platform/protos/gen/ras/service/api/v1;apiv1";
@@ -19,7 +19,7 @@ message AdminsRequest {
 }
 
 message AdminsResponse {
-  repeated ras.messages.v1.AdminInfo admins = 1;
+  repeated ras.protocol.messages.AdminInfo admins = 1;
 }
 
 message DeleteAdminRequest {
@@ -29,6 +29,6 @@ message DeleteAdminRequest {
 
 message AddAdminRequest {
   Cluster cluster = 1;
-  ras.messages.v1.AdminInfo admin_info = 2;
+  ras.protocol.messages.AdminInfo admin_info = 2;
 }
 

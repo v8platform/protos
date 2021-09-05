@@ -34,10 +34,10 @@ message InfobaseInfo {
   int32 license_distribution = 20 [(ras.encoding.field).order = 19];
   string external_session_manager_connection_string = 21 [(ras.encoding.field).order = 20];
   bool external_session_manager_required = 22 [(ras.encoding.field).order = 21];
-  string SecurityProfileName = 23 [(ras.encoding.field).order = 22];
-  string SafeModeSecurityProfileName = 24 [(ras.encoding.field).order = 23];
+  string security_profile_name = 23 [(ras.encoding.field).order = 22];
+  string safe_mode_security_profile_name = 24 [(ras.encoding.field).order = 23];
   // version >=9
-  bool ReserveWorkingProcesses = 25 [(ras.encoding.field) = {order: 24, version: 9}];
+  bool reserve_working_processes = 25 [(ras.encoding.field) = {order: 24, version: 9}];
 
 }
 

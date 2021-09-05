@@ -7,7 +7,7 @@ managed:
     except:
       - buf.build/googleapis/googleapis
       - buf.build/v8platform/encodingapis
-
+      - buf.build/v8platform/serializeapis
 plugins:
   - name: go
     out: ./gen

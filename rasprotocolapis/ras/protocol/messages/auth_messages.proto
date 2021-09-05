@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package ras.protocol.messages;
+
+import "ras/encoding/ras.proto";
+import "google/protobuf/any.proto";
+
+option csharp_namespace = "ras.protocol.messages";
+option go_package = "github.com/v8platform/protos/gen/ras/messages;messages";
+
+message AuthenticateAgentRequest {
+  option (encoding.options).message_type = "AUTHENTICATE_AGENT_REQUEST";
+  string user = 1 [(ras.encoding.field) = {order: 1}];
+  string password = 2 [(ras.encoding.field) = {order: 2}];
+}
+
+message ClusterAuthenticateRequest  {
+  option (encoding.options).message_type = "AUTHENTICATE_REQUEST";
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"}];
+  string user = 2 [(ras.encoding.field) = {order: 2}];
+  string password = 3 [(ras.encoding.field) = {order: 3}];
+}
+
+message AuthenticateInfobaseRequest   {
+  option (encoding.options).message_type = "ADD_AUTHENTICATION_REQUEST";
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"}];
+  string user = 2 [(ras.encoding.field) = {order: 2}];
+  string password = 3 [(ras.encoding.field) = {order: 3}];
+}

@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package ras.protocol;
+
+import "google/protobuf/any.proto";
+import "google/protobuf/descriptor.proto";
+import "ras/protocol/param.proto";
+import "ras/protocol/types.proto";
+import "ras/protocol/packet.proto";
+import "ras/encoding/ras.proto";
+
+
+option csharp_namespace = "ras.protocol";
+option go_package = "github.com/v8platform/protos/gen/ras/protocol;protocol";
+
+message NegotiateMessage {
+  option (ras.encoding.options).packet_type = "PACKET_TYPE_NEGOTIATE";
+  option (ras.encoding.options).is_negotiate = true;
+
+  int32 magic = 1 [(ras.encoding.field) = {
+    order: 1,
+    encoder: "int32",
+  }];      // Use only one value `475223888`
+  int32 protocol = 2 [(ras.encoding.field) = {
+    order: 2,
+    encoder: "short",
+  }];
+  int32 version = 3 [(ras.encoding.field) = {
+    order: 3,
+    encoder: "short",
+  }];
+}
+
+message ConnectMessage {
+  option (ras.encoding.options).packet_type = "PACKET_TYPE_CONNECT";
+
+  // Известные параметры
+  // "connect.timeout" = 2000
+  map<string, Param> params = 1 [(ras.encoding.field).order = 1];
+}
+
+message DisconnectMessage {
+  option (ras.encoding.options).packet_type = "PACKET_TYPE_DISCONNECT";
+  map<string, Param> params = 1 [(ras.encoding.field).order = 1];
+}
+
+message ConnectMessageAck {
+  option (ras.encoding.options).packet_type = "PACKET_TYPE_CONNECT_ACK";
+  option (ras.encoding.options).generate_empty = true;
+}

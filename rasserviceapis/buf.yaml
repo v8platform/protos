@@ -4,7 +4,7 @@ deps:
   - buf.build/googleapis/googleapis
   - buf.build/v8platform/encodingapis
   - buf.build/v8platform/serializeapis
-  - buf.build/v8platform/rasapis
+  - buf.build/v8platform/rasprotocolapis
 
 lint:
   use:

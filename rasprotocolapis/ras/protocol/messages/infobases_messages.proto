@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package ras.protocol.messages;
+
+import "ras/encoding/ras.proto";
+import "v8platform/serialize/v1/infobases.proto";
+import "v8platform/serialize/v1/sessions.proto";
+
+
+
+option csharp_namespace = "ras.protocol.messages";
+option go_package = "github.com/v8platform/protos/gen/ras/messages;messages";
+
+
+message GetInfobasesShortRequest {
+  option (encoding.options).message_type = "GET_INFOBASES_SHORT_REQUEST";
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"}
+  ];
+}
+
+message GetInfobasesShortResponse {
+  option (encoding.options).message_type = "GET_INFOBASES_SHORT_RESPONSE";
+  repeated v8platform.serialize.v1.InfobaseSummaryInfo sessions = 1 [(ras.encoding.field) = {
+    order: 1,
+  }];;
+}
+
+message GetInfobaseSessionsRequest {
+  option (encoding.options).message_type = "GET_INFOBASE_SESSIONS_REQUEST";
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"}];
+  string infobase_id = 2 [(ras.encoding.field) = {order: 2, encoder: "uuid"}];
+}
+
+message GetInfobaseSessionsResponse {
+  option (encoding.options).message_type = "GET_INFOBASE_SESSIONS_RESPONSE";
+  repeated v8platform.serialize.v1.SessionInfo infobases = 1 [(ras.encoding.field).order = 1];
+}

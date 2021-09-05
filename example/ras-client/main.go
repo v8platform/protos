@@ -5,8 +5,8 @@ import (
 	"flag"
 	"fmt"
 	"github.com/v8platform/protos/example/ras-client/simpleClient"
-	clientv1 "go.buf.build/v8platform/go-gen-ras/v8platform/rasapis/ras/client/v1"
-	messagesv1 "go.buf.build/v8platform/go-gen-ras/v8platform/rasapis/ras/messages/v1"
+	clientv1 "github.com/v8platform/protos/gen/ras/client/v1"
+	"github.com/v8platform/protos/gen/ras/protocol/messages"
 	"log"
 )
 
@@ -38,17 +38,17 @@ func main() {
 	}
 
 	ras := clientv1.NewRasService(endpointService)
-	clusters, err := ras.GetClusters(&messagesv1.GetClustersRequest{})
+	clusters, err := ras.GetClusters(&messages.GetClustersRequest{})
 	if err != nil {
 		panic(err)
 	}
 
-	_, err = ras.AuthenticateCluster(&messagesv1.ClusterAuthenticateRequest{ClusterId: clusters.Clusters[0].Uuid})
+	_, err = ras.AuthenticateCluster(&messages.ClusterAuthenticateRequest{ClusterId: clusters.Clusters[0].Uuid})
 	if err != nil {
 		panic(err)
 	}
 
-	sessions, err := ras.GetSessions(&messagesv1.GetSessionsRequest{ClusterId: clusters.Clusters[0].Uuid})
+	sessions, err := ras.GetSessions(&messages.GetSessionsRequest{ClusterId: clusters.Clusters[0].Uuid})
 	if err != nil {
 		panic(err)
 	}
