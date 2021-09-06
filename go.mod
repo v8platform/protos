@@ -15,7 +15,7 @@ require (
 	github.com/satori/go.uuid v1.2.0 // indirect
 	github.com/spf13/cast v1.4.1 // indirect
 	github.com/stretchr/testify v1.7.0 // indirect
-	github.com/v8platform/encoder v0.0.1 // indirect
+	github.com/v8platform/encoder latest // indirect
 	github.com/v8platform/protoc-gen-go-ras v0.0.0-20210902165457-013367855358 // indirect
 	golang.org/x/net v0.0.0-20210610132358-84b48f89b13b // indirect
 	golang.org/x/sys v0.0.0-20210611083646-a4fc73990273 // indirect
