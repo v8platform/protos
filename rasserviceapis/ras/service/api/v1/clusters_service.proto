@@ -1,0 +1,14 @@
+package ras.service.api.v1;
+import "google/protobuf/empty.proto";
+import "ras/messages/v1/clusters_messages.proto";
+
+option go_package = "github.com/v8platform/protos/gen/ras/service/api/v1;service_api_v1";
+
+service ClustersService {
+
+  rpc GetClusters(messages.v1.GetClustersRequest) returns (messages.v1.GetClustersResponse) {};
+  rpc GetClusterInfo(messages.v1.GetClusterInfoRequest) returns (messages.v1.GetClusterInfoResponse) {};
+  rpc RegCluster(messages.v1.RegClusterRequest) returns (messages.v1.RegClusterResponse) {};
+  rpc UnregCluster(messages.v1.UnregClusterRequest) returns (google.protobuf.Empty) {};
+}
+

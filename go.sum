@@ -78,6 +78,8 @@ github.com/stretchr/testify v1.7.0 h1:nwc3DEeHmmLAfoZucVR881uASk0Mfjw8xYJ99tb5Cc
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/v8platform/encoder v0.0.1 h1:Fla82VNfbYexxUmaSzWErfQE4O6/qAfLCGkJNsR/khQ=
 github.com/v8platform/encoder v0.0.1/go.mod h1:g6fd9SvAvmvi28QLQ6tzkoxbrh1xPGDNr+SDHINjAkI=
+github.com/v8platform/protoc-gen-go-ras v0.0.0-20210902165457-013367855358 h1:0F2yUabLX4vpkmIYXcDb+qoQnlqcJaEL25H/8/betKw=
+github.com/v8platform/protoc-gen-go-ras v0.0.0-20210902165457-013367855358/go.mod h1:1CEQnN/e7zOjnlO8o+ZkwFvyrGUYb4JCDns3ovp923w=
 github.com/yuin/goldmark v1.3.5/go.mod h1:mwnBkeHKe2W/ZEtQ+71ViKU8L12m81fl3OWwC1Zlc8k=
 go.buf.build/v8platform/go-gen-ras/v8platform/encodingapis v1.2.2 h1:4Njy9y8svUoL+ncWSXxRhDBAExCl7r/dvT8BJ7Gi0/0=
 go.buf.build/v8platform/go-gen-ras/v8platform/encodingapis v1.2.2/go.mod h1:M7qxAD3sf3aKWMnTTqSFKJYFahMjnf0EdhGpQeoXuUY=

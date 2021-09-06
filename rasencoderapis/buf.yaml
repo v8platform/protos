@@ -1,5 +1,5 @@
 version: v1
-name: buf.build/v8platform/rasserviceapis
+name: buf.build/v8platform/rasencoderapis
 deps:
   - buf.build/v8platform/encodingapis
   - buf.build/v8platform/serializeapis
