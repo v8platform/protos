@@ -2,8 +2,8 @@ package simpleClient
 
 import (
 	"context"
-	clientv1 "go.buf.build/v8platform/go-gen-ras/v8platform/rasapis/ras/client/v1"
-	protocolv1 "go.buf.build/v8platform/go-gen-ras/v8platform/rasapis/ras/protocol/v1"
+	clientv1 "github.com/v8platform/protos/gen/ras/client/v1"
+	protocolv1 "github.com/v8platform/protos/gen/ras/protocol/v1"
 )
 
 var defaultVersion = "10.0"

@@ -5,8 +5,8 @@ import (
 	"flag"
 	"fmt"
 	"github.com/v8platform/protos/example/ras-client/simpleClient"
-	clientv1 "go.buf.build/v8platform/go-gen-ras/v8platform/rasapis/ras/client/v1"
-	messagesv1 "go.buf.build/v8platform/go-gen-ras/v8platform/rasapis/ras/messages/v1"
+	clientv1 "github.com/v8platform/protos/gen/ras/client/v1"
+	messagesv1 "github.com/v8platform/protos/gen/ras/messages/v1"
 	"log"
 )
 
