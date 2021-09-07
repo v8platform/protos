@@ -22,7 +22,7 @@ type InfobasesServiceClient interface {
 	// GetInfobasesShortRequest
 	GetShortInfobases(ctx context.Context, in *v1.GetInfobasesShortRequest, opts ...grpc.CallOption) (*v1.GetInfobasesShortResponse, error)
 	// GetInfobaseSessionsRequest
-	GetSessions(ctx context.Context, in *v1.GetInfobaseSessionsRequest, opts ...grpc.CallOption) (*v1.GetInfobaseSessionsResponse, error)
+	GetInfobaseSessions(ctx context.Context, in *v1.GetInfobaseSessionsRequest, opts ...grpc.CallOption) (*v1.GetInfobaseSessionsResponse, error)
 }
 
 type infobasesServiceClient struct {
@@ -42,9 +42,9 @@ func (c *infobasesServiceClient) GetShortInfobases(ctx context.Context, in *v1.G
 	return out, nil
 }
 
-func (c *infobasesServiceClient) GetSessions(ctx context.Context, in *v1.GetInfobaseSessionsRequest, opts ...grpc.CallOption) (*v1.GetInfobaseSessionsResponse, error) {
+func (c *infobasesServiceClient) GetInfobaseSessions(ctx context.Context, in *v1.GetInfobaseSessionsRequest, opts ...grpc.CallOption) (*v1.GetInfobaseSessionsResponse, error) {
 	out := new(v1.GetInfobaseSessionsResponse)
-	err := c.cc.Invoke(ctx, "/ras.service.api.v1.InfobasesService/GetSessions", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ras.service.api.v1.InfobasesService/GetInfobaseSessions", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,7 @@ type InfobasesServiceServer interface {
 	// GetInfobasesShortRequest
 	GetShortInfobases(context.Context, *v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error)
 	// GetInfobaseSessionsRequest
-	GetSessions(context.Context, *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error)
+	GetInfobaseSessions(context.Context, *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error)
 }
 
 // UnimplementedInfobasesServiceServer should be embedded to have forward compatible implementations.
@@ -68,8 +68,8 @@ type UnimplementedInfobasesServiceServer struct {
 func (UnimplementedInfobasesServiceServer) GetShortInfobases(context.Context, *v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetShortInfobases not implemented")
 }
-func (UnimplementedInfobasesServiceServer) GetSessions(context.Context, *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetSessions not implemented")
+func (UnimplementedInfobasesServiceServer) GetInfobaseSessions(context.Context, *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetInfobaseSessions not implemented")
 }
 
 // UnsafeInfobasesServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -101,20 +101,20 @@ func _InfobasesService_GetShortInfobases_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
-func _InfobasesService_GetSessions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _InfobasesService_GetInfobaseSessions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(v1.GetInfobaseSessionsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(InfobasesServiceServer).GetSessions(ctx, in)
+		return srv.(InfobasesServiceServer).GetInfobaseSessions(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ras.service.api.v1.InfobasesService/GetSessions",
+		FullMethod: "/ras.service.api.v1.InfobasesService/GetInfobaseSessions",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(InfobasesServiceServer).GetSessions(ctx, req.(*v1.GetInfobaseSessionsRequest))
+		return srv.(InfobasesServiceServer).GetInfobaseSessions(ctx, req.(*v1.GetInfobaseSessionsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -131,8 +131,8 @@ var InfobasesService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _InfobasesService_GetShortInfobases_Handler,
 		},
 		{
-			MethodName: "GetSessions",
-			Handler:    _InfobasesService_GetSessions_Handler,
+			MethodName: "GetInfobaseSessions",
+			Handler:    _InfobasesService_GetInfobaseSessions_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -22,21 +22,21 @@ http:
     - selector: ras.service.api.v1.ClustersService.DeleteCluster
       delete: '/api/v1/clusters/{cluster.id}'
 
-    # Cluster admin
-    - selector: ras.service.api.v1.ClusterAdminService.Admins
-      get: '/clusters/{cluster.id}/admins'
-      additional_bindings:
-        - get: "/admins"
-    - selector: ras.service.api.v1.ClusterAdminService.AddAdmin
-      post: '/clusters/{cluster.id}/admins'
-      body: 'admin_info'
-      additional_bindings:
-        - post: "/admins"
-          body: 'admin_info'
-    - selector: ras.service.api.v1.ClusterAdminService.DeleteAdmin
-      delete: '/clusters/{cluster.id}/admins/{admin_name}'
-      additional_bindings:
-        - delete: "/admins/{admin_name}"
+    #    # Cluster admin
+    #    - selector: ras.service.api.v1.ClusterAdminService.Admins
+    #      get: '/clusters/{cluster.id}/admins'
+    #      additional_bindings:
+    #        - get: "/admins"
+    #    - selector: ras.service.api.v1.ClusterAdminService.AddAdmin
+    #      post: '/clusters/{cluster.id}/admins'
+    #      body: 'admin_info'
+    #      additional_bindings:
+    #        - post: "/admins"
+    #          body: 'admin_info'
+    #    - selector: ras.service.api.v1.ClusterAdminService.DeleteAdmin
+    #      delete: '/clusters/{cluster.id}/admins/{admin_name}'
+    #      additional_bindings:
+    #        - delete: "/admins/{admin_name}"
 
     # Infobases
     - selector: ras.service.api.v1.InfobasesService.Infobases

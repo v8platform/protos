@@ -11,7 +11,7 @@ service InfobasesService {
   // GetInfobasesShortRequest
   rpc GetShortInfobases(messages.v1.GetInfobasesShortRequest) returns (messages.v1.GetInfobasesShortResponse) {};
   // GetInfobaseSessionsRequest
-  rpc GetSessions(messages.v1.GetInfobaseSessionsRequest) returns (messages.v1.GetInfobaseSessionsResponse) {};
+  rpc GetInfobaseSessions(messages.v1.GetInfobaseSessionsRequest) returns (messages.v1.GetInfobaseSessionsResponse) {};
 
 }
 
