@@ -6,13 +6,14 @@
 package clientv1
 
 import (
+	context "context"
 	v1 "github.com/v8platform/protos/gen/ras/messages/v1"
 	proto "google.golang.org/protobuf/proto"
 	anypb "google.golang.org/protobuf/types/known/anypb"
 )
 
 type SessionsServiceImpl interface {
-	GetSessions(*v1.GetSessionsRequest) (*v1.GetSessionsResponse, error)
+	GetSessions(ctx context.Context, req *v1.GetSessionsRequest) (*v1.GetSessionsResponse, error)
 }
 
 func NewSessionsService(endpointService EndpointServiceImpl) SessionsServiceImpl {
@@ -26,7 +27,7 @@ type SessionsService struct {
 	e EndpointServiceImpl
 }
 
-func (x *SessionsService) GetSessions(req *v1.GetSessionsRequest) (*v1.GetSessionsResponse, error) {
+func (x *SessionsService) GetSessions(ctx context.Context, req *v1.GetSessionsRequest) (*v1.GetSessionsResponse, error) {
 
 	var resp v1.GetSessionsResponse
 
@@ -44,7 +45,8 @@ func (x *SessionsService) GetSessions(req *v1.GetSessionsRequest) (*v1.GetSessio
 		Request: anyRequest,
 		Respond: anyRespond,
 	}
-	response, err := x.e.Request(endpointRequest)
+
+	response, err := x.e.Request(ctx, endpointRequest)
 	if err != nil {
 		return nil, err
 	}

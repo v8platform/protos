@@ -6,6 +6,7 @@
 package clientv1
 
 import (
+	context "context"
 	v1 "github.com/v8platform/protos/gen/ras/messages/v1"
 	proto "google.golang.org/protobuf/proto"
 	anypb "google.golang.org/protobuf/types/known/anypb"
@@ -13,10 +14,10 @@ import (
 )
 
 type ClustersServiceImpl interface {
-	GetClusters(*v1.GetClustersRequest) (*v1.GetClustersResponse, error)
-	GetClusterInfo(*v1.GetClusterInfoRequest) (*v1.GetClusterInfoResponse, error)
-	RegCluster(*v1.RegClusterRequest) (*v1.RegClusterResponse, error)
-	UnregCluster(*v1.UnregClusterRequest) (*emptypb.Empty, error)
+	GetClusters(ctx context.Context, req *v1.GetClustersRequest) (*v1.GetClustersResponse, error)
+	GetClusterInfo(ctx context.Context, req *v1.GetClusterInfoRequest) (*v1.GetClusterInfoResponse, error)
+	RegCluster(ctx context.Context, req *v1.RegClusterRequest) (*v1.RegClusterResponse, error)
+	UnregCluster(ctx context.Context, req *v1.UnregClusterRequest) (*emptypb.Empty, error)
 }
 
 func NewClustersService(endpointService EndpointServiceImpl) ClustersServiceImpl {
@@ -30,7 +31,7 @@ type ClustersService struct {
 	e EndpointServiceImpl
 }
 
-func (x *ClustersService) GetClusters(req *v1.GetClustersRequest) (*v1.GetClustersResponse, error) {
+func (x *ClustersService) GetClusters(ctx context.Context, req *v1.GetClustersRequest) (*v1.GetClustersResponse, error) {
 
 	var resp v1.GetClustersResponse
 
@@ -48,7 +49,8 @@ func (x *ClustersService) GetClusters(req *v1.GetClustersRequest) (*v1.GetCluste
 		Request: anyRequest,
 		Respond: anyRespond,
 	}
-	response, err := x.e.Request(endpointRequest)
+
+	response, err := x.e.Request(ctx, endpointRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +61,7 @@ func (x *ClustersService) GetClusters(req *v1.GetClustersRequest) (*v1.GetCluste
 	return &resp, nil
 }
 
-func (x *ClustersService) GetClusterInfo(req *v1.GetClusterInfoRequest) (*v1.GetClusterInfoResponse, error) {
+func (x *ClustersService) GetClusterInfo(ctx context.Context, req *v1.GetClusterInfoRequest) (*v1.GetClusterInfoResponse, error) {
 
 	var resp v1.GetClusterInfoResponse
 
@@ -77,7 +79,8 @@ func (x *ClustersService) GetClusterInfo(req *v1.GetClusterInfoRequest) (*v1.Get
 		Request: anyRequest,
 		Respond: anyRespond,
 	}
-	response, err := x.e.Request(endpointRequest)
+
+	response, err := x.e.Request(ctx, endpointRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +91,7 @@ func (x *ClustersService) GetClusterInfo(req *v1.GetClusterInfoRequest) (*v1.Get
 	return &resp, nil
 }
 
-func (x *ClustersService) RegCluster(req *v1.RegClusterRequest) (*v1.RegClusterResponse, error) {
+func (x *ClustersService) RegCluster(ctx context.Context, req *v1.RegClusterRequest) (*v1.RegClusterResponse, error) {
 
 	var resp v1.RegClusterResponse
 
@@ -106,7 +109,8 @@ func (x *ClustersService) RegCluster(req *v1.RegClusterRequest) (*v1.RegClusterR
 		Request: anyRequest,
 		Respond: anyRespond,
 	}
-	response, err := x.e.Request(endpointRequest)
+
+	response, err := x.e.Request(ctx, endpointRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -117,7 +121,7 @@ func (x *ClustersService) RegCluster(req *v1.RegClusterRequest) (*v1.RegClusterR
 	return &resp, nil
 }
 
-func (x *ClustersService) UnregCluster(req *v1.UnregClusterRequest) (*emptypb.Empty, error) {
+func (x *ClustersService) UnregCluster(ctx context.Context, req *v1.UnregClusterRequest) (*emptypb.Empty, error) {
 
 	var resp emptypb.Empty
 
@@ -135,7 +139,8 @@ func (x *ClustersService) UnregCluster(req *v1.UnregClusterRequest) (*emptypb.Em
 		Request: anyRequest,
 		Respond: anyRespond,
 	}
-	response, err := x.e.Request(endpointRequest)
+
+	response, err := x.e.Request(ctx, endpointRequest)
 	if err != nil {
 		return nil, err
 	}
