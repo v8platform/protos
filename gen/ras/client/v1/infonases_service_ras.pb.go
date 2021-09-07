@@ -6,14 +6,15 @@
 package clientv1
 
 import (
+	context "context"
 	v1 "github.com/v8platform/protos/gen/ras/messages/v1"
 	proto "google.golang.org/protobuf/proto"
 	anypb "google.golang.org/protobuf/types/known/anypb"
 )
 
 type InfobasesServiceImpl interface {
-	GetShortInfobases(*v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error)
-	GetSessions(*v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error)
+	GetShortInfobases(ctx context.Context, req *v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error)
+	GetSessions(ctx context.Context, req *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error)
 }
 
 func NewInfobasesService(endpointService EndpointServiceImpl) InfobasesServiceImpl {
@@ -27,7 +28,7 @@ type InfobasesService struct {
 	e EndpointServiceImpl
 }
 
-func (x *InfobasesService) GetShortInfobases(req *v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error) {
+func (x *InfobasesService) GetShortInfobases(ctx context.Context, req *v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error) {
 
 	var resp v1.GetInfobasesShortResponse
 
@@ -45,7 +46,8 @@ func (x *InfobasesService) GetShortInfobases(req *v1.GetInfobasesShortRequest) (
 		Request: anyRequest,
 		Respond: anyRespond,
 	}
-	response, err := x.e.Request(endpointRequest)
+
+	response, err := x.e.Request(ctx, endpointRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +58,7 @@ func (x *InfobasesService) GetShortInfobases(req *v1.GetInfobasesShortRequest) (
 	return &resp, nil
 }
 
-func (x *InfobasesService) GetSessions(req *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error) {
+func (x *InfobasesService) GetSessions(ctx context.Context, req *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error) {
 
 	var resp v1.GetInfobaseSessionsResponse
 
@@ -74,7 +76,8 @@ func (x *InfobasesService) GetSessions(req *v1.GetInfobaseSessionsRequest) (*v1.
 		Request: anyRequest,
 		Respond: anyRespond,
 	}
-	response, err := x.e.Request(endpointRequest)
+
+	response, err := x.e.Request(ctx, endpointRequest)
 	if err != nil {
 		return nil, err
 	}

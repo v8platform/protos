@@ -6,31 +6,32 @@
 package clientv1
 
 import (
+	context "context"
 	v1 "github.com/v8platform/protos/gen/ras/messages/v1"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 type RasServiceImpl interface {
 	// AuthenticateCluster proxy request AuthService.AuthenticateCluster
-	AuthenticateCluster(*v1.ClusterAuthenticateRequest) (*emptypb.Empty, error)
+	AuthenticateCluster(ctx context.Context, req *v1.ClusterAuthenticateRequest) (*emptypb.Empty, error)
 	// AuthenticateInfobase proxy request AuthService.AuthenticateInfobase
-	AuthenticateInfobase(*v1.AuthenticateInfobaseRequest) (*emptypb.Empty, error)
+	AuthenticateInfobase(ctx context.Context, req *v1.AuthenticateInfobaseRequest) (*emptypb.Empty, error)
 	// AuthenticateAgent proxy request AuthService.AuthenticateAgent
-	AuthenticateAgent(*v1.AuthenticateAgentRequest) (*emptypb.Empty, error)
+	AuthenticateAgent(ctx context.Context, req *v1.AuthenticateAgentRequest) (*emptypb.Empty, error)
 	// GetClusters proxy request ClustersService.GetClusters
-	GetClusters(*v1.GetClustersRequest) (*v1.GetClustersResponse, error)
+	GetClusters(ctx context.Context, req *v1.GetClustersRequest) (*v1.GetClustersResponse, error)
 	// GetClusterInfo proxy request ClustersService.GetClusterInfo
-	GetClusterInfo(*v1.GetClusterInfoRequest) (*v1.GetClusterInfoResponse, error)
+	GetClusterInfo(ctx context.Context, req *v1.GetClusterInfoRequest) (*v1.GetClusterInfoResponse, error)
 	// RegCluster proxy request ClustersService.RegCluster
-	RegCluster(*v1.RegClusterRequest) (*v1.RegClusterResponse, error)
+	RegCluster(ctx context.Context, req *v1.RegClusterRequest) (*v1.RegClusterResponse, error)
 	// UnregCluster proxy request ClustersService.UnregCluster
-	UnregCluster(*v1.UnregClusterRequest) (*emptypb.Empty, error)
+	UnregCluster(ctx context.Context, req *v1.UnregClusterRequest) (*emptypb.Empty, error)
 	// GetShortInfobases proxy request InfobasesService.GetShortInfobases
-	GetShortInfobases(*v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error)
+	GetShortInfobases(ctx context.Context, req *v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error)
 	// GetInfobaseSessions proxy request InfobasesService.GetSessions
-	GetInfobaseSessions(*v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error)
+	GetInfobaseSessions(ctx context.Context, req *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error)
 	// GetSessions proxy request SessionsService.GetSessions
-	GetSessions(*v1.GetSessionsRequest) (*v1.GetSessionsResponse, error)
+	GetSessions(ctx context.Context, req *v1.GetSessionsRequest) (*v1.GetSessionsResponse, error)
 }
 
 func NewRasService(endpointService EndpointServiceImpl) RasServiceImpl {
@@ -65,51 +66,51 @@ type rasService struct {
 }
 
 // AuthenticateCluster is proxy method to request AuthService.AuthenticateCluster
-func (x *rasService) AuthenticateCluster(req *v1.ClusterAuthenticateRequest) (*emptypb.Empty, error) {
-	return x.AuthService.AuthenticateCluster(req)
+func (x *rasService) AuthenticateCluster(ctx context.Context, req *v1.ClusterAuthenticateRequest) (*emptypb.Empty, error) {
+	return x.AuthService.AuthenticateCluster(ctx, req)
 }
 
 // AuthenticateInfobase is proxy method to request AuthService.AuthenticateInfobase
-func (x *rasService) AuthenticateInfobase(req *v1.AuthenticateInfobaseRequest) (*emptypb.Empty, error) {
-	return x.AuthService.AuthenticateInfobase(req)
+func (x *rasService) AuthenticateInfobase(ctx context.Context, req *v1.AuthenticateInfobaseRequest) (*emptypb.Empty, error) {
+	return x.AuthService.AuthenticateInfobase(ctx, req)
 }
 
 // AuthenticateAgent is proxy method to request AuthService.AuthenticateAgent
-func (x *rasService) AuthenticateAgent(req *v1.AuthenticateAgentRequest) (*emptypb.Empty, error) {
-	return x.AuthService.AuthenticateAgent(req)
+func (x *rasService) AuthenticateAgent(ctx context.Context, req *v1.AuthenticateAgentRequest) (*emptypb.Empty, error) {
+	return x.AuthService.AuthenticateAgent(ctx, req)
 }
 
 // GetClusters is proxy method to request ClustersService.GetClusters
-func (x *rasService) GetClusters(req *v1.GetClustersRequest) (*v1.GetClustersResponse, error) {
-	return x.ClustersService.GetClusters(req)
+func (x *rasService) GetClusters(ctx context.Context, req *v1.GetClustersRequest) (*v1.GetClustersResponse, error) {
+	return x.ClustersService.GetClusters(ctx, req)
 }
 
 // GetClusterInfo is proxy method to request ClustersService.GetClusterInfo
-func (x *rasService) GetClusterInfo(req *v1.GetClusterInfoRequest) (*v1.GetClusterInfoResponse, error) {
-	return x.ClustersService.GetClusterInfo(req)
+func (x *rasService) GetClusterInfo(ctx context.Context, req *v1.GetClusterInfoRequest) (*v1.GetClusterInfoResponse, error) {
+	return x.ClustersService.GetClusterInfo(ctx, req)
 }
 
 // RegCluster is proxy method to request ClustersService.RegCluster
-func (x *rasService) RegCluster(req *v1.RegClusterRequest) (*v1.RegClusterResponse, error) {
-	return x.ClustersService.RegCluster(req)
+func (x *rasService) RegCluster(ctx context.Context, req *v1.RegClusterRequest) (*v1.RegClusterResponse, error) {
+	return x.ClustersService.RegCluster(ctx, req)
 }
 
 // UnregCluster is proxy method to request ClustersService.UnregCluster
-func (x *rasService) UnregCluster(req *v1.UnregClusterRequest) (*emptypb.Empty, error) {
-	return x.ClustersService.UnregCluster(req)
+func (x *rasService) UnregCluster(ctx context.Context, req *v1.UnregClusterRequest) (*emptypb.Empty, error) {
+	return x.ClustersService.UnregCluster(ctx, req)
 }
 
 // GetShortInfobases is proxy method to request InfobasesService.GetShortInfobases
-func (x *rasService) GetShortInfobases(req *v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error) {
-	return x.InfobasesService.GetShortInfobases(req)
+func (x *rasService) GetShortInfobases(ctx context.Context, req *v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error) {
+	return x.InfobasesService.GetShortInfobases(ctx, req)
 }
 
 // GetInfobaseSessions is proxy method to request InfobasesService.GetSessions
-func (x *rasService) GetInfobaseSessions(req *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error) {
-	return x.InfobasesService.GetSessions(req)
+func (x *rasService) GetInfobaseSessions(ctx context.Context, req *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error) {
+	return x.InfobasesService.GetSessions(ctx, req)
 }
 
 // GetSessions is proxy method to request SessionsService.GetSessions
-func (x *rasService) GetSessions(req *v1.GetSessionsRequest) (*v1.GetSessionsResponse, error) {
-	return x.SessionsService.GetSessions(req)
+func (x *rasService) GetSessions(ctx context.Context, req *v1.GetSessionsRequest) (*v1.GetSessionsResponse, error) {
+	return x.SessionsService.GetSessions(ctx, req)
 }

@@ -6,6 +6,7 @@
 package clientv1
 
 import (
+	context "context"
 	v1 "github.com/v8platform/protos/gen/ras/messages/v1"
 	proto "google.golang.org/protobuf/proto"
 	anypb "google.golang.org/protobuf/types/known/anypb"
@@ -13,9 +14,9 @@ import (
 )
 
 type AuthServiceImpl interface {
-	AuthenticateCluster(*v1.ClusterAuthenticateRequest) (*emptypb.Empty, error)
-	AuthenticateInfobase(*v1.AuthenticateInfobaseRequest) (*emptypb.Empty, error)
-	AuthenticateAgent(*v1.AuthenticateAgentRequest) (*emptypb.Empty, error)
+	AuthenticateCluster(ctx context.Context, req *v1.ClusterAuthenticateRequest) (*emptypb.Empty, error)
+	AuthenticateInfobase(ctx context.Context, req *v1.AuthenticateInfobaseRequest) (*emptypb.Empty, error)
+	AuthenticateAgent(ctx context.Context, req *v1.AuthenticateAgentRequest) (*emptypb.Empty, error)
 }
 
 func NewAuthService(endpointService EndpointServiceImpl) AuthServiceImpl {
@@ -29,7 +30,7 @@ type AuthService struct {
 	e EndpointServiceImpl
 }
 
-func (x *AuthService) AuthenticateCluster(req *v1.ClusterAuthenticateRequest) (*emptypb.Empty, error) {
+func (x *AuthService) AuthenticateCluster(ctx context.Context, req *v1.ClusterAuthenticateRequest) (*emptypb.Empty, error) {
 
 	var resp emptypb.Empty
 
@@ -47,7 +48,8 @@ func (x *AuthService) AuthenticateCluster(req *v1.ClusterAuthenticateRequest) (*
 		Request: anyRequest,
 		Respond: anyRespond,
 	}
-	response, err := x.e.Request(endpointRequest)
+
+	response, err := x.e.Request(ctx, endpointRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +60,7 @@ func (x *AuthService) AuthenticateCluster(req *v1.ClusterAuthenticateRequest) (*
 	return &resp, nil
 }
 
-func (x *AuthService) AuthenticateInfobase(req *v1.AuthenticateInfobaseRequest) (*emptypb.Empty, error) {
+func (x *AuthService) AuthenticateInfobase(ctx context.Context, req *v1.AuthenticateInfobaseRequest) (*emptypb.Empty, error) {
 
 	var resp emptypb.Empty
 
@@ -76,7 +78,8 @@ func (x *AuthService) AuthenticateInfobase(req *v1.AuthenticateInfobaseRequest) 
 		Request: anyRequest,
 		Respond: anyRespond,
 	}
-	response, err := x.e.Request(endpointRequest)
+
+	response, err := x.e.Request(ctx, endpointRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +90,7 @@ func (x *AuthService) AuthenticateInfobase(req *v1.AuthenticateInfobaseRequest) 
 	return &resp, nil
 }
 
-func (x *AuthService) AuthenticateAgent(req *v1.AuthenticateAgentRequest) (*emptypb.Empty, error) {
+func (x *AuthService) AuthenticateAgent(ctx context.Context, req *v1.AuthenticateAgentRequest) (*emptypb.Empty, error) {
 
 	var resp emptypb.Empty
 
@@ -105,7 +108,8 @@ func (x *AuthService) AuthenticateAgent(req *v1.AuthenticateAgentRequest) (*empt
 		Request: anyRequest,
 		Respond: anyRespond,
 	}
-	response, err := x.e.Request(endpointRequest)
+
+	response, err := x.e.Request(ctx, endpointRequest)
 	if err != nil {
 		return nil, err
 	}

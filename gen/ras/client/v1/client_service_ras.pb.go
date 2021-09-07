@@ -6,6 +6,7 @@
 package clientv1
 
 import (
+	context "context"
 	fmt "fmt"
 	cast "github.com/spf13/cast"
 	codec256 "github.com/v8platform/encoder/ras/codec256"
@@ -13,49 +14,47 @@ import (
 	proto "google.golang.org/protobuf/proto"
 	anypb "google.golang.org/protobuf/types/known/anypb"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	net "net"
+	io "io"
 	regexp "regexp"
 	strings "strings"
 	sync "sync"
-	time "time"
 )
 
 type ClientServiceImpl interface {
-	Negotiate(*v1.NegotiateMessage) (*emptypb.Empty, error)
-	Connect(*v1.ConnectMessage) (*v1.ConnectMessageAck, error)
-	Disconnect(*v1.DisconnectMessage) (*emptypb.Empty, error)
-	EndpointOpen(*v1.EndpointOpen) (*v1.EndpointOpenAck, error)
-	EndpointClose(*v1.EndpointClose) (*emptypb.Empty, error)
-	EndpointMessage(*v1.EndpointMessage) (*v1.EndpointMessage, error)
-	NewEndpoint(*v1.EndpointOpenAck) (*v1.Endpoint, error)
-	DetectSupportedVersion(err error) string
+	Negotiate(ctx context.Context, req *v1.NegotiateMessage) (*emptypb.Empty, error)
+	Connect(ctx context.Context, req *v1.ConnectMessage) (*v1.ConnectMessageAck, error)
+	Disconnect(ctx context.Context, req *v1.DisconnectMessage) (*emptypb.Empty, error)
+	EndpointOpen(ctx context.Context, req *v1.EndpointOpen) (*v1.EndpointOpenAck, error)
+	EndpointClose(ctx context.Context, req *v1.EndpointClose) (*emptypb.Empty, error)
+	EndpointMessage(ctx context.Context, req *v1.EndpointMessage) (*v1.EndpointMessage, error)
+	NewEndpoint(ctx context.Context, req *v1.EndpointOpenAck) (*v1.Endpoint, error)
+}
+type ClientImpl interface {
+	// Методы для блокировки соединения sync.Mutex
+	// берем из sync.Locker
+	sync.Locker
+	// Методы для записи и чтения из соединение
+	// берем из io.ReadWriter
+	io.ReadWriter
 }
 
-func NewClientService(host string, opts ...ClientServiceOption) ClientServiceImpl {
-	options := &ClientServiceOptions{timeout: 5 * time.Second}
-	for _, opt := range opts {
-		opt(options)
-	}
+func NewClientService(client ClientImpl) ClientServiceImpl {
 	return &clientService{
-		host:                 host,
-		ClientServiceOptions: options,
-		mu:                   &sync.Mutex{},
+		client: client,
 	}
 }
 
 // ClientService is the client for RAS service.
 type clientService struct {
-	*ClientServiceOptions
-	host string
-	conn net.Conn
-	mu   *sync.Mutex
+	client ClientImpl
 }
 
 var serviceVersions = []string{"3.0", "4.0", "5.0", "6.0", "7.0", "8.0", "9.0", "10.0"}
 
 var re = regexp.MustCompile(`(?m)supported=(.*?)]`)
 
-func (x *clientService) DetectSupportedVersion(err error) string {
+// DetectSupportedVersion func helpers detect supported version in EndpointFailureAck
+func DetectSupportedVersion(err error) string {
 
 	fail, ok := err.(*v1.EndpointFailureAck)
 	if !ok {
@@ -83,65 +82,43 @@ func (x *clientService) DetectSupportedVersion(err error) string {
 	return ""
 }
 
-type ClientServiceOption func(*ClientServiceOptions)
+func (x *clientService) Negotiate(ctx context.Context, req *v1.NegotiateMessage) (*emptypb.Empty, error) {
 
-type ClientServiceOptions struct {
-	dialer  *net.Dialer
-	timeout time.Duration
-}
+	x.client.Lock()
+	defer x.client.Unlock()
 
-func WithDialer(dialer *net.Dialer) ClientServiceOption {
-	return func(o *ClientServiceOptions) { o.dialer = dialer }
-}
-
-func SetTimeout(timeout time.Duration) ClientServiceOption {
-	return func(o *ClientServiceOptions) { o.timeout = timeout }
-}
-func (x *clientService) dial() error {
-	if x.conn != nil {
-		return nil
-	}
-	if _, err := net.ResolveTCPAddr("tcp", x.host); err != nil {
-		return err
+	// Check context
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
 	}
 
-	var err error
-	if x.dialer != nil {
-		x.conn, err = x.dialer.Dial("tcp", x.host)
-		return err
-	}
-	x.conn, err = net.Dial("tcp", x.host)
-	return err
-}
-
-func (x *clientService) Negotiate(req *v1.NegotiateMessage) (*emptypb.Empty, error) {
-	if err := x.dial(); err != nil {
-		return nil, err
-	}
-	x.mu.Lock()
-	defer x.mu.Unlock()
-	if err := req.Formatter(x.conn, 0); err != nil {
+	if err := req.Formatter(x.client, 0); err != nil {
 		return nil, err
 	}
 	return new(emptypb.Empty), nil
 }
-func (x *clientService) Connect(req *v1.ConnectMessage) (*v1.ConnectMessageAck, error) {
-	if err := x.dial(); err != nil {
-		return nil, err
+func (x *clientService) Connect(ctx context.Context, req *v1.ConnectMessage) (*v1.ConnectMessageAck, error) {
+
+	x.client.Lock()
+	defer x.client.Unlock()
+
+	// Check context
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
 	}
-	x.mu.Lock()
-	defer x.mu.Unlock()
+
 	packet, err := v1.NewPacket(req)
 	if err != nil {
 		return nil, err
 	}
-	if _, err := packet.WriteTo(x.conn); err != nil {
+	if _, err := packet.WriteTo(x.client); err != nil {
 		return nil, err
 	}
-	if err := x.conn.SetReadDeadline(time.Now().Add(x.timeout)); err != nil {
-		return nil, err
-	}
-	ackPacket, err := v1.NewPacket(x.conn)
+	ackPacket, err := v1.NewPacket(x.client)
 	if err != nil {
 		return nil, err
 	}
@@ -149,38 +126,47 @@ func (x *clientService) Connect(req *v1.ConnectMessage) (*v1.ConnectMessageAck, 
 	return resp, ackPacket.Unpack(resp)
 }
 
-func (x *clientService) Disconnect(req *v1.DisconnectMessage) (*emptypb.Empty, error) {
-	if err := x.dial(); err != nil {
-		return nil, err
+func (x *clientService) Disconnect(ctx context.Context, req *v1.DisconnectMessage) (*emptypb.Empty, error) {
+
+	x.client.Lock()
+	defer x.client.Unlock()
+
+	// Check context
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
 	}
-	x.mu.Lock()
-	defer x.mu.Unlock()
+
 	packet, err := v1.NewPacket(req)
 	if err != nil {
 		return nil, err
 	}
-	if _, err := packet.WriteTo(x.conn); err != nil {
+	if _, err := packet.WriteTo(x.client); err != nil {
 		return nil, err
 	}
 	return new(emptypb.Empty), nil
 }
-func (x *clientService) EndpointOpen(req *v1.EndpointOpen) (*v1.EndpointOpenAck, error) {
-	if err := x.dial(); err != nil {
-		return nil, err
+func (x *clientService) EndpointOpen(ctx context.Context, req *v1.EndpointOpen) (*v1.EndpointOpenAck, error) {
+
+	x.client.Lock()
+	defer x.client.Unlock()
+
+	// Check context
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
 	}
-	x.mu.Lock()
-	defer x.mu.Unlock()
+
 	packet, err := v1.NewPacket(req)
 	if err != nil {
 		return nil, err
 	}
-	if _, err := packet.WriteTo(x.conn); err != nil {
+	if _, err := packet.WriteTo(x.client); err != nil {
 		return nil, err
 	}
-	if err := x.conn.SetReadDeadline(time.Now().Add(x.timeout)); err != nil {
-		return nil, err
-	}
-	ackPacket, err := v1.NewPacket(x.conn)
+	ackPacket, err := v1.NewPacket(x.client)
 	if err != nil {
 		return nil, err
 	}
@@ -188,38 +174,47 @@ func (x *clientService) EndpointOpen(req *v1.EndpointOpen) (*v1.EndpointOpenAck,
 	return resp, ackPacket.Unpack(resp)
 }
 
-func (x *clientService) EndpointClose(req *v1.EndpointClose) (*emptypb.Empty, error) {
-	if err := x.dial(); err != nil {
-		return nil, err
+func (x *clientService) EndpointClose(ctx context.Context, req *v1.EndpointClose) (*emptypb.Empty, error) {
+
+	x.client.Lock()
+	defer x.client.Unlock()
+
+	// Check context
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
 	}
-	x.mu.Lock()
-	defer x.mu.Unlock()
+
 	packet, err := v1.NewPacket(req)
 	if err != nil {
 		return nil, err
 	}
-	if _, err := packet.WriteTo(x.conn); err != nil {
+	if _, err := packet.WriteTo(x.client); err != nil {
 		return nil, err
 	}
 	return new(emptypb.Empty), nil
 }
-func (x *clientService) EndpointMessage(req *v1.EndpointMessage) (*v1.EndpointMessage, error) {
-	if err := x.dial(); err != nil {
-		return nil, err
+func (x *clientService) EndpointMessage(ctx context.Context, req *v1.EndpointMessage) (*v1.EndpointMessage, error) {
+
+	x.client.Lock()
+	defer x.client.Unlock()
+
+	// Check context
+	select {
+	case <-ctx.Done():
+		return nil, ctx.Err()
+	default:
 	}
-	x.mu.Lock()
-	defer x.mu.Unlock()
+
 	packet, err := v1.NewPacket(req)
 	if err != nil {
 		return nil, err
 	}
-	if _, err := packet.WriteTo(x.conn); err != nil {
+	if _, err := packet.WriteTo(x.client); err != nil {
 		return nil, err
 	}
-	if err := x.conn.SetReadDeadline(time.Now().Add(x.timeout)); err != nil {
-		return nil, err
-	}
-	ackPacket, err := v1.NewPacket(x.conn)
+	ackPacket, err := v1.NewPacket(x.client)
 	if err != nil {
 		return nil, err
 	}
@@ -227,7 +222,7 @@ func (x *clientService) EndpointMessage(req *v1.EndpointMessage) (*v1.EndpointMe
 	return resp, ackPacket.Unpack(resp)
 }
 
-func (x *clientService) NewEndpoint(req *v1.EndpointOpenAck) (*v1.Endpoint, error) {
+func (x *clientService) NewEndpoint(_ context.Context, req *v1.EndpointOpenAck) (*v1.Endpoint, error) {
 	return &v1.Endpoint{
 		Service: req.GetService(),
 		Version: cast.ToInt32(cast.ToFloat32(req.GetVersion())),
@@ -237,7 +232,7 @@ func (x *clientService) NewEndpoint(req *v1.EndpointOpenAck) (*v1.Endpoint, erro
 }
 
 type EndpointServiceImpl interface {
-	Request(*EndpointRequest) (*anypb.Any, error)
+	Request(ctx context.Context, req *EndpointRequest) (*anypb.Any, error)
 }
 
 func NewEndpointService(clientService ClientServiceImpl, endpoint v1.EndpointImpl) EndpointServiceImpl {
@@ -253,7 +248,7 @@ type endpointService struct {
 	client ClientServiceImpl
 }
 
-func (x *endpointService) Request(req *EndpointRequest) (*anypb.Any, error) {
+func (x *endpointService) Request(ctx context.Context, req *EndpointRequest) (*anypb.Any, error) {
 	message, err := anypb.UnmarshalNew(req.GetRequest(), proto.UnmarshalOptions{})
 	if err != nil {
 		return nil, err
@@ -264,7 +259,7 @@ func (x *endpointService) Request(req *EndpointRequest) (*anypb.Any, error) {
 		return nil, err
 	}
 
-	respMessage, err := x.client.EndpointMessage(reqMessage)
+	respMessage, err := x.client.EndpointMessage(ctx, reqMessage)
 	if err != nil {
 		return nil, err
 	}
