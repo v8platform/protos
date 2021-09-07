@@ -1,16 +1,14 @@
 package simpleClient
 
 import (
-	"bytes"
 	"context"
 	"fmt"
 	clientv1 "github.com/v8platform/protos/gen/ras/client/v1"
 	protocolv1 "github.com/v8platform/protos/gen/ras/protocol"
-	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"io"
+	"log"
 	"net"
-	"strings"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -23,6 +21,7 @@ var _ clientv1.ClientServiceServer = (*Client)(nil)
 type Client struct {
 	ClientOptions
 
+	host       string
 	conn       net.Conn
 	onceInit   *sync.Once
 	usedAt     uint32 // atomic
@@ -37,11 +36,11 @@ type Client struct {
 }
 
 type ClientOptions struct {
-	Host             string
-	IdleTimeout      time.Duration
-	NegotiateMessage *protocolv1.NegotiateMessage
-	ConnectMessage   *protocolv1.ConnectMessage
-	OpenEndpoint     *protocolv1.EndpointOpen
+	IdleTimeout        time.Duration
+	IdleCheckFrequency time.Duration
+	NegotiateMessage   *protocolv1.NegotiateMessage
+	ConnectMessage     *protocolv1.ConnectMessage
+	OpenEndpoint       *protocolv1.EndpointOpen
 }
 
 type Stats struct {
@@ -52,17 +51,17 @@ type Stats struct {
 }
 
 var defaultClientOptions = ClientOptions{
-	Host:             "localhost:1545",
-	IdleTimeout:      30 * time.Minute,
-	NegotiateMessage: protocolv1.NewNegotiateMessage(),
-	ConnectMessage:   &protocolv1.ConnectMessage{},
+	IdleTimeout:        30 * time.Minute,
+	IdleCheckFrequency: 5 * time.Minute,
+	NegotiateMessage:   protocolv1.NewNegotiateMessage(),
+	ConnectMessage:     &protocolv1.ConnectMessage{},
 	OpenEndpoint: &protocolv1.EndpointOpen{
 		Service: "v8.service.Admin.Cluster",
 		Version: defaultVersion,
 	},
 }
 
-func NewClient(options ...ClientOptions) clientv1.ClientServiceServer {
+func NewClient(host string, options ...ClientOptions) *Client {
 
 	opt := defaultClientOptions
 	if len(options) > 0 {
@@ -70,6 +69,7 @@ func NewClient(options ...ClientOptions) clientv1.ClientServiceServer {
 	}
 
 	return &Client{
+		host:          host,
 		ClientOptions: opt,
 		endpoints:     &sync.Map{},
 		mu:            &sync.Mutex{},
@@ -115,19 +115,27 @@ func (c *Client) addEndpoint(endpoint *protocolv1.Endpoint) (loaded bool) {
 
 func (c *Client) Init(ctx context.Context, request *clientv1.InitRequest) (*clientv1.StatusInfo, error) {
 
-	if !strings.EqualFold(request.GetHost(), c.Host) {
-		err := c.reset()
-		if err != nil {
-			return nil, err
-		}
-	}
 	c.IdleTimeout = time.Duration(request.GetIdleTimeout())
 
 	if request.GetLazy() != nil {
-		c.OpenEndpoint = request.Lazy.GetOpenEndpoint()
-		c.NegotiateMessage = request.Lazy.GetNegotiate()
-		c.ConnectMessage = request.Lazy.GetConnect()
+
+		if val := request.Lazy.GetOpenEndpoint(); val != nil {
+			c.OpenEndpoint = val
+		}
+		if val := request.Lazy.GetNegotiate(); val != nil {
+			c.NegotiateMessage = val
+		}
+		if val := request.Lazy.GetConnect(); val != nil {
+			c.ConnectMessage = val
+		}
 	}
+
+	err := c.init(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return new(clientv1.StatusInfo), nil
 }
 
 func (c *Client) Status(ctx context.Context, _ *emptypb.Empty) (*clientv1.StatusInfo, error) {
@@ -137,7 +145,7 @@ func (c *Client) Status(ctx context.Context, _ *emptypb.Empty) (*clientv1.Status
 func (c *Client) NewEndpoint(ctx context.Context, request *clientv1.NewEndpointRequest) (*protocolv1.Endpoint, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-
+	return nil, nil
 }
 
 func (c *Client) CloseEndpoint(ctx context.Context, endpoint *protocolv1.Endpoint) (*emptypb.Empty, error) {
@@ -195,7 +203,7 @@ func (c *Client) Disconnect(ctx context.Context, message *protocolv1.DisconnectM
 
 func (c *Client) EndpointOpen(ctx context.Context, open *protocolv1.EndpointOpen) (resp *protocolv1.EndpointOpenAck, err error) {
 
-	if err := c.initConn(ctx); err != nil {
+	if err := c.lazyInit(ctx); err != nil {
 		return nil, err
 	}
 
@@ -301,7 +309,7 @@ func (c *Client) initConn(ctx context.Context) (err error) {
 	default:
 	}
 
-	if len(c.Host) == 0 {
+	if len(c.host) == 0 {
 		return fmt.Errorf("host is not set")
 	}
 
@@ -314,14 +322,41 @@ func (c *Client) initConn(ctx context.Context) (err error) {
 		return err
 	}
 
+	go c.reaper(c.IdleCheckFrequency)
+
 	atomic.StoreUint32(&c._connected, 1)
 
 	return nil
 }
 
-func (c *Client) populateConn(ctx context.Context) (err error) {
+func (p *Client) reaper(frequency time.Duration) {
 
-	conn, err := net.Dial("tcp", c.Host)
+	if p.IdleTimeout == 0 {
+		return
+	}
+
+	ticker := time.NewTicker(frequency)
+	defer ticker.Stop()
+
+	for range ticker.C {
+		if p.closed() {
+			break
+		}
+
+		now := time.Now()
+		if now.Sub(p.UsedAt()) >= p.IdleTimeout {
+			err := p.Close()
+			if err != nil {
+				log.Println("reaper err", err)
+				return
+			}
+		}
+	}
+}
+
+func (c *Client) populateConn(_ context.Context) (err error) {
+
+	conn, err := net.Dial("tcp", c.host)
 	if err != nil {
 		return err
 	}
@@ -357,6 +392,10 @@ func (c *Client) request(ctx context.Context, req protocolv1.PacketMessageFormat
 	case protocolv1.PacketMessageParser:
 
 		packet, err := c.recv(ctx)
+		if err != nil {
+			return err
+		}
+
 		atomic.AddUint32(&c.stats.Recv, 1)
 		err = packet.Unpack(typed)
 		if err != nil {
@@ -451,29 +490,29 @@ func (c *Client) closed() bool {
 	return false
 }
 
-func (c *Client) Open(version string) (endpoint clientv1.EndpointServiceImpl, err error) {
+// func (c *Client) Open(version string) (endpoint clientv1.EndpointServiceImpl, err error) {
 
-	EndpointOpenAck, err := c.client.EndpointOpen(&protocolv1.EndpointOpen{
-		Service: "v8.service.Admin.Cluster",
-		Version: version,
-	})
-
-	if err != nil {
-		if version := c.client.DetectSupportedVersion(err); len(version) == 0 {
-			return nil, err
-		}
-		if EndpointOpenAck, err = c.client.EndpointOpen(&protocolv1.EndpointOpen{
-			Service: "v8.service.Admin.Cluster",
-			Version: version,
-		}); err != nil {
-			return nil, err
-		}
-	}
-
-	end, err := c.client.NewEndpoint(EndpointOpenAck)
-	if err != nil {
-		return nil, err
-	}
-
-	return clientv1.NewEndpointService(c.client, end), nil
-}
+// EndpointOpenAck, err := c.client.EndpointOpen(&protocolv1.EndpointOpen{
+// 	Service: "v8.service.Admin.Cluster",
+// 	Version: version,
+// })
+//
+// if err != nil {
+// 	if version := c.client.DetectSupportedVersion(err); len(version) == 0 {
+// 		return nil, err
+// 	}
+// 	if EndpointOpenAck, err = c.client.EndpointOpen(&protocolv1.EndpointOpen{
+// 		Service: "v8.service.Admin.Cluster",
+// 		Version: version,
+// 	}); err != nil {
+// 		return nil, err
+// 	}
+// }
+//
+// end, err := c.client.NewEndpoint(EndpointOpenAck)
+// if err != nil {
+// 	return nil, err
+// }
+//
+// return clientv1.NewEndpointService(c.client, end), nil
+// }

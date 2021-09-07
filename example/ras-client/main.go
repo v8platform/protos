@@ -3,11 +3,9 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
+	"github.com/k0kubun/pp"
 	"github.com/v8platform/protos/example/ras-client/simpleClient"
-	clientv1 "github.com/v8platform/protos/gen/ras/client/v1"
-	"github.com/v8platform/protos/gen/ras/protocol/messages"
-	"log"
+	"github.com/v8platform/protos/gen/ras/protocol"
 )
 
 func main() {
@@ -27,37 +25,42 @@ func main() {
 		}
 	}()
 
-	err := client.Connect(ctx)
+	ack, err := client.EndpointOpen(ctx, &protocol.EndpointOpen{
+		Service: "v8.service.Admin.Cluster",
+		Version: "10.0",
+	})
 	if err != nil {
 		panic(err)
 	}
 
-	endpointService, err := client.Open("10.0")
-	if err != nil {
-		panic(err)
-	}
+	pp.Println(ack)
 
-	ras := clientv1.NewRasService(endpointService)
-	clusters, err := ras.GetClusters(&messages.GetClustersRequest{})
-	if err != nil {
-		panic(err)
-	}
-
-	_, err = ras.AuthenticateCluster(&messages.ClusterAuthenticateRequest{ClusterId: clusters.Clusters[0].Uuid})
-	if err != nil {
-		panic(err)
-	}
-
-	sessions, err := ras.GetSessions(&messages.GetSessionsRequest{ClusterId: clusters.Clusters[0].Uuid})
-	if err != nil {
-		panic(err)
-	}
-	// pp.SetDefaultMaxDepth(1)
-	// pp.Println(resp.Sessions)
-	fmt.Println("Список полученных сессий ", len(sessions.Sessions))
-	for _, session := range sessions.Sessions {
-
-		log.Println(session.String())
-	}
+	// endpointService, err := client.Open("10.0")
+	// if err != nil {
+	// 	panic(err)
+	// }
+	//
+	// ras := clientv1.NewRasService(endpointService)
+	// clusters, err := ras.GetClusters(&messages.GetClustersRequest{})
+	// if err != nil {
+	// 	panic(err)
+	// }
+	//
+	// _, err = ras.AuthenticateCluster(&messages.ClusterAuthenticateRequest{ClusterId: clusters.Clusters[0].Uuid})
+	// if err != nil {
+	// 	panic(err)
+	// }
+	//
+	// sessions, err := ras.GetSessions(&messages.GetSessionsRequest{ClusterId: clusters.Clusters[0].Uuid})
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// // pp.SetDefaultMaxDepth(1)
+	// // pp.Println(resp.Sessions)
+	// fmt.Println("Список полученных сессий ", len(sessions.Sessions))
+	// for _, session := range sessions.Sessions {
+	//
+	// 	log.Println(session.String())
+	// }
 
 }
