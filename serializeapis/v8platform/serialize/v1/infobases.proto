@@ -10,8 +10,8 @@ option go_package = "github.com/v8platform/protos/gen/v8platform/serialize/v1;se
 
 message InfobaseInfo {
 
-  // ignore
-  string cluster_id = 1;
+  // reserved for cluater_id
+  reserved 1;
 
   string uuid = 2 [(ras.encoding.field) = {encoder: "uuid", order: 1}];
   int32 date_offset = 3 [(ras.encoding.field).order = 2];

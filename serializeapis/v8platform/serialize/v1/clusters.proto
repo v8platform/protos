@@ -9,9 +9,8 @@ option go_package = "github.com/v8platform/protos/gen/v8platform/serialize/v1;se
 
 message ClusterInfo {
 
-
   string uuid = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"}];
-  int32 expiration_timeout = 2 [(ras.encoding.field).order = 2];
+  int32 expiration_timeout = 2 [json_name = "expiration_timeout", (ras.encoding.field).order = 2];
   string host = 3 [(ras.encoding.field) = {
     order: 3,
   }];

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package v8platform.serialize.v1;
+
+import "google/protobuf/timestamp.proto";
+import "ras/encoding/ras.proto";
+import "v8platform/serialize/v1/licanses.proto";
+
+
+option go_package = "github.com/v8platform/protos/gen/v8platform/serialize/v1;serializev1";
+
+message ConnectionInfo  {
+
+  string uuid = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"}];
+  string application = 2 [(ras.encoding.field) = {order: 2}];
+  int32 blocked_by_ls = 3 [(ras.encoding.field) = {order: 3}];
+  google.protobuf.Timestamp connected_at = 4 [(ras.encoding.field) = {order: 4, encoder: "time"}];
+  int32 id = 5 [(ras.encoding.field) = {order: 5}];
+  string host = 6 [(ras.encoding.field) = {order: 6}];
+  string infobase_id = 7 [(ras.encoding.field) = {order: 7, encoder: "uuid"}];
+  string process_id = 8 [(ras.encoding.field) = {order: 8, encoder: "uuid"}];
+  int32 session_id = 9 [(ras.encoding.field) = {order: 9}];
+
+}

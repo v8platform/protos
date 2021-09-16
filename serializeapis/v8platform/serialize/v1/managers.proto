@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package v8platform.serialize.v1;
+
+import "google/protobuf/timestamp.proto";
+import "ras/encoding/ras.proto";
+
+option go_package = "github.com/v8platform/protos/gen/v8platform/serialize/v1;serializev1";
+
+message ManagerInfo   {
+
+  string uuid = 1 [(ras.encoding.field) = {encoder: "uuid", order: 1}];
+  string descr = 2 [(ras.encoding.field) = {order: 2}];
+  string host = 3 [(ras.encoding.field).order = 3];
+  int32 main_manager = 4 [(ras.encoding.field).order = 4];
+  int32 port = 5 [(ras.encoding.field) = {encoder: "short", order: 5}];
+  string pid = 6 [(ras.encoding.field).order = 6];
+
+}
