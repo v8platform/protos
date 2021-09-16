@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package v8platform.serialize.v1;
+
+import "google/protobuf/timestamp.proto";
+import "ras/encoding/ras.proto";
+import "v8platform/serialize/v1/licanses.proto";
+
+
+option go_package = "github.com/v8platform/protos/gen/v8platform/serialize/v1;serializev1";
+
+message LockInfo {
+
+  string connection_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"}];
+  string description = 2 [(ras.encoding.field) = {order: 2}];
+  google.protobuf.Timestamp locked_at = 3 [(ras.encoding.field) = {order: 3, encoder: "time"}];
+  string object_id = 4 [(ras.encoding.field) = {order: 4, encoder: "uuid"}];
+  string session_id = 5 [(ras.encoding.field) = {order: 5, encoder: "uuid"}];
+
+}

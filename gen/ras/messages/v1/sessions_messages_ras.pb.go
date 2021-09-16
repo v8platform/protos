@@ -73,3 +73,171 @@ func (x *GetSessionsResponse) Formatter(writer io.Writer, version int32) error {
 	}
 	return nil
 }
+func (x *GetSessionInfoRequest) GetMessageType() MessageType {
+	return MessageType_GET_SESSION_INFO_REQUEST
+}
+
+func (x *GetSessionInfoRequest) Parse(reader io.Reader, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
+		return err
+	}
+	// decode x.SessionId opts: encoder:"uuid"  order:2
+	if err := codec256.ParseUUID(reader, &x.SessionId); err != nil {
+		return err
+	}
+	return nil
+}
+func (x *GetSessionInfoRequest) Formatter(writer io.Writer, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
+		return err
+	}
+	// decode x.SessionId opts: encoder:"uuid"  order:2
+	if err := codec256.FormatUuid(writer, x.SessionId); err != nil {
+		return err
+	}
+	return nil
+}
+func (x *GetInfobaseSessionsRequest) GetMessageType() MessageType {
+	return MessageType_GET_INFOBASE_SESSIONS_REQUEST
+}
+
+func (x *GetInfobaseSessionsRequest) Parse(reader io.Reader, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
+		return err
+	}
+	// decode x.InfobaseId opts: encoder:"uuid"  order:2
+	if err := codec256.ParseUUID(reader, &x.InfobaseId); err != nil {
+		return err
+	}
+	return nil
+}
+func (x *GetInfobaseSessionsRequest) Formatter(writer io.Writer, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
+		return err
+	}
+	// decode x.InfobaseId opts: encoder:"uuid"  order:2
+	if err := codec256.FormatUuid(writer, x.InfobaseId); err != nil {
+		return err
+	}
+	return nil
+}
+func (x *GetInfobaseSessionsResponse) GetMessageType() MessageType {
+	return MessageType_GET_INFOBASE_SESSIONS_RESPONSE
+}
+
+func (x *GetInfobaseSessionsResponse) Parse(reader io.Reader, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.Infobases opts: order:1
+	var size_Infobases int
+	if err := codec256.ParseSize(reader, &size_Infobases); err != nil {
+		return err
+	}
+	for i := 0; i < size_Infobases; i++ {
+		val := &v1.SessionInfo{}
+		if err := val.Parse(reader, version); err != nil {
+			return err
+		}
+
+		x.Infobases = append(x.Infobases, val)
+	}
+	return nil
+}
+func (x *GetInfobaseSessionsResponse) Formatter(writer io.Writer, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.Infobases opts: order:1
+	if err := codec256.FormatSize(writer, len(x.Infobases)); err != nil {
+		return err
+	}
+	for i := 0; i < len(x.Infobases); i++ {
+		if err := x.Infobases[i].Formatter(writer, version); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+func (x *GetSessionInfoResponse) GetMessageType() MessageType {
+	return MessageType_GET_SESSION_INFO_RESPONSE
+}
+
+func (x *GetSessionInfoResponse) Parse(reader io.Reader, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.Info opts: order:1
+	x.Info = &v1.SessionInfo{}
+	if err := x.Info.Parse(reader, version); err != nil {
+		return err
+	}
+
+	return nil
+}
+func (x *GetSessionInfoResponse) Formatter(writer io.Writer, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.Info opts: order:1
+	if err := x.Info.Formatter(writer, version); err != nil {
+		return err
+	}
+	return nil
+}
+func (x *TerminateSessionRequest) GetMessageType() MessageType {
+	return MessageType_TERMINATE_SESSION_REQUEST
+}
+
+func (x *TerminateSessionRequest) Parse(reader io.Reader, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
+		return err
+	}
+	// decode x.SessionId opts: encoder:"uuid"  order:2
+	if err := codec256.ParseUUID(reader, &x.SessionId); err != nil {
+		return err
+	}
+	// decode x.Message opts: order:3
+	if err := codec256.ParseString(reader, &x.Message); err != nil {
+		return err
+	}
+	return nil
+}
+func (x *TerminateSessionRequest) Formatter(writer io.Writer, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
+		return err
+	}
+	// decode x.SessionId opts: encoder:"uuid"  order:2
+	if err := codec256.FormatUuid(writer, x.SessionId); err != nil {
+		return err
+	}
+	// decode x.Message opts: order:3
+	if err := codec256.FormatString(writer, x.Message); err != nil {
+		return err
+	}
+	return nil
+}

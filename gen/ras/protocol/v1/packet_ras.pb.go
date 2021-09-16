@@ -65,6 +65,21 @@ func (x *Packet) Unpack(into PacketMessageParser) error {
 func (x *Packet) UnpackNew() (interface{}, error) {
 	var into interface{}
 	switch x.GetType() {
+	// type PacketType_PACKET_TYPE_ENDPOINT_MESSAGE cast EndpointMessage
+	case PacketType_PACKET_TYPE_ENDPOINT_MESSAGE:
+		into = &EndpointMessage{}
+	// type PacketType_PACKET_TYPE_ENDPOINT_FAILURE cast EndpointFailureAck
+	case PacketType_PACKET_TYPE_ENDPOINT_FAILURE:
+		into = &EndpointFailureAck{}
+	// type PacketType_PACKET_TYPE_DISCONNECT cast DisconnectMessage
+	case PacketType_PACKET_TYPE_DISCONNECT:
+		into = &DisconnectMessage{}
+	// type PacketType_PACKET_TYPE_ENDPOINT_OPEN_ACK cast EndpointOpenAck
+	case PacketType_PACKET_TYPE_ENDPOINT_OPEN_ACK:
+		into = &EndpointOpenAck{}
+	// type PacketType_PACKET_TYPE_CONNECT cast ConnectMessage
+	case PacketType_PACKET_TYPE_CONNECT:
+		into = &ConnectMessage{}
 	// type PacketType_PACKET_TYPE_CONNECT_ACK cast ConnectMessageAck
 	case PacketType_PACKET_TYPE_CONNECT_ACK:
 		into = &ConnectMessageAck{}
@@ -74,21 +89,6 @@ func (x *Packet) UnpackNew() (interface{}, error) {
 	// type PacketType_PACKET_TYPE_NEGOTIATE cast NegotiateMessage
 	case PacketType_PACKET_TYPE_NEGOTIATE:
 		into = &NegotiateMessage{}
-	// type PacketType_PACKET_TYPE_ENDPOINT_MESSAGE cast EndpointMessage
-	case PacketType_PACKET_TYPE_ENDPOINT_MESSAGE:
-		into = &EndpointMessage{}
-	// type PacketType_PACKET_TYPE_ENDPOINT_OPEN_ACK cast EndpointOpenAck
-	case PacketType_PACKET_TYPE_ENDPOINT_OPEN_ACK:
-		into = &EndpointOpenAck{}
-	// type PacketType_PACKET_TYPE_DISCONNECT cast DisconnectMessage
-	case PacketType_PACKET_TYPE_DISCONNECT:
-		into = &DisconnectMessage{}
-	// type PacketType_PACKET_TYPE_ENDPOINT_FAILURE cast EndpointFailureAck
-	case PacketType_PACKET_TYPE_ENDPOINT_FAILURE:
-		into = &EndpointFailureAck{}
-	// type PacketType_PACKET_TYPE_CONNECT cast ConnectMessage
-	case PacketType_PACKET_TYPE_CONNECT:
-		into = &ConnectMessage{}
 	default:
 		return nil, fmt.Errorf("unknown unpack type %s", x.GetType())
 	}

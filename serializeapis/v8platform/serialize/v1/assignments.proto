@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package v8platform.serialize.v1;
+
+import "google/protobuf/timestamp.proto";
+import "ras/encoding/ras.proto";
+
+
+option go_package = "github.com/v8platform/protos/gen/v8platform/serialize/v1;serializev1";
+
+message AssignmentInfo  {
+
+  string uuid = 1 [(ras.encoding.field) = {encoder: "uuid", order: 1}];
+  string object_type = 2 [(ras.encoding.field) = {order: 2}];
+  string infobase_name = 3 [(ras.encoding.field) = {order: 3}];
+  int32 type = 4 [(ras.encoding.field) = {order: 4}];
+  string application_ext = 5 [(ras.encoding.field) = {order: 5}];
+  int32 priority = 6 [(ras.encoding.field) = {order: 6}];
+
+}

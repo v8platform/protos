@@ -10,11 +10,15 @@ import (
 	v1 "github.com/v8platform/protos/gen/ras/messages/v1"
 	proto "google.golang.org/protobuf/proto"
 	anypb "google.golang.org/protobuf/types/known/anypb"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 type InfobasesServiceImpl interface {
 	GetShortInfobases(ctx context.Context, req *v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error)
-	GetSessions(ctx context.Context, req *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error)
+	CreateInfobase(ctx context.Context, req *v1.CreateInfobaseRequest) (*v1.CreateInfobaseResponse, error)
+	DropInfobase(ctx context.Context, req *v1.DropInfobaseRequest) (*emptypb.Empty, error)
+	UpdateInfobase(ctx context.Context, req *v1.UpdateInfobaseRequest) (*emptypb.Empty, error)
+	UpdateInfobaseSummary(ctx context.Context, req *v1.UpdateInfobaseSummaryRequest) (*emptypb.Empty, error)
 }
 
 func NewInfobasesService(endpointService EndpointServiceImpl) InfobasesServiceImpl {
@@ -58,9 +62,99 @@ func (x *InfobasesService) GetShortInfobases(ctx context.Context, req *v1.GetInf
 	return &resp, nil
 }
 
-func (x *InfobasesService) GetSessions(ctx context.Context, req *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error) {
+func (x *InfobasesService) CreateInfobase(ctx context.Context, req *v1.CreateInfobaseRequest) (*v1.CreateInfobaseResponse, error) {
 
-	var resp v1.GetInfobaseSessionsResponse
+	var resp v1.CreateInfobaseResponse
+
+	anyRequest, err := anypb.New(req)
+	if err != nil {
+		return nil, err
+	}
+
+	anyRespond, err := anypb.New(&resp)
+	if err != nil {
+		return nil, err
+	}
+
+	endpointRequest := &EndpointRequest{
+		Request: anyRequest,
+		Respond: anyRespond,
+	}
+
+	response, err := x.e.Request(ctx, endpointRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (x *InfobasesService) DropInfobase(ctx context.Context, req *v1.DropInfobaseRequest) (*emptypb.Empty, error) {
+
+	var resp emptypb.Empty
+
+	anyRequest, err := anypb.New(req)
+	if err != nil {
+		return nil, err
+	}
+
+	anyRespond, err := anypb.New(&resp)
+	if err != nil {
+		return nil, err
+	}
+
+	endpointRequest := &EndpointRequest{
+		Request: anyRequest,
+		Respond: anyRespond,
+	}
+
+	response, err := x.e.Request(ctx, endpointRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (x *InfobasesService) UpdateInfobase(ctx context.Context, req *v1.UpdateInfobaseRequest) (*emptypb.Empty, error) {
+
+	var resp emptypb.Empty
+
+	anyRequest, err := anypb.New(req)
+	if err != nil {
+		return nil, err
+	}
+
+	anyRespond, err := anypb.New(&resp)
+	if err != nil {
+		return nil, err
+	}
+
+	endpointRequest := &EndpointRequest{
+		Request: anyRequest,
+		Respond: anyRespond,
+	}
+
+	response, err := x.e.Request(ctx, endpointRequest)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (x *InfobasesService) UpdateInfobaseSummary(ctx context.Context, req *v1.UpdateInfobaseSummaryRequest) (*emptypb.Empty, error) {
+
+	var resp emptypb.Empty
 
 	anyRequest, err := anypb.New(req)
 	if err != nil {

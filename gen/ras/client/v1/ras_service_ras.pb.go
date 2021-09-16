@@ -28,10 +28,22 @@ type RasServiceImpl interface {
 	UnregCluster(ctx context.Context, req *v1.UnregClusterRequest) (*emptypb.Empty, error)
 	// GetShortInfobases proxy request InfobasesService.GetShortInfobases
 	GetShortInfobases(ctx context.Context, req *v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error)
-	// GetInfobaseSessions proxy request InfobasesService.GetSessions
-	GetInfobaseSessions(ctx context.Context, req *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error)
+	// CreateInfobase proxy request InfobasesService.CreateInfobase
+	CreateInfobase(ctx context.Context, req *v1.CreateInfobaseRequest) (*v1.CreateInfobaseResponse, error)
+	// DropInfobase proxy request InfobasesService.DropInfobase
+	DropInfobase(ctx context.Context, req *v1.DropInfobaseRequest) (*emptypb.Empty, error)
+	// UpdateInfobase proxy request InfobasesService.UpdateInfobase
+	UpdateInfobase(ctx context.Context, req *v1.UpdateInfobaseRequest) (*emptypb.Empty, error)
+	// UpdateInfobaseSummary proxy request InfobasesService.UpdateInfobaseSummary
+	UpdateInfobaseSummary(ctx context.Context, req *v1.UpdateInfobaseSummaryRequest) (*emptypb.Empty, error)
 	// GetSessions proxy request SessionsService.GetSessions
 	GetSessions(ctx context.Context, req *v1.GetSessionsRequest) (*v1.GetSessionsResponse, error)
+	// GetInfobaseSessions proxy request SessionsService.GetInfobaseSessions
+	GetInfobaseSessions(ctx context.Context, req *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error)
+	// GetSession proxy request SessionsService.GetSession
+	GetSession(ctx context.Context, req *v1.GetSessionInfoRequest) (*v1.GetSessionInfoResponse, error)
+	// TerminateSession proxy request SessionsService.TerminateSession
+	TerminateSession(ctx context.Context, req *v1.TerminateSessionRequest) (*emptypb.Empty, error)
 }
 
 func NewRasService(endpointService EndpointServiceImpl) RasServiceImpl {
@@ -105,12 +117,42 @@ func (x *rasService) GetShortInfobases(ctx context.Context, req *v1.GetInfobases
 	return x.InfobasesService.GetShortInfobases(ctx, req)
 }
 
-// GetInfobaseSessions is proxy method to request InfobasesService.GetSessions
-func (x *rasService) GetInfobaseSessions(ctx context.Context, req *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error) {
-	return x.InfobasesService.GetSessions(ctx, req)
+// CreateInfobase is proxy method to request InfobasesService.CreateInfobase
+func (x *rasService) CreateInfobase(ctx context.Context, req *v1.CreateInfobaseRequest) (*v1.CreateInfobaseResponse, error) {
+	return x.InfobasesService.CreateInfobase(ctx, req)
+}
+
+// DropInfobase is proxy method to request InfobasesService.DropInfobase
+func (x *rasService) DropInfobase(ctx context.Context, req *v1.DropInfobaseRequest) (*emptypb.Empty, error) {
+	return x.InfobasesService.DropInfobase(ctx, req)
+}
+
+// UpdateInfobase is proxy method to request InfobasesService.UpdateInfobase
+func (x *rasService) UpdateInfobase(ctx context.Context, req *v1.UpdateInfobaseRequest) (*emptypb.Empty, error) {
+	return x.InfobasesService.UpdateInfobase(ctx, req)
+}
+
+// UpdateInfobaseSummary is proxy method to request InfobasesService.UpdateInfobaseSummary
+func (x *rasService) UpdateInfobaseSummary(ctx context.Context, req *v1.UpdateInfobaseSummaryRequest) (*emptypb.Empty, error) {
+	return x.InfobasesService.UpdateInfobaseSummary(ctx, req)
 }
 
 // GetSessions is proxy method to request SessionsService.GetSessions
 func (x *rasService) GetSessions(ctx context.Context, req *v1.GetSessionsRequest) (*v1.GetSessionsResponse, error) {
 	return x.SessionsService.GetSessions(ctx, req)
+}
+
+// GetInfobaseSessions is proxy method to request SessionsService.GetInfobaseSessions
+func (x *rasService) GetInfobaseSessions(ctx context.Context, req *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error) {
+	return x.SessionsService.GetInfobaseSessions(ctx, req)
+}
+
+// GetSession is proxy method to request SessionsService.GetSession
+func (x *rasService) GetSession(ctx context.Context, req *v1.GetSessionInfoRequest) (*v1.GetSessionInfoResponse, error) {
+	return x.SessionsService.GetSession(ctx, req)
+}
+
+// TerminateSession is proxy method to request SessionsService.TerminateSession
+func (x *rasService) TerminateSession(ctx context.Context, req *v1.TerminateSessionRequest) (*emptypb.Empty, error) {
+	return x.SessionsService.TerminateSession(ctx, req)
 }

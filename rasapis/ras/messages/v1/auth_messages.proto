@@ -4,26 +4,69 @@ package ras.messages.v1;
 
 import "ras/encoding/ras.proto";
 import "google/protobuf/any.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 
 option csharp_namespace = "ras.messages.v1";
 option go_package = "github.com/v8platform/protos/gen/ras/messages/v1;messagesv1";
 
 message AuthenticateAgentRequest {
   option (encoding.options).message_type = "AUTHENTICATE_AGENT_REQUEST";
-  string user = 1 [(ras.encoding.field) = {order: 1}];
-  string password = 2 [(ras.encoding.field) = {order: 2}];
+  string user = 1 [(ras.encoding.field) = {order: 1},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Имя администратора агента кластера"
+      format: "string"
+    }
+  ];
+  string password = 2 [(ras.encoding.field) = {order: 2},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Пароль администратора агента кластера"
+      format: "string"
+    }
+  ];
 }
 
 message ClusterAuthenticateRequest  {
   option (encoding.options).message_type = "AUTHENTICATE_REQUEST";
-  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"}];
-  string user = 2 [(ras.encoding.field) = {order: 2}];
-  string password = 3 [(ras.encoding.field) = {order: 3}];
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+  string user = 2 [(ras.encoding.field) = {order: 2},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Имя администратора кластера"
+      format: "string"
+    }
+  ];
+  string password = 3 [(ras.encoding.field) = {order: 3},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Пароль администратора кластера"
+      format: "string"
+    }
+  ];
 }
 
 message AuthenticateInfobaseRequest   {
   option (encoding.options).message_type = "ADD_AUTHENTICATION_REQUEST";
-  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"}];
-  string user = 2 [(ras.encoding.field) = {order: 2}];
-  string password = 3 [(ras.encoding.field) = {order: 3}];
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+  string user = 2 [(ras.encoding.field) = {order: 2},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Имя пользователя информационной базы"
+      format: "string"
+    }
+  ];
+  string password = 3 [(ras.encoding.field) = {order: 3},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Пароль пользователя информационной базы"
+      format: "string"
+    }
+  ];
 }

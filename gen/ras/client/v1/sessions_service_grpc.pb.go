@@ -8,6 +8,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -20,6 +21,9 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SessionsServiceClient interface {
 	GetSessions(ctx context.Context, in *v1.GetSessionsRequest, opts ...grpc.CallOption) (*v1.GetSessionsResponse, error)
+	GetInfobaseSessions(ctx context.Context, in *v1.GetInfobaseSessionsRequest, opts ...grpc.CallOption) (*v1.GetInfobaseSessionsResponse, error)
+	GetSession(ctx context.Context, in *v1.GetSessionInfoRequest, opts ...grpc.CallOption) (*v1.GetSessionInfoResponse, error)
+	TerminateSession(ctx context.Context, in *v1.TerminateSessionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type sessionsServiceClient struct {
@@ -39,11 +43,41 @@ func (c *sessionsServiceClient) GetSessions(ctx context.Context, in *v1.GetSessi
 	return out, nil
 }
 
+func (c *sessionsServiceClient) GetInfobaseSessions(ctx context.Context, in *v1.GetInfobaseSessionsRequest, opts ...grpc.CallOption) (*v1.GetInfobaseSessionsResponse, error) {
+	out := new(v1.GetInfobaseSessionsResponse)
+	err := c.cc.Invoke(ctx, "/ras.client.v1.SessionsService/GetInfobaseSessions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sessionsServiceClient) GetSession(ctx context.Context, in *v1.GetSessionInfoRequest, opts ...grpc.CallOption) (*v1.GetSessionInfoResponse, error) {
+	out := new(v1.GetSessionInfoResponse)
+	err := c.cc.Invoke(ctx, "/ras.client.v1.SessionsService/GetSession", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *sessionsServiceClient) TerminateSession(ctx context.Context, in *v1.TerminateSessionRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/ras.client.v1.SessionsService/TerminateSession", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SessionsServiceServer is the server API for SessionsService service.
 // All implementations should embed UnimplementedSessionsServiceServer
 // for forward compatibility
 type SessionsServiceServer interface {
 	GetSessions(context.Context, *v1.GetSessionsRequest) (*v1.GetSessionsResponse, error)
+	GetInfobaseSessions(context.Context, *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error)
+	GetSession(context.Context, *v1.GetSessionInfoRequest) (*v1.GetSessionInfoResponse, error)
+	TerminateSession(context.Context, *v1.TerminateSessionRequest) (*emptypb.Empty, error)
 }
 
 // UnimplementedSessionsServiceServer should be embedded to have forward compatible implementations.
@@ -52,6 +86,15 @@ type UnimplementedSessionsServiceServer struct {
 
 func (UnimplementedSessionsServiceServer) GetSessions(context.Context, *v1.GetSessionsRequest) (*v1.GetSessionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSessions not implemented")
+}
+func (UnimplementedSessionsServiceServer) GetInfobaseSessions(context.Context, *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetInfobaseSessions not implemented")
+}
+func (UnimplementedSessionsServiceServer) GetSession(context.Context, *v1.GetSessionInfoRequest) (*v1.GetSessionInfoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetSession not implemented")
+}
+func (UnimplementedSessionsServiceServer) TerminateSession(context.Context, *v1.TerminateSessionRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method TerminateSession not implemented")
 }
 
 // UnsafeSessionsServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -83,6 +126,60 @@ func _SessionsService_GetSessions_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SessionsService_GetInfobaseSessions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.GetInfobaseSessionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SessionsServiceServer).GetInfobaseSessions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ras.client.v1.SessionsService/GetInfobaseSessions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SessionsServiceServer).GetInfobaseSessions(ctx, req.(*v1.GetInfobaseSessionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SessionsService_GetSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.GetSessionInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SessionsServiceServer).GetSession(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ras.client.v1.SessionsService/GetSession",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SessionsServiceServer).GetSession(ctx, req.(*v1.GetSessionInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SessionsService_TerminateSession_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.TerminateSessionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SessionsServiceServer).TerminateSession(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ras.client.v1.SessionsService/TerminateSession",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SessionsServiceServer).TerminateSession(ctx, req.(*v1.TerminateSessionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SessionsService_ServiceDesc is the grpc.ServiceDesc for SessionsService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -93,6 +190,18 @@ var SessionsService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSessions",
 			Handler:    _SessionsService_GetSessions_Handler,
+		},
+		{
+			MethodName: "GetInfobaseSessions",
+			Handler:    _SessionsService_GetInfobaseSessions_Handler,
+		},
+		{
+			MethodName: "GetSession",
+			Handler:    _SessionsService_GetSession_Handler,
+		},
+		{
+			MethodName: "TerminateSession",
+			Handler:    _SessionsService_TerminateSession_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

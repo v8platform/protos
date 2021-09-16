@@ -6,9 +6,9 @@ managed:
     default: github.com/v8platform/protos/gen
     except:
       - buf.build/googleapis/googleapis
-    override:
-      "github.com/v8platform/protoc-gen-go-ras": "go.buf.build/v8platform/go-gen-ras/v8platform/encodingapis"
-      "buf.build/v8platform/encodingapis": "go.buf.build/v8platform/go-gen-ras/v8platform/encodingapis"
+      - buf.build/grpc-ecosystem/grpc-gateway
+      - buf.build/v8platform/encodingapis
+      - github.com/v8platform/protoc-gen-go-ras
 
 plugins:
   - name: go

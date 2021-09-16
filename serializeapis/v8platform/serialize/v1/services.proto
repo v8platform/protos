@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package v8platform.serialize.v1;
+
+import "google/protobuf/timestamp.proto";
+import "ras/encoding/ras.proto";
+import "v8platform/serialize/v1/licanses.proto";
+
+
+option go_package = "github.com/v8platform/protos/gen/v8platform/serialize/v1;serializev1";
+
+message ServiceInfo {
+
+  string name = 1 [(ras.encoding.field) = {order: 1}];
+  string descr = 2 [(ras.encoding.field) = {order: 2}];
+  int32 main_only = 3 [(ras.encoding.field) = {order: 3}];
+  repeated string managers = 4 [(ras.encoding.field) = {order: 4, encoder: "uuid"}];
+
+}

@@ -10,6 +10,12 @@ option go_package = "github.com/v8platform/protos/gen/ras/client/v1;clientv1";
 
 service SessionsService {
   option(client).is_request_service = true;
+
   rpc GetSessions(messages.v1.GetSessionsRequest) returns (messages.v1.GetSessionsResponse) {};
+  rpc GetInfobaseSessions(messages.v1.GetInfobaseSessionsRequest) returns (messages.v1.GetInfobaseSessionsResponse) {};
+
+  rpc GetSession(messages.v1.GetSessionInfoRequest) returns (messages.v1.GetSessionInfoResponse) {};
+  rpc TerminateSession(messages.v1.TerminateSessionRequest) returns (google.protobuf.Empty){};
+
 }
 

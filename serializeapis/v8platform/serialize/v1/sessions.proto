@@ -5,6 +5,8 @@ package v8platform.serialize.v1;
 import "google/protobuf/timestamp.proto";
 import "ras/encoding/ras.proto";
 import "v8platform/serialize/v1/licanses.proto";
+
+
 option go_package = "github.com/v8platform/protos/gen/v8platform/serialize/v1;serializev1";
 
 
@@ -68,9 +70,6 @@ message SessionInfo {
   string data_separation = 49 [(ras.encoding.field) = {order: 49, version: 7}];
   // version >= 10
   string client_ip_address = 50 [(ras.encoding.field) = {order: 50, version: 10}];
-
-  // ignore
-  string cluster_id = 51;
 
 }
 

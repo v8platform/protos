@@ -13,10 +13,10 @@ service InfobasesService {
 
   // GetInfobasesShortRequest
   rpc GetShortInfobases(messages.v1.GetInfobasesShortRequest) returns (messages.v1.GetInfobasesShortResponse) {};
-  // GetInfobaseSessionsRequest
-  rpc GetSessions(messages.v1.GetInfobaseSessionsRequest) returns (messages.v1.GetInfobaseSessionsResponse) {
-    option(method).proxy_name = "GetInfobaseSessions";
-  };
+  rpc CreateInfobase(messages.v1.CreateInfobaseRequest) returns (messages.v1.CreateInfobaseResponse) {};
+  rpc DropInfobase(messages.v1.DropInfobaseRequest) returns (google.protobuf.Empty){};
+  rpc UpdateInfobase(messages.v1.UpdateInfobaseRequest) returns (google.protobuf.Empty){};
+  rpc UpdateInfobaseSummary(messages.v1.UpdateInfobaseSummaryRequest) returns (google.protobuf.Empty){};
 
 }
 

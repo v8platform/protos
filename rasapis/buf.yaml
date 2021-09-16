@@ -4,6 +4,7 @@ deps:
   - buf.build/googleapis/googleapis
   - buf.build/v8platform/encodingapis
   - buf.build/v8platform/serializeapis
+  - buf.build/grpc-ecosystem/grpc-gateway
 
 lint:
   use:

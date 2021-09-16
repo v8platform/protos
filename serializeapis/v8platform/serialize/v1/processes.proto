@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package v8platform.serialize.v1;
+
+import "google/protobuf/timestamp.proto";
+import "ras/encoding/ras.proto";
+import "v8platform/serialize/v1/licanses.proto";
+
+
+option go_package = "github.com/v8platform/protos/gen/v8platform/serialize/v1;serializev1";
+
+
+message ProcessInfo  {
+
+  string uuid = 1 [(ras.encoding.field) = {encoder: "uuid", order: 1}];
+  double avg_back_call_time = 2 [(ras.encoding.field) = {order: 2}];
+  double avg_call_time = 3 [(ras.encoding.field) = {order: 3}];
+  double avg_db_call_time = 4 [(ras.encoding.field) = {order: 4}];
+  double avg_lock_call_time = 5 [(ras.encoding.field) = {order: 5}];
+  double avg_server_call_time = 6 [(ras.encoding.field) = {order: 6}];
+  double avg_threads = 7 [(ras.encoding.field) = {order: 7}];
+  int32 capacity = 8 [(ras.encoding.field) = {order: 8}];
+  int32 connections = 9 [(ras.encoding.field) = {order: 9}];
+  string host = 10 [(ras.encoding.field) = {order: 10}];
+  bool enable = 11 [(ras.encoding.field) = {order: 11}];
+  repeated LicenseInfo licenses = 12 [(ras.encoding.field) = {order: 12}];
+  int32 port = 13 [(ras.encoding.field) = {encoder: "short", order: 13}];
+  int32 memory_excess_time = 14 [(ras.encoding.field) = {order: 14}];
+  int32 memory_size = 15 [(ras.encoding.field) = {order: 15}];
+  string pid = 16 [(ras.encoding.field) = {order: 16}];
+  bool running = 17 [(ras.encoding.field) = {encoder: "int",order: 17}];
+  int32 selection_size = 18 [(ras.encoding.field) = {order: 18}];
+  google.protobuf.Timestamp started_at = 19 [(ras.encoding.field) = {encoder: "time", order: 18}];
+  bool use = 20 [(ras.encoding.field) = {encoder: "int", order: 20}];
+  int32 available_perfomance = 21 [(ras.encoding.field) = {order: 21}];
+  bool reverse = 22 [(ras.encoding.field) = {version: 9, order: 22}];
+
+}

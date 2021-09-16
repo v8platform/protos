@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/spf13/cast v1.4.1
-	github.com/v8platform/encoder v0.0.3
+	github.com/v8platform/encoder v0.0.4
 	github.com/v8platform/protoc-gen-go-ras v0.0.0-20210902165457-013367855358
 	go.buf.build/v8platform/go-gen-ras/v8platform/rasapis v1.2.1
 	google.golang.org/grpc v1.40.0

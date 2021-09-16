@@ -8,6 +8,7 @@ import (
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
 // This is a compile-time assertion to ensure that this generated file
@@ -21,8 +22,10 @@ const _ = grpc.SupportPackageIsVersion7
 type InfobasesServiceClient interface {
 	// GetInfobasesShortRequest
 	GetShortInfobases(ctx context.Context, in *v1.GetInfobasesShortRequest, opts ...grpc.CallOption) (*v1.GetInfobasesShortResponse, error)
-	// GetInfobaseSessionsRequest
-	GetSessions(ctx context.Context, in *v1.GetInfobaseSessionsRequest, opts ...grpc.CallOption) (*v1.GetInfobaseSessionsResponse, error)
+	CreateInfobase(ctx context.Context, in *v1.CreateInfobaseRequest, opts ...grpc.CallOption) (*v1.CreateInfobaseResponse, error)
+	DropInfobase(ctx context.Context, in *v1.DropInfobaseRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateInfobase(ctx context.Context, in *v1.UpdateInfobaseRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateInfobaseSummary(ctx context.Context, in *v1.UpdateInfobaseSummaryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type infobasesServiceClient struct {
@@ -42,9 +45,36 @@ func (c *infobasesServiceClient) GetShortInfobases(ctx context.Context, in *v1.G
 	return out, nil
 }
 
-func (c *infobasesServiceClient) GetSessions(ctx context.Context, in *v1.GetInfobaseSessionsRequest, opts ...grpc.CallOption) (*v1.GetInfobaseSessionsResponse, error) {
-	out := new(v1.GetInfobaseSessionsResponse)
-	err := c.cc.Invoke(ctx, "/ras.client.v1.InfobasesService/GetSessions", in, out, opts...)
+func (c *infobasesServiceClient) CreateInfobase(ctx context.Context, in *v1.CreateInfobaseRequest, opts ...grpc.CallOption) (*v1.CreateInfobaseResponse, error) {
+	out := new(v1.CreateInfobaseResponse)
+	err := c.cc.Invoke(ctx, "/ras.client.v1.InfobasesService/CreateInfobase", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *infobasesServiceClient) DropInfobase(ctx context.Context, in *v1.DropInfobaseRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/ras.client.v1.InfobasesService/DropInfobase", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *infobasesServiceClient) UpdateInfobase(ctx context.Context, in *v1.UpdateInfobaseRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/ras.client.v1.InfobasesService/UpdateInfobase", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *infobasesServiceClient) UpdateInfobaseSummary(ctx context.Context, in *v1.UpdateInfobaseSummaryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/ras.client.v1.InfobasesService/UpdateInfobaseSummary", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -57,8 +87,10 @@ func (c *infobasesServiceClient) GetSessions(ctx context.Context, in *v1.GetInfo
 type InfobasesServiceServer interface {
 	// GetInfobasesShortRequest
 	GetShortInfobases(context.Context, *v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error)
-	// GetInfobaseSessionsRequest
-	GetSessions(context.Context, *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error)
+	CreateInfobase(context.Context, *v1.CreateInfobaseRequest) (*v1.CreateInfobaseResponse, error)
+	DropInfobase(context.Context, *v1.DropInfobaseRequest) (*emptypb.Empty, error)
+	UpdateInfobase(context.Context, *v1.UpdateInfobaseRequest) (*emptypb.Empty, error)
+	UpdateInfobaseSummary(context.Context, *v1.UpdateInfobaseSummaryRequest) (*emptypb.Empty, error)
 }
 
 // UnimplementedInfobasesServiceServer should be embedded to have forward compatible implementations.
@@ -68,8 +100,17 @@ type UnimplementedInfobasesServiceServer struct {
 func (UnimplementedInfobasesServiceServer) GetShortInfobases(context.Context, *v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetShortInfobases not implemented")
 }
-func (UnimplementedInfobasesServiceServer) GetSessions(context.Context, *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetSessions not implemented")
+func (UnimplementedInfobasesServiceServer) CreateInfobase(context.Context, *v1.CreateInfobaseRequest) (*v1.CreateInfobaseResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateInfobase not implemented")
+}
+func (UnimplementedInfobasesServiceServer) DropInfobase(context.Context, *v1.DropInfobaseRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DropInfobase not implemented")
+}
+func (UnimplementedInfobasesServiceServer) UpdateInfobase(context.Context, *v1.UpdateInfobaseRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateInfobase not implemented")
+}
+func (UnimplementedInfobasesServiceServer) UpdateInfobaseSummary(context.Context, *v1.UpdateInfobaseSummaryRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateInfobaseSummary not implemented")
 }
 
 // UnsafeInfobasesServiceServer may be embedded to opt out of forward compatibility for this service.
@@ -101,20 +142,74 @@ func _InfobasesService_GetShortInfobases_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
-func _InfobasesService_GetSessions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(v1.GetInfobaseSessionsRequest)
+func _InfobasesService_CreateInfobase_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.CreateInfobaseRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(InfobasesServiceServer).GetSessions(ctx, in)
+		return srv.(InfobasesServiceServer).CreateInfobase(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ras.client.v1.InfobasesService/GetSessions",
+		FullMethod: "/ras.client.v1.InfobasesService/CreateInfobase",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(InfobasesServiceServer).GetSessions(ctx, req.(*v1.GetInfobaseSessionsRequest))
+		return srv.(InfobasesServiceServer).CreateInfobase(ctx, req.(*v1.CreateInfobaseRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _InfobasesService_DropInfobase_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.DropInfobaseRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InfobasesServiceServer).DropInfobase(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ras.client.v1.InfobasesService/DropInfobase",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InfobasesServiceServer).DropInfobase(ctx, req.(*v1.DropInfobaseRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _InfobasesService_UpdateInfobase_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.UpdateInfobaseRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InfobasesServiceServer).UpdateInfobase(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ras.client.v1.InfobasesService/UpdateInfobase",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InfobasesServiceServer).UpdateInfobase(ctx, req.(*v1.UpdateInfobaseRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _InfobasesService_UpdateInfobaseSummary_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(v1.UpdateInfobaseSummaryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InfobasesServiceServer).UpdateInfobaseSummary(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/ras.client.v1.InfobasesService/UpdateInfobaseSummary",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InfobasesServiceServer).UpdateInfobaseSummary(ctx, req.(*v1.UpdateInfobaseSummaryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -131,8 +226,20 @@ var InfobasesService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _InfobasesService_GetShortInfobases_Handler,
 		},
 		{
-			MethodName: "GetSessions",
-			Handler:    _InfobasesService_GetSessions_Handler,
+			MethodName: "CreateInfobase",
+			Handler:    _InfobasesService_CreateInfobase_Handler,
+		},
+		{
+			MethodName: "DropInfobase",
+			Handler:    _InfobasesService_DropInfobase_Handler,
+		},
+		{
+			MethodName: "UpdateInfobase",
+			Handler:    _InfobasesService_UpdateInfobase_Handler,
+		},
+		{
+			MethodName: "UpdateInfobaseSummary",
+			Handler:    _InfobasesService_UpdateInfobaseSummary_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

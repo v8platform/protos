@@ -5,16 +5,23 @@ deps:
     owner: googleapis
     repository: googleapis
     branch: main
-    commit: d1a849b8f8304950832335723096e954
-    digest: b1-zJkwX0YeOp1Wa0Jaj_RqMLa2-oEzePH6PJEK8aaMeI4=
-    create_time: 2021-08-26T15:07:19.652533Z
+    commit: 7d452530229747c18e7fb356d083908e
+    digest: b1--iOE3RUMTW_MZfzxxCUgplse84R14WEekhQwcz1rIGQ=
+    create_time: 2021-09-16T15:04:58.905133Z
+  - remote: buf.build
+    owner: grpc-ecosystem
+    repository: grpc-gateway
+    branch: main
+    commit: de24a84aed3d4d84806740946b55d947
+    digest: b1-Q-mEW3P3NR5UL8gm0pr3YWFSo5DAtrBqqgvkwH2WFWw=
+    create_time: 2021-09-08T00:32:28.231758Z
   - remote: buf.build
     owner: v8platform
     repository: encodingapis
     branch: main
-    commit: ed9a75c1223f43759e3c7be9067aa8ac
-    digest: b1-kAStsQhzYGPt2Wk8ZNCl6KYUNoKQS1JwwwgpEXLPyZs=
-    create_time: 2021-09-02T12:20:10.287435Z
+    commit: 091695bd6f3f4d0586002d3d0968d58b
+    digest: b1-5jEAqm3xGhroobf8noT90y9leB7HYIrgmLfg5M32wgs=
+    create_time: 2021-09-07T09:19:15.738113Z
   - remote: buf.build
     owner: v8platform
     repository: serializeapis
