@@ -15,7 +15,7 @@ func (x *ConnectionInfo) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Uuid opts: encoder:"uuid" order:1
+	// decode x.Uuid opts: encoder:"uuid"  order:1
 	if err := codec256.ParseUUID(reader, &x.Uuid); err != nil {
 		return err
 	}
@@ -27,7 +27,7 @@ func (x *ConnectionInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseInt(reader, &x.BlockedByLs); err != nil {
 		return err
 	}
-	// decode x.ConnectedAt opts: encoder:"time" order:4
+	// decode x.ConnectedAt opts: encoder:"time"  order:4
 	x.ConnectedAt = &timestamppb.Timestamp{}
 	if err := codec256.ParseTime(reader, x.ConnectedAt); err != nil {
 		return err
@@ -40,11 +40,11 @@ func (x *ConnectionInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseString(reader, &x.Host); err != nil {
 		return err
 	}
-	// decode x.InfobaseId opts: encoder:"uuid" order:7
+	// decode x.InfobaseId opts: encoder:"uuid"  order:7
 	if err := codec256.ParseUUID(reader, &x.InfobaseId); err != nil {
 		return err
 	}
-	// decode x.ProcessId opts: encoder:"uuid" order:8
+	// decode x.ProcessId opts: encoder:"uuid"  order:8
 	if err := codec256.ParseUUID(reader, &x.ProcessId); err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func (x *ConnectionInfo) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Uuid opts: encoder:"uuid" order:1
+	// decode x.Uuid opts: encoder:"uuid"  order:1
 	if err := codec256.FormatUuid(writer, x.Uuid); err != nil {
 		return err
 	}
@@ -70,7 +70,7 @@ func (x *ConnectionInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatInt(writer, x.BlockedByLs); err != nil {
 		return err
 	}
-	// decode x.ConnectedAt opts: encoder:"time" order:4
+	// decode x.ConnectedAt opts: encoder:"time"  order:4
 	// TODO check nil
 	if err := codec256.FormatTime(writer, x.GetConnectedAt().AsTime()); err != nil {
 		return err
@@ -83,11 +83,11 @@ func (x *ConnectionInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatString(writer, x.Host); err != nil {
 		return err
 	}
-	// decode x.InfobaseId opts: encoder:"uuid" order:7
+	// decode x.InfobaseId opts: encoder:"uuid"  order:7
 	if err := codec256.FormatUuid(writer, x.InfobaseId); err != nil {
 		return err
 	}
-	// decode x.ProcessId opts: encoder:"uuid" order:8
+	// decode x.ProcessId opts: encoder:"uuid"  order:8
 	if err := codec256.FormatUuid(writer, x.ProcessId); err != nil {
 		return err
 	}

@@ -15,7 +15,7 @@ func (x *SessionInfo) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Uuid opts: encoder:"uuid" order:1
+	// decode x.Uuid opts: encoder:"uuid"  order:1
 	if err := codec256.ParseUUID(reader, &x.Uuid); err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func (x *SessionInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseLong(reader, &x.CallsLast5Min); err != nil {
 		return err
 	}
-	// decode x.ConnectionId opts: encoder:"uuid" order:9
+	// decode x.ConnectionId opts: encoder:"uuid"  order:9
 	if err := codec256.ParseUUID(reader, &x.ConnectionId); err != nil {
 		return err
 	}
@@ -67,7 +67,7 @@ func (x *SessionInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseInt(reader, &x.DbProcTook); err != nil {
 		return err
 	}
-	// decode x.DbProcTookAt opts: encoder:"time" order:14
+	// decode x.DbProcTookAt opts: encoder:"time"  order:14
 	x.DbProcTookAt = &timestamppb.Timestamp{}
 	if err := codec256.ParseTime(reader, x.DbProcTookAt); err != nil {
 		return err
@@ -100,11 +100,11 @@ func (x *SessionInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseString(reader, &x.Host); err != nil {
 		return err
 	}
-	// decode x.InfobaseId opts: encoder:"uuid" order:22
+	// decode x.InfobaseId opts: encoder:"uuid"  order:22
 	if err := codec256.ParseUUID(reader, &x.InfobaseId); err != nil {
 		return err
 	}
-	// decode x.LastActiveAt opts: encoder:"time" order:23
+	// decode x.LastActiveAt opts: encoder:"time"  order:23
 	x.LastActiveAt = &timestamppb.Timestamp{}
 	if err := codec256.ParseTime(reader, x.LastActiveAt); err != nil {
 		return err
@@ -138,7 +138,7 @@ func (x *SessionInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseString(reader, &x.Locale); err != nil {
 		return err
 	}
-	// decode x.ProcessId opts: encoder:"uuid" order:29
+	// decode x.ProcessId opts: encoder:"uuid"  order:29
 	if err := codec256.ParseUUID(reader, &x.ProcessId); err != nil {
 		return err
 	}
@@ -146,7 +146,7 @@ func (x *SessionInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseInt(reader, &x.Id); err != nil {
 		return err
 	}
-	// decode x.StartedAt opts: encoder:"time" order:31
+	// decode x.StartedAt opts: encoder:"time"  order:31
 	x.StartedAt = &timestamppb.Timestamp{}
 	if err := codec256.ParseTime(reader, x.StartedAt); err != nil {
 		return err
@@ -156,83 +156,83 @@ func (x *SessionInfo) Parse(reader io.Reader, version int32) error {
 		return err
 	}
 	if version >= 4 {
-		// decode x.MemoryCurrent opts: order:33 version:4
+		// decode x.MemoryCurrent opts: order:33  version:4
 		if err := codec256.ParseLong(reader, &x.MemoryCurrent); err != nil {
 			return err
 		}
-		// decode x.MemoryLast5Min opts: order:34 version:4
+		// decode x.MemoryLast5Min opts: order:34  version:4
 		if err := codec256.ParseLong(reader, &x.MemoryLast5Min); err != nil {
 			return err
 		}
-		// decode x.MemoryTotal opts: order:35 version:4
+		// decode x.MemoryTotal opts: order:35  version:4
 		if err := codec256.ParseLong(reader, &x.MemoryTotal); err != nil {
 			return err
 		}
-		// decode x.ReadCurrent opts: order:36 version:4
+		// decode x.ReadCurrent opts: order:36  version:4
 		if err := codec256.ParseLong(reader, &x.ReadCurrent); err != nil {
 			return err
 		}
-		// decode x.ReadLast5Min opts: order:37 version:4
+		// decode x.ReadLast5Min opts: order:37  version:4
 		if err := codec256.ParseLong(reader, &x.ReadLast5Min); err != nil {
 			return err
 		}
-		// decode x.ReadTotal opts: order:38 version:4
+		// decode x.ReadTotal opts: order:38  version:4
 		if err := codec256.ParseLong(reader, &x.ReadTotal); err != nil {
 			return err
 		}
-		// decode x.WriteCurrent opts: order:39 version:4
+		// decode x.WriteCurrent opts: order:39  version:4
 		if err := codec256.ParseLong(reader, &x.WriteCurrent); err != nil {
 			return err
 		}
-		// decode x.WriteLast5Min opts: order:40 version:4
+		// decode x.WriteLast5Min opts: order:40  version:4
 		if err := codec256.ParseLong(reader, &x.WriteLast5Min); err != nil {
 			return err
 		}
-		// decode x.WriteTotal opts: order:41 version:4
+		// decode x.WriteTotal opts: order:41  version:4
 		if err := codec256.ParseLong(reader, &x.WriteTotal); err != nil {
 			return err
 		}
 	}
 	if version >= 5 {
-		// decode x.DurationCurrentService opts: order:42 version:5
+		// decode x.DurationCurrentService opts: order:42  version:5
 		if err := codec256.ParseInt(reader, &x.DurationCurrentService); err != nil {
 			return err
 		}
-		// decode x.DurationLast5MinService opts: order:43 version:5
+		// decode x.DurationLast5MinService opts: order:43  version:5
 		if err := codec256.ParseLong(reader, &x.DurationLast5MinService); err != nil {
 			return err
 		}
-		// decode x.DurationAllService opts: order:44 version:5
+		// decode x.DurationAllService opts: order:44  version:5
 		if err := codec256.ParseInt(reader, &x.DurationAllService); err != nil {
 			return err
 		}
-		// decode x.CurrentServiceName opts: order:45 version:5
+		// decode x.CurrentServiceName opts: order:45  version:5
 		if err := codec256.ParseString(reader, &x.CurrentServiceName); err != nil {
 			return err
 		}
 	}
 	if version >= 6 {
-		// decode x.CpuTimeCurrent opts: order:46 version:6
+		// decode x.CpuTimeCurrent opts: order:46  version:6
 		if err := codec256.ParseLong(reader, &x.CpuTimeCurrent); err != nil {
 			return err
 		}
-		// decode x.CpuTimeLast5Min opts: order:47 version:6
+		// decode x.CpuTimeLast5Min opts: order:47  version:6
 		if err := codec256.ParseLong(reader, &x.CpuTimeLast5Min); err != nil {
 			return err
 		}
-		// decode x.CpuTimeTotal opts: order:48 version:6
+		// decode x.CpuTimeTotal opts: order:48  version:6
 		if err := codec256.ParseLong(reader, &x.CpuTimeTotal); err != nil {
 			return err
 		}
 	}
 	if version >= 7 {
-		// decode x.DataSeparation opts: order:49 version:7
+		// decode x.DataSeparation opts: order:49  version:7
 		if err := codec256.ParseString(reader, &x.DataSeparation); err != nil {
 			return err
 		}
 	}
 	if version >= 10 {
-		// decode x.ClientIpAddress opts: order:50 version:10
+		// decode x.ClientIpAddress opts: order:50  version:10
 		if err := codec256.ParseString(reader, &x.ClientIpAddress); err != nil {
 			return err
 		}
@@ -243,7 +243,7 @@ func (x *SessionInfo) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Uuid opts: encoder:"uuid" order:1
+	// decode x.Uuid opts: encoder:"uuid"  order:1
 	if err := codec256.FormatUuid(writer, x.Uuid); err != nil {
 		return err
 	}
@@ -275,7 +275,7 @@ func (x *SessionInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatLong(writer, x.CallsLast5Min); err != nil {
 		return err
 	}
-	// decode x.ConnectionId opts: encoder:"uuid" order:9
+	// decode x.ConnectionId opts: encoder:"uuid"  order:9
 	if err := codec256.FormatUuid(writer, x.ConnectionId); err != nil {
 		return err
 	}
@@ -295,7 +295,7 @@ func (x *SessionInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatInt(writer, x.DbProcTook); err != nil {
 		return err
 	}
-	// decode x.DbProcTookAt opts: encoder:"time" order:14
+	// decode x.DbProcTookAt opts: encoder:"time"  order:14
 	// TODO check nil
 	if err := codec256.FormatTime(writer, x.GetDbProcTookAt().AsTime()); err != nil {
 		return err
@@ -328,11 +328,11 @@ func (x *SessionInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatString(writer, x.Host); err != nil {
 		return err
 	}
-	// decode x.InfobaseId opts: encoder:"uuid" order:22
+	// decode x.InfobaseId opts: encoder:"uuid"  order:22
 	if err := codec256.FormatUuid(writer, x.InfobaseId); err != nil {
 		return err
 	}
-	// decode x.LastActiveAt opts: encoder:"time" order:23
+	// decode x.LastActiveAt opts: encoder:"time"  order:23
 	// TODO check nil
 	if err := codec256.FormatTime(writer, x.GetLastActiveAt().AsTime()); err != nil {
 		return err
@@ -362,7 +362,7 @@ func (x *SessionInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatString(writer, x.Locale); err != nil {
 		return err
 	}
-	// decode x.ProcessId opts: encoder:"uuid" order:29
+	// decode x.ProcessId opts: encoder:"uuid"  order:29
 	if err := codec256.FormatUuid(writer, x.ProcessId); err != nil {
 		return err
 	}
@@ -370,7 +370,7 @@ func (x *SessionInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatInt(writer, x.Id); err != nil {
 		return err
 	}
-	// decode x.StartedAt opts: encoder:"time" order:31
+	// decode x.StartedAt opts: encoder:"time"  order:31
 	// TODO check nil
 	if err := codec256.FormatTime(writer, x.GetStartedAt().AsTime()); err != nil {
 		return err
@@ -380,83 +380,83 @@ func (x *SessionInfo) Formatter(writer io.Writer, version int32) error {
 		return err
 	}
 	if version >= 4 {
-		// decode x.MemoryCurrent opts: order:33 version:4
+		// decode x.MemoryCurrent opts: order:33  version:4
 		if err := codec256.FormatLong(writer, x.MemoryCurrent); err != nil {
 			return err
 		}
-		// decode x.MemoryLast5Min opts: order:34 version:4
+		// decode x.MemoryLast5Min opts: order:34  version:4
 		if err := codec256.FormatLong(writer, x.MemoryLast5Min); err != nil {
 			return err
 		}
-		// decode x.MemoryTotal opts: order:35 version:4
+		// decode x.MemoryTotal opts: order:35  version:4
 		if err := codec256.FormatLong(writer, x.MemoryTotal); err != nil {
 			return err
 		}
-		// decode x.ReadCurrent opts: order:36 version:4
+		// decode x.ReadCurrent opts: order:36  version:4
 		if err := codec256.FormatLong(writer, x.ReadCurrent); err != nil {
 			return err
 		}
-		// decode x.ReadLast5Min opts: order:37 version:4
+		// decode x.ReadLast5Min opts: order:37  version:4
 		if err := codec256.FormatLong(writer, x.ReadLast5Min); err != nil {
 			return err
 		}
-		// decode x.ReadTotal opts: order:38 version:4
+		// decode x.ReadTotal opts: order:38  version:4
 		if err := codec256.FormatLong(writer, x.ReadTotal); err != nil {
 			return err
 		}
-		// decode x.WriteCurrent opts: order:39 version:4
+		// decode x.WriteCurrent opts: order:39  version:4
 		if err := codec256.FormatLong(writer, x.WriteCurrent); err != nil {
 			return err
 		}
-		// decode x.WriteLast5Min opts: order:40 version:4
+		// decode x.WriteLast5Min opts: order:40  version:4
 		if err := codec256.FormatLong(writer, x.WriteLast5Min); err != nil {
 			return err
 		}
-		// decode x.WriteTotal opts: order:41 version:4
+		// decode x.WriteTotal opts: order:41  version:4
 		if err := codec256.FormatLong(writer, x.WriteTotal); err != nil {
 			return err
 		}
 	}
 	if version >= 5 {
-		// decode x.DurationCurrentService opts: order:42 version:5
+		// decode x.DurationCurrentService opts: order:42  version:5
 		if err := codec256.FormatInt(writer, x.DurationCurrentService); err != nil {
 			return err
 		}
-		// decode x.DurationLast5MinService opts: order:43 version:5
+		// decode x.DurationLast5MinService opts: order:43  version:5
 		if err := codec256.FormatLong(writer, x.DurationLast5MinService); err != nil {
 			return err
 		}
-		// decode x.DurationAllService opts: order:44 version:5
+		// decode x.DurationAllService opts: order:44  version:5
 		if err := codec256.FormatInt(writer, x.DurationAllService); err != nil {
 			return err
 		}
-		// decode x.CurrentServiceName opts: order:45 version:5
+		// decode x.CurrentServiceName opts: order:45  version:5
 		if err := codec256.FormatString(writer, x.CurrentServiceName); err != nil {
 			return err
 		}
 	}
 	if version >= 6 {
-		// decode x.CpuTimeCurrent opts: order:46 version:6
+		// decode x.CpuTimeCurrent opts: order:46  version:6
 		if err := codec256.FormatLong(writer, x.CpuTimeCurrent); err != nil {
 			return err
 		}
-		// decode x.CpuTimeLast5Min opts: order:47 version:6
+		// decode x.CpuTimeLast5Min opts: order:47  version:6
 		if err := codec256.FormatLong(writer, x.CpuTimeLast5Min); err != nil {
 			return err
 		}
-		// decode x.CpuTimeTotal opts: order:48 version:6
+		// decode x.CpuTimeTotal opts: order:48  version:6
 		if err := codec256.FormatLong(writer, x.CpuTimeTotal); err != nil {
 			return err
 		}
 	}
 	if version >= 7 {
-		// decode x.DataSeparation opts: order:49 version:7
+		// decode x.DataSeparation opts: order:49  version:7
 		if err := codec256.FormatString(writer, x.DataSeparation); err != nil {
 			return err
 		}
 	}
 	if version >= 10 {
-		// decode x.ClientIpAddress opts: order:50 version:10
+		// decode x.ClientIpAddress opts: order:50  version:10
 		if err := codec256.FormatString(writer, x.ClientIpAddress); err != nil {
 			return err
 		}
