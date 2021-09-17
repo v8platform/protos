@@ -1,0 +1,119 @@
+syntax = "proto3";
+
+package ras.messages.v1;
+
+import "ras/encoding/ras.proto";
+import "v8platform/serialize/v1/servers.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option csharp_namespace = "ras.messages.v1";
+option go_package = "github.com/v8platform/protos/gen/ras/messages/v1;messagesv1";
+
+message GetWorkingServersRequest {
+  option (ras.encoding.options).message_type = "GET_WORKING_SERVERS_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetWorkingServersRequest";
+      description: "Получение списка рабочих серверов на локальном кластере";
+      required: ["cluster_id"];
+    };
+  };
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+}
+
+message GetWorkingServersResponse {
+  option (ras.encoding.options).message_type = "GET_WORKING_SERVERS_RESPONSE";
+  v8platform.serialize.v1.ServerInfo servers = 1 [(ras.encoding.field).order = 1];
+}
+
+message GetWorkingServerInfoRequest {
+  option (ras.encoding.options).message_type = "GET_WORKING_SERVER_INFO_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetWorkingServerInfoRequest";
+      description: "Получение информации о рабочем сервере локального кластера";
+      required: ["cluster_id", "server_id"];
+    };
+  };
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+  string server_id = 2 [(ras.encoding.field) = {order: 2, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор рабочего сервере локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+}
+
+message GetWorkingServerInfoResponse {
+  option (ras.encoding.options).message_type = "GET_WORKING_SERVER_INFO_RESPONSE";
+  v8platform.serialize.v1.ServerInfo info = 1 [(ras.encoding.field).order = 1];
+}
+
+message AddWorkingServerRequest {
+  option (ras.encoding.options).message_type = "REG_WORKING_SERVER_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "RegClusterResponse";
+      description: "Добавление нового рабочего сервера на локальный кластер";
+      required: ["cluster_id"];
+    };
+  };
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+  v8platform.serialize.v1.ServerInfo info = 2 [(ras.encoding.field).order = 2];
+}
+
+message AddWorkingServerResponse {
+  option (ras.encoding.options).message_type = "REG_WORKING_SERVER_RESPONSE";
+  string server_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор рабочего сервере локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+}
+
+// renamed UnregWorkingServerRequest
+message DeleteWorkingServerInfoRequest {
+  option (ras.encoding.options).message_type = "UNREG_WORKING_SERVER_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "DeleteWorkingServerInfoRequest";
+      description: "Удаление рабочего сервере из локального кластера";
+      required: ["cluster_id", "server_id"];
+    };
+  };
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+  string server_id = 2 [(ras.encoding.field) = {order: 2, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор рабочего сервере локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+}

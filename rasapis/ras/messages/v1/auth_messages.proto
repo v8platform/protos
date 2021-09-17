@@ -9,17 +9,24 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 option csharp_namespace = "ras.messages.v1";
 option go_package = "github.com/v8platform/protos/gen/ras/messages/v1;messagesv1";
 
-message AuthenticateAgentRequest {
+// Renamed AuthenticateAgentRequest
+message ServerAuthenticateRequest {
   option (encoding.options).message_type = "AUTHENTICATE_AGENT_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "ServerAuthenticateRequest";
+      description: "Авторизация администратора на сервере 1С";
+    };
+  };
   string user = 1 [(ras.encoding.field) = {order: 1},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      description: "Имя администратора агента кластера"
+      description: "Имя администратора сервера 1С"
       format: "string"
     }
   ];
   string password = 2 [(ras.encoding.field) = {order: 2},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      description: "Пароль администратора агента кластера"
+      description: "Пароль администратора сервера 1С"
       format: "string"
     }
   ];
@@ -27,6 +34,12 @@ message AuthenticateAgentRequest {
 
 message ClusterAuthenticateRequest  {
   option (encoding.options).message_type = "AUTHENTICATE_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "ClusterAuthenticateRequest";
+      description: "Авторизация администратора на локальном кластере сервере 1С";
+    };
+  };
   string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "Уникальный идентификатор локального кластера"
@@ -50,6 +63,12 @@ message ClusterAuthenticateRequest  {
 
 message AuthenticateInfobaseRequest   {
   option (encoding.options).message_type = "ADD_AUTHENTICATION_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "ClusterAuthenticateRequest";
+      description: "Авторизация пользователя информационной базы";
+    };
+  };
   string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "Уникальный идентификатор локального кластера"

@@ -5,65 +5,138 @@ package ras.messages.v1;
 //import "ras/protocol/v1/param.proto";
 import "ras/encoding/ras.proto";
 import "google/protobuf/any.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 
 option csharp_namespace = "ras.messages.v1";
 option go_package = "github.com/v8platform/protos/gen/ras/messages/v1;messagesv1";
 
-
 message GetAgentVersionRequest {
-  //  option (ras.encoding.endpoint_message_type) = GET_AGENT_VERSION_REQUEST;
+  option (encoding.options).message_type = "GET_AGENT_VERSION_REQUEST";
+  option (ras.encoding.options).generate_empty = true;
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetAgentVersionRequest";
+      description: "Получение версии сервера 1С";
+    };
+  };
+
 }
 message GetAgentVersionResponse {
-  //  option (ras.encoding.endpoint_message_type) = GET_AGENT_VERSION_RESPONSE;
-  string version = 1;
+  option (encoding.options).message_type = "GET_AGENT_VERSION_RESPONSE";
+  string version = 1 [(ras.encoding.field) = {order: 1}];
 }
 
 message GetClusterAdminsRequest {
-  //  option (ras.encoding.endpoint_message_type) = GET_CLUSTER_ADMINS_REQUEST;
-  string cluster_id = 1;
+
+  option (encoding.options).message_type = "GET_AGENT_VERSION_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetClusterAdminsRequest";
+      description: "Получение списка администраторов локального кластера сервера 1С";
+      required: ["cluster_id"];
+    };
+  };
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
 }
 
 message GetClusterAdminsResponse {
   //  option (ras.encoding.endpoint_message_type) = GET_CLUSTER_ADMINS_RESPONSE;
-  repeated AdminInfo admins = 1;
+  option (encoding.options).message_type = "GET_CLUSTER_ADMINS_RESPONSE";
+  repeated AdminInfo admins = 1 [(ras.encoding.field) = {order: 1}];
 }
 
 message GetAgentAdminsRequest {
   //  option (ras.encoding.endpoint_message_type) = GET_AGENT_ADMINS_REQUEST;
+  option (encoding.options).message_type = "GET_AGENT_ADMINS_REQUEST";
+  option (ras.encoding.options).generate_empty = true;
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetAgentAdminsRequest";
+      description: "Получение списка администраторов сервера 1С";
+    };
+  };
 }
 
 message GetAgentAdminsResponse {
-  //  option (ras.encoding.endpoint_message_type) = GET_AGENT_ADMINS_RESPONSE;
-  repeated AdminInfo admins = 1;
+  option (encoding.options).message_type = "GET_AGENT_ADMINS_RESPONSE";
+  repeated AdminInfo admins = 1 [(ras.encoding.field) = {order: 1}];
+}
+// Renamed RegClusterAdminRequest
+message CreateClusterAdminRequest {
+  option (encoding.options).message_type = "REG_CLUSTER_ADMIN_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "CreateClusterAdminRequest";
+      description: "Добавление нового администратора локального кластера сервера 1С";
+      required: ["cluster_id"];
+    };
+  };
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+  AdminInfo admin_info = 2 [(ras.encoding.field) = {order: 1}];
 }
 
-message RegClusterAdminRequest {
-  //  option (ras.encoding.endpoint_message_type) = REG_CLUSTER_ADMIN_REQUEST;
-  string cluster_id = 1;
-  AdminInfo admin_info = 2;
-}
+// Renamed UnregClusterAdminRequest
+message DeleteClusterAdminRequest {
+  option (encoding.options).message_type = "UNREG_CLUSTER_ADMIN_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "RegClusterAdminRequest";
+      description: "Удаление администратора локального кластера сервера 1С";
+      required: ["cluster_id"];
+    };
+  };
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
 
-message UnregClusterAdminRequest {
-  //  option (ras.encoding.endpoint_message_type) = UNREG_CLUSTER_ADMIN_REQUEST;
-  string cluster_id = 1;
-  string admin_name = 2;
-}
+  string admin_name = 2 [(ras.encoding.field) = {order: 1}];
 
-message RegAgentAdminRequest {
-  //  option (ras.encoding.endpoint_message_type) = REG_AGENT_ADMIN_REQUEST;
-  AdminInfo admin_info = 1;
 }
-
-message UnregAgentAdminRequest {
+// Renamed RegAgentAdminRequest
+message CreateAgentAdminRequest {
+  option (encoding.options).message_type = "REG_AGENT_ADMIN_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "CreateAgentAdminRequest";
+      description: "Добавление администратора сервера 1С";
+    };
+  };
+  AdminInfo admin_info = 1 [(ras.encoding.field) = {order: 1}];
+}
+// Renamed UnregAgentAdminRequest
+message DeleteAgentAdminRequest {
   //  option (ras.encoding.endpoint_message_type) = UNREG_AGENT_ADMIN_REQUEST;
-  string admin_name = 1;
+  option (encoding.options).message_type = "UNREG_AGENT_ADMIN_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "DeleteAgentAdminRequest";
+      description: "Удаление администратора сервера 1С";
+    };
+  };
+  string admin_name = 1 [(ras.encoding.field) = {order: 1}];
 }
 
 message AdminInfo {
-  string Name = 1;
-  string description = 2;
-  string password = 3;
-  bool password_auth_allowed = 4;
-  bool sys_auth_allowed = 5;
-  string sys_user_name = 6;
+  string Name = 1 [(ras.encoding.field) = {order: 1}];
+  string description = 2 [(ras.encoding.field) = {order: 2}];
+  string password = 3 [(ras.encoding.field) = {order: 3}];
+  bool password_auth_allowed = 4 [(ras.encoding.field) = {order: 4}];
+  bool sys_auth_allowed = 5 [(ras.encoding.field) = {order: 5}];
+  string sys_user_name = 6 [(ras.encoding.field) = {order: 6}];
 }

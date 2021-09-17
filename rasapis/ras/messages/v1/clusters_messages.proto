@@ -16,16 +16,13 @@ message GetClustersRequest {
     json_schema: {
       title: "GetClustersRequest";
       description: "Получение списка локальных кластеров";
-      required: ["GetClusterInfoRequest"];
     };
   };
 }
 
 message GetClustersResponse {
   option (ras.encoding.options).message_type = "GET_CLUSTERS_RESPONSE";
-  repeated v8platform.serialize.v1.ClusterInfo clusters = 1 [(ras.encoding.field) = {
-    order: 1,
-  }];;
+  repeated v8platform.serialize.v1.ClusterInfo clusters = 1 [(ras.encoding.field) = {order: 1}];
 }
 
 message GetClusterInfoRequest {
@@ -48,23 +45,22 @@ message GetClusterInfoRequest {
 
 message GetClusterInfoResponse {
   option (ras.encoding.options).message_type = "GET_CLUSTER_INFO_RESPONSE";
-  v8platform.serialize.v1.ClusterInfo cluster_info = 1 [(ras.encoding.field).order = 1];
+  v8platform.serialize.v1.ClusterInfo info = 1 [(ras.encoding.field).order = 1];
 }
 
 message RegClusterRequest {
   option (ras.encoding.options).message_type = "REG_CLUSTER_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "RegClusterRequest";
+      description: "Регистрация нового локального кластера на сервере 1С";
+    };
+  };
   v8platform.serialize.v1.ClusterInfo cluster_info = 1 [(ras.encoding.field).order = 1];
 }
 
 message RegClusterResponse {
   option (ras.encoding.options).message_type = "REG_CLUSTER_RESPONSE";
-  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
-    json_schema: {
-      title: "RegClusterResponse";
-      description: "Регистрация нового локального кластера на агенте";
-      required: ["cluster_id"];
-    };
-  };
   string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "Уникальный идентификатор локального кластера"
