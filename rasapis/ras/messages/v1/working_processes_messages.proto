@@ -58,6 +58,12 @@ message GetWorkingProcessInfoRequest {
   ];
 }
 
+message GetWorkingProcessInfoResponse {
+  option (ras.encoding.options).message_type = "GET_WORKING_PROCESS_INFO_RESPONSE";
+  v8platform.serialize.v1.ProcessInfo info = 1 [(ras.encoding.field).order = 1];
+}
+
+
 message GetServerWorkingProcessesRequest {
   option (ras.encoding.options).message_type = "GET_SERVER_WORKING_PROCESSES_REQUEST";
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {

@@ -13,7 +13,7 @@ message GetClusterServicesRequest {
   option (ras.encoding.options).message_type = "GET_CLUSTER_SERVICES_REQUEST";
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
-      title: "GetClusterInfoRequest";
+      title: "GetClusterServicesRequest";
       description: "Получение списка сервисов локального кластера";
       required: ["cluster_id"];
     };
