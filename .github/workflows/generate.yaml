@@ -1,0 +1,36 @@
+name: generate-prtos
+on:
+  push:
+    paths:
+      - '*.proto'
+      - '.github/workflows/generate.yaml'
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: bufbuild/buf-setup-action@v0.3.1
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+      - name: Buf generate
+        if: success()
+        run: |
+          go install google.golang.org/protobuf/cmd/protoc-gen-go
+          go install github.com/v8platform/protoc-gen-go-ras
+          buf generate
+      - name: Set up Git
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name GitHub
+          git config user.email noreply@github.com
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+      - name: Commit and push changes
+        run: |
+          git add .
+          if output=$(git status --porcelain) && [ ! -z "$output" ]; then
+            git commit --author "github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>" --message "buf generate"
+            git push
+          fi

@@ -1,0 +1,19 @@
+name: buf-push
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+  push-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: bufbuild/buf-setup-action@v0.3.1
+      - uses: bufbuild/buf-push-action@v0.3.0
+        with:
+          input: 'serializeapis'
+          buf_token: ${{ secrets.BUF_TOKEN }}-
+      - uses: bufbuild/buf-push-action@v0.3.0
+        with:
+          input: 'rasapis'
+          buf_token: ${{ secrets.BUF_TOKEN }}
