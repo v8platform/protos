@@ -1,0 +1,17 @@
+project_name: protos
+before:
+  hooks:
+    - go mod tidy
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+      - Merge pull request
+      - Merge branch
+build:
+  skip: true
+release:
+  github:
+  prerelease: auto
