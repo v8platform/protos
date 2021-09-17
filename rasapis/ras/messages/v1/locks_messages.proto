@@ -1,0 +1,132 @@
+syntax = "proto3";
+
+package ras.messages.v1;
+
+import "ras/encoding/ras.proto";
+import "v8platform/serialize/v1/locks.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option csharp_namespace = "ras.messages.v1";
+option go_package = "github.com/v8platform/protos/gen/ras/messages/v1;messagesv1";
+
+
+message GetLocksRequest {
+  option (encoding.options).message_type = "GET_LOCKS_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetLocksRequest";
+      description: "Получение списка блокировок локального кластера";
+      required: ["cluster_id"];
+    };
+  };
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+}
+
+message GetLocksResponse {
+  option (encoding.options).message_type = "GET_LOCKS_RESPONSE";
+  repeated v8platform.serialize.v1.LockInfo locks = 1 [(ras.encoding.field) = {order: 1}];
+}
+
+message GetInfobaseLocksRequest {
+  option (encoding.options).message_type = "GET_INFOBASE_LOCKS_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetInfobaseConnectionsRequest";
+      description: "Получение списка блокировок информационной базы локального кластера";
+      required: ["cluster_id", "infobase_id"];
+    };
+  };
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+  string infobase_id = 2  [(ras.encoding.field) = {order: 2, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор информационной базы кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+}
+
+message GetInfobaseLocksResponse {
+  option (encoding.options).message_type = "GET_INFOBASE_LOCKS_RESPONSE";
+  repeated v8platform.serialize.v1.LockInfo locks = 1 [(ras.encoding.field) = {order: 1}];
+}
+
+
+message GetConnectionLocksRequest {
+  option (encoding.options).message_type = "GET_CONNECTION_LOCKS_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetInfobaseConnectionsRequest";
+      description: "Получение списка блокировок соединения локального кластера";
+      required: ["cluster_id", "connection_id"];
+    };
+  };
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+  string connection_id = 2 [(ras.encoding.field) = {order: 2, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор соединения локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+}
+
+message GetConnectionLocksResponse {
+  option (encoding.options).message_type = "GET_CONNECTION_LOCKS_RESPONSE";
+  repeated v8platform.serialize.v1.LockInfo locks = 1 [(ras.encoding.field) = {order: 1}];
+}
+
+message GetSessionLocksRequest {
+  option (encoding.options).message_type = "GET_SESSION_LOCKS_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetInfobaseConnectionsRequest";
+      description: "Получение списка блокировок сессии информационной базы локального кластера";
+      required: ["cluster_id", "infobase_id", "session_id"];
+    };
+  };
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+  string infobase_id = 2  [(ras.encoding.field) = {order: 2, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор информационной базы кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+  string session_id = 3 [(ras.encoding.field) = {order: 3, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор сессии"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+}
+
+message GetSessionLocksResponse {
+  option (encoding.options).message_type = "GET_SESSION_LOCKS_RESPONSE";
+  repeated v8platform.serialize.v1.LockInfo locks = 1 [(ras.encoding.field) = {order: 1}];
+}
