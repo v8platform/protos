@@ -14,13 +14,13 @@ func (x *Param) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Type opts: encoder:"byte" order:1
+	// decode x.Type opts: encoder:"byte"  order:1
 	var val_Type int32
 	if err := codec256.ParseByte(reader, &val_Type); err != nil {
 		return err
 	}
 	x.Type = ParamType(val_Type)
-	// decode x.Value opts: encoder:"type" order:2
+	// decode x.Value opts: encoder:"type"  order:2
 	var err error
 	x.Value, err = io.ReadAll(reader)
 	if err != nil {
@@ -32,11 +32,11 @@ func (x *Param) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Type opts: encoder:"byte" order:1
+	// decode x.Type opts: encoder:"byte"  order:1
 	if err := codec256.FormatByte(writer, int32(x.Type)); err != nil {
 		return err
 	}
-	// decode x.Value opts: encoder:"type" order:2
+	// decode x.Value opts: encoder:"type"  order:2
 	if err := codec256.FormatBytes(writer, x.Value); err != nil {
 		return err
 	}

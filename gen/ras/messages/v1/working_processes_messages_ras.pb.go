@@ -19,7 +19,7 @@ func (x *GetWorkingProcessesRequest) Parse(reader io.Reader, version int32) erro
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid" order:1
+	// decode x.ClusterId opts: encoder:"uuid"  order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (x *GetWorkingProcessesRequest) Formatter(writer io.Writer, version int32) 
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid" order:1
+	// decode x.ClusterId opts: encoder:"uuid"  order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
@@ -69,11 +69,11 @@ func (x *GetWorkingProcessInfoRequest) Parse(reader io.Reader, version int32) er
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid" order:1
+	// decode x.ClusterId opts: encoder:"uuid"  order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.ProcessId opts: encoder:"uuid" order:2
+	// decode x.ProcessId opts: encoder:"uuid"  order:2
 	if err := codec256.ParseUUID(reader, &x.ProcessId); err != nil {
 		return err
 	}
@@ -83,11 +83,11 @@ func (x *GetWorkingProcessInfoRequest) Formatter(writer io.Writer, version int32
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid" order:1
+	// decode x.ClusterId opts: encoder:"uuid"  order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.ProcessId opts: encoder:"uuid" order:2
+	// decode x.ProcessId opts: encoder:"uuid"  order:2
 	if err := codec256.FormatUuid(writer, x.ProcessId); err != nil {
 		return err
 	}
@@ -127,11 +127,11 @@ func (x *GetServerWorkingProcessesRequest) Parse(reader io.Reader, version int32
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid" order:1
+	// decode x.ClusterId opts: encoder:"uuid"  order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.ServerId opts: encoder:"uuid" order:2
+	// decode x.ServerId opts: encoder:"uuid"  order:2
 	if err := codec256.ParseUUID(reader, &x.ServerId); err != nil {
 		return err
 	}
@@ -141,11 +141,11 @@ func (x *GetServerWorkingProcessesRequest) Formatter(writer io.Writer, version i
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid" order:1
+	// decode x.ClusterId opts: encoder:"uuid"  order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.ServerId opts: encoder:"uuid" order:2
+	// decode x.ServerId opts: encoder:"uuid"  order:2
 	if err := codec256.FormatUuid(writer, x.ServerId); err != nil {
 		return err
 	}

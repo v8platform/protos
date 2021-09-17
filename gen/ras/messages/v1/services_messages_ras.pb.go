@@ -19,7 +19,7 @@ func (x *GetClusterServicesRequest) Parse(reader io.Reader, version int32) error
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid" order:1
+	// decode x.ClusterId opts: encoder:"uuid"  order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (x *GetClusterServicesRequest) Formatter(writer io.Writer, version int32) e
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid" order:1
+	// decode x.ClusterId opts: encoder:"uuid"  order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
