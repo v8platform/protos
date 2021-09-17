@@ -32,15 +32,15 @@ func (x *NegotiateMessage) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Magic opts: encoder:"int32"  order:1
+	// decode x.Magic opts: encoder:"int32" order:1
 	if err := codec256.ParseInt(reader, &x.Magic); err != nil {
 		return err
 	}
-	// decode x.Protocol opts: encoder:"short"  order:2
+	// decode x.Protocol opts: encoder:"short" order:2
 	if err := codec256.ParseShort(reader, &x.Protocol); err != nil {
 		return err
 	}
-	// decode x.Version opts: encoder:"short"  order:3
+	// decode x.Version opts: encoder:"short" order:3
 	if err := codec256.ParseShort(reader, &x.Version); err != nil {
 		return err
 	}
@@ -50,15 +50,15 @@ func (x *NegotiateMessage) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Magic opts: encoder:"int32"  order:1
+	// decode x.Magic opts: encoder:"int32" order:1
 	if err := codec256.FormatInt(writer, x.Magic); err != nil {
 		return err
 	}
-	// decode x.Protocol opts: encoder:"short"  order:2
+	// decode x.Protocol opts: encoder:"short" order:2
 	if err := codec256.FormatShort(writer, x.Protocol); err != nil {
 		return err
 	}
-	// decode x.Version opts: encoder:"short"  order:3
+	// decode x.Version opts: encoder:"short" order:3
 	if err := codec256.FormatShort(writer, x.Version); err != nil {
 		return err
 	}

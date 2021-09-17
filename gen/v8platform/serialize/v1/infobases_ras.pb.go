@@ -15,7 +15,7 @@ func (x *InfobaseInfo) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Uuid opts: encoder:"uuid"  order:1
+	// decode x.Uuid opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.Uuid); err != nil {
 		return err
 	}
@@ -43,7 +43,7 @@ func (x *InfobaseInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseString(reader, &x.DbPwd); err != nil {
 		return err
 	}
-	// decode x.DeniedFrom opts: encoder:"time"  order:8
+	// decode x.DeniedFrom opts: encoder:"time" order:8
 	x.DeniedFrom = &timestamppb.Timestamp{}
 	if err := codec256.ParseTime(reader, x.DeniedFrom); err != nil {
 		return err
@@ -56,7 +56,7 @@ func (x *InfobaseInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseString(reader, &x.DeniedParameter); err != nil {
 		return err
 	}
-	// decode x.DeniedTo opts: encoder:"time"  order:11
+	// decode x.DeniedTo opts: encoder:"time" order:11
 	x.DeniedTo = &timestamppb.Timestamp{}
 	if err := codec256.ParseTime(reader, x.DeniedTo); err != nil {
 		return err
@@ -110,7 +110,7 @@ func (x *InfobaseInfo) Parse(reader io.Reader, version int32) error {
 		return err
 	}
 	if version >= 9 {
-		// decode x.ReserveWorkingProcesses opts: order:24  version:9
+		// decode x.ReserveWorkingProcesses opts: order:24 version:9
 		if err := codec256.ParseBool(reader, &x.ReserveWorkingProcesses); err != nil {
 			return err
 		}
@@ -121,7 +121,7 @@ func (x *InfobaseInfo) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Uuid opts: encoder:"uuid"  order:1
+	// decode x.Uuid opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.Uuid); err != nil {
 		return err
 	}
@@ -149,7 +149,7 @@ func (x *InfobaseInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatString(writer, x.DbPwd); err != nil {
 		return err
 	}
-	// decode x.DeniedFrom opts: encoder:"time"  order:8
+	// decode x.DeniedFrom opts: encoder:"time" order:8
 	// TODO check nil
 	if err := codec256.FormatTime(writer, x.GetDeniedFrom().AsTime()); err != nil {
 		return err
@@ -162,7 +162,7 @@ func (x *InfobaseInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatString(writer, x.DeniedParameter); err != nil {
 		return err
 	}
-	// decode x.DeniedTo opts: encoder:"time"  order:11
+	// decode x.DeniedTo opts: encoder:"time" order:11
 	// TODO check nil
 	if err := codec256.FormatTime(writer, x.GetDeniedTo().AsTime()); err != nil {
 		return err
@@ -216,7 +216,7 @@ func (x *InfobaseInfo) Formatter(writer io.Writer, version int32) error {
 		return err
 	}
 	if version >= 9 {
-		// decode x.ReserveWorkingProcesses opts: order:24  version:9
+		// decode x.ReserveWorkingProcesses opts: order:24 version:9
 		if err := codec256.FormatBool(writer, x.ReserveWorkingProcesses); err != nil {
 			return err
 		}
@@ -227,7 +227,7 @@ func (x *InfobaseSummaryInfo) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Uuid opts: encoder:"uuid"  order:1
+	// decode x.Uuid opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.Uuid); err != nil {
 		return err
 	}
@@ -245,7 +245,7 @@ func (x *InfobaseSummaryInfo) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Uuid opts: encoder:"uuid"  order:1
+	// decode x.Uuid opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.Uuid); err != nil {
 		return err
 	}

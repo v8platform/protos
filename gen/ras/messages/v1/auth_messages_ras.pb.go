@@ -10,11 +10,11 @@ import (
 	io "io"
 )
 
-func (x *AuthenticateAgentRequest) GetMessageType() MessageType {
+func (x *ServerAuthenticateRequest) GetMessageType() MessageType {
 	return MessageType_AUTHENTICATE_AGENT_REQUEST
 }
 
-func (x *AuthenticateAgentRequest) Parse(reader io.Reader, version int32) error {
+func (x *ServerAuthenticateRequest) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
@@ -28,7 +28,7 @@ func (x *AuthenticateAgentRequest) Parse(reader io.Reader, version int32) error 
 	}
 	return nil
 }
-func (x *AuthenticateAgentRequest) Formatter(writer io.Writer, version int32) error {
+func (x *ServerAuthenticateRequest) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
@@ -50,7 +50,7 @@ func (x *ClusterAuthenticateRequest) Parse(reader io.Reader, version int32) erro
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
@@ -68,7 +68,7 @@ func (x *ClusterAuthenticateRequest) Formatter(writer io.Writer, version int32) 
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
@@ -90,7 +90,7 @@ func (x *AuthenticateInfobaseRequest) Parse(reader io.Reader, version int32) err
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
@@ -108,7 +108,7 @@ func (x *AuthenticateInfobaseRequest) Formatter(writer io.Writer, version int32)
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}

@@ -16,8 +16,8 @@ type RasServiceImpl interface {
 	AuthenticateCluster(ctx context.Context, req *v1.ClusterAuthenticateRequest) (*emptypb.Empty, error)
 	// AuthenticateInfobase proxy request AuthService.AuthenticateInfobase
 	AuthenticateInfobase(ctx context.Context, req *v1.AuthenticateInfobaseRequest) (*emptypb.Empty, error)
-	// AuthenticateAgent proxy request AuthService.AuthenticateAgent
-	AuthenticateAgent(ctx context.Context, req *v1.AuthenticateAgentRequest) (*emptypb.Empty, error)
+	// AuthenticateServer proxy request AuthService.AuthenticateServer
+	AuthenticateServer(ctx context.Context, req *v1.ServerAuthenticateRequest) (*emptypb.Empty, error)
 	// GetClusters proxy request ClustersService.GetClusters
 	GetClusters(ctx context.Context, req *v1.GetClustersRequest) (*v1.GetClustersResponse, error)
 	// GetClusterInfo proxy request ClustersService.GetClusterInfo
@@ -27,7 +27,7 @@ type RasServiceImpl interface {
 	// UnregCluster proxy request ClustersService.UnregCluster
 	UnregCluster(ctx context.Context, req *v1.UnregClusterRequest) (*emptypb.Empty, error)
 	// GetShortInfobases proxy request InfobasesService.GetShortInfobases
-	GetShortInfobases(ctx context.Context, req *v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error)
+	GetShortInfobases(ctx context.Context, req *v1.GetInfobasesRequest) (*v1.GetInfobasesResponse, error)
 	// CreateInfobase proxy request InfobasesService.CreateInfobase
 	CreateInfobase(ctx context.Context, req *v1.CreateInfobaseRequest) (*v1.CreateInfobaseResponse, error)
 	// DropInfobase proxy request InfobasesService.DropInfobase
@@ -87,9 +87,9 @@ func (x *rasService) AuthenticateInfobase(ctx context.Context, req *v1.Authentic
 	return x.AuthService.AuthenticateInfobase(ctx, req)
 }
 
-// AuthenticateAgent is proxy method to request AuthService.AuthenticateAgent
-func (x *rasService) AuthenticateAgent(ctx context.Context, req *v1.AuthenticateAgentRequest) (*emptypb.Empty, error) {
-	return x.AuthService.AuthenticateAgent(ctx, req)
+// AuthenticateServer is proxy method to request AuthService.AuthenticateServer
+func (x *rasService) AuthenticateServer(ctx context.Context, req *v1.ServerAuthenticateRequest) (*emptypb.Empty, error) {
+	return x.AuthService.AuthenticateServer(ctx, req)
 }
 
 // GetClusters is proxy method to request ClustersService.GetClusters
@@ -113,7 +113,7 @@ func (x *rasService) UnregCluster(ctx context.Context, req *v1.UnregClusterReque
 }
 
 // GetShortInfobases is proxy method to request InfobasesService.GetShortInfobases
-func (x *rasService) GetShortInfobases(ctx context.Context, req *v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error) {
+func (x *rasService) GetShortInfobases(ctx context.Context, req *v1.GetInfobasesRequest) (*v1.GetInfobasesResponse, error) {
 	return x.InfobasesService.GetShortInfobases(ctx, req)
 }
 

@@ -12,5 +12,5 @@ service AuthService {
   option(client).is_request_service = true;
   rpc AuthenticateCluster(messages.v1.ClusterAuthenticateRequest) returns (google.protobuf.Empty) {};
   rpc AuthenticateInfobase(messages.v1.AuthenticateInfobaseRequest) returns (google.protobuf.Empty) {};
-  rpc AuthenticateAgent(messages.v1.AuthenticateAgentRequest) returns (google.protobuf.Empty) {};
+  rpc AuthenticateServer(messages.v1.ServerAuthenticateRequest) returns (google.protobuf.Empty) {};
 }

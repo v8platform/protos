@@ -15,7 +15,7 @@ func (x *ProcessInfo) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Uuid opts: encoder:"uuid"  order:1
+	// decode x.Uuid opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.Uuid); err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func (x *ProcessInfo) Parse(reader io.Reader, version int32) error {
 
 		x.Licenses = append(x.Licenses, val)
 	}
-	// decode x.Port opts: encoder:"short"  order:13
+	// decode x.Port opts: encoder:"short" order:13
 	if err := codec256.ParseShort(reader, &x.Port); err != nil {
 		return err
 	}
@@ -88,7 +88,7 @@ func (x *ProcessInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseString(reader, &x.Pid); err != nil {
 		return err
 	}
-	// decode x.Running opts: encoder:"int"  order:17
+	// decode x.Running opts: encoder:"int" order:17
 	if err := codec256.ParseInt(reader, &x.Running); err != nil {
 		return err
 	}
@@ -96,12 +96,12 @@ func (x *ProcessInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseInt(reader, &x.SelectionSize); err != nil {
 		return err
 	}
-	// decode x.StartedAt opts: encoder:"time"  order:18
+	// decode x.StartedAt opts: encoder:"time" order:18
 	x.StartedAt = &timestamppb.Timestamp{}
 	if err := codec256.ParseTime(reader, x.StartedAt); err != nil {
 		return err
 	}
-	// decode x.Use opts: encoder:"int"  order:20
+	// decode x.Use opts: encoder:"int" order:20
 	if err := codec256.ParseInt(reader, &x.Use); err != nil {
 		return err
 	}
@@ -110,7 +110,7 @@ func (x *ProcessInfo) Parse(reader io.Reader, version int32) error {
 		return err
 	}
 	if version >= 9 {
-		// decode x.Reverse opts: order:22  version:9
+		// decode x.Reverse opts: order:22 version:9
 		if err := codec256.ParseBool(reader, &x.Reverse); err != nil {
 			return err
 		}
@@ -121,7 +121,7 @@ func (x *ProcessInfo) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Uuid opts: encoder:"uuid"  order:1
+	// decode x.Uuid opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.Uuid); err != nil {
 		return err
 	}
@@ -174,7 +174,7 @@ func (x *ProcessInfo) Formatter(writer io.Writer, version int32) error {
 			return err
 		}
 	}
-	// decode x.Port opts: encoder:"short"  order:13
+	// decode x.Port opts: encoder:"short" order:13
 	if err := codec256.FormatShort(writer, x.Port); err != nil {
 		return err
 	}
@@ -190,7 +190,7 @@ func (x *ProcessInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatString(writer, x.Pid); err != nil {
 		return err
 	}
-	// decode x.Running opts: encoder:"int"  order:17
+	// decode x.Running opts: encoder:"int" order:17
 	if err := codec256.FormatInt(writer, x.Running); err != nil {
 		return err
 	}
@@ -198,12 +198,12 @@ func (x *ProcessInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatInt(writer, x.SelectionSize); err != nil {
 		return err
 	}
-	// decode x.StartedAt opts: encoder:"time"  order:18
+	// decode x.StartedAt opts: encoder:"time" order:18
 	// TODO check nil
 	if err := codec256.FormatTime(writer, x.GetStartedAt().AsTime()); err != nil {
 		return err
 	}
-	// decode x.Use opts: encoder:"int"  order:20
+	// decode x.Use opts: encoder:"int" order:20
 	if err := codec256.FormatInt(writer, x.Use); err != nil {
 		return err
 	}
@@ -212,7 +212,7 @@ func (x *ProcessInfo) Formatter(writer io.Writer, version int32) error {
 		return err
 	}
 	if version >= 9 {
-		// decode x.Reverse opts: order:22  version:9
+		// decode x.Reverse opts: order:22 version:9
 		if err := codec256.FormatBool(writer, x.Reverse); err != nil {
 			return err
 		}

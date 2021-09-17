@@ -11,35 +11,35 @@ import (
 	io "io"
 )
 
-func (x *GetInfobasesShortRequest) GetMessageType() MessageType {
+func (x *GetInfobasesSummaryRequest) GetMessageType() MessageType {
 	return MessageType_GET_INFOBASES_SHORT_REQUEST
 }
 
-func (x *GetInfobasesShortRequest) Parse(reader io.Reader, version int32) error {
+func (x *GetInfobasesSummaryRequest) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
 	return nil
 }
-func (x *GetInfobasesShortRequest) Formatter(writer io.Writer, version int32) error {
+func (x *GetInfobasesSummaryRequest) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
 	return nil
 }
-func (x *GetInfobasesShortResponse) GetMessageType() MessageType {
+func (x *GetInfobasesSummaryResponse) GetMessageType() MessageType {
 	return MessageType_GET_INFOBASES_SHORT_RESPONSE
 }
 
-func (x *GetInfobasesShortResponse) Parse(reader io.Reader, version int32) error {
+func (x *GetInfobasesSummaryResponse) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
@@ -58,7 +58,69 @@ func (x *GetInfobasesShortResponse) Parse(reader io.Reader, version int32) error
 	}
 	return nil
 }
-func (x *GetInfobasesShortResponse) Formatter(writer io.Writer, version int32) error {
+func (x *GetInfobasesSummaryResponse) Formatter(writer io.Writer, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.Infobases opts: order:1
+	if err := codec256.FormatSize(writer, len(x.Infobases)); err != nil {
+		return err
+	}
+	for i := 0; i < len(x.Infobases); i++ {
+		if err := x.Infobases[i].Formatter(writer, version); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+func (x *GetInfobasesRequest) GetMessageType() MessageType {
+	return MessageType_GET_INFOBASES_REQUEST
+}
+
+func (x *GetInfobasesRequest) Parse(reader io.Reader, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.ClusterId opts: encoder:"uuid" order:1
+	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
+		return err
+	}
+	return nil
+}
+func (x *GetInfobasesRequest) Formatter(writer io.Writer, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.ClusterId opts: encoder:"uuid" order:1
+	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
+		return err
+	}
+	return nil
+}
+func (x *GetInfobasesResponse) GetMessageType() MessageType {
+	return MessageType_GET_INFOBASES_RESPONSE
+}
+
+func (x *GetInfobasesResponse) Parse(reader io.Reader, version int32) error {
+	if x == nil {
+		return nil
+	}
+	// decode x.Infobases opts: order:1
+	var size_Infobases int
+	if err := codec256.ParseSize(reader, &size_Infobases); err != nil {
+		return err
+	}
+	for i := 0; i < size_Infobases; i++ {
+		val := &v1.InfobaseInfo{}
+		if err := val.Parse(reader, version); err != nil {
+			return err
+		}
+
+		x.Infobases = append(x.Infobases, val)
+	}
+	return nil
+}
+func (x *GetInfobasesResponse) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
@@ -81,11 +143,11 @@ func (x *GetInfobaseInfoRequest) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.InfobaseId opts: encoder:"uuid"  order:2
+	// decode x.InfobaseId opts: encoder:"uuid" order:2
 	if err := codec256.ParseUUID(reader, &x.InfobaseId); err != nil {
 		return err
 	}
@@ -95,11 +157,11 @@ func (x *GetInfobaseInfoRequest) Formatter(writer io.Writer, version int32) erro
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.InfobaseId opts: encoder:"uuid"  order:2
+	// decode x.InfobaseId opts: encoder:"uuid" order:2
 	if err := codec256.FormatUuid(writer, x.InfobaseId); err != nil {
 		return err
 	}
@@ -139,7 +201,7 @@ func (x *CreateInfobaseRequest) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
@@ -149,7 +211,7 @@ func (x *CreateInfobaseRequest) Parse(reader io.Reader, version int32) error {
 		return err
 	}
 
-	// decode x.Mode opts: encoder:"int"  order:3
+	// decode x.Mode opts: encoder:"int" order:3
 	if err := codec256.ParseInt(reader, &x.Mode); err != nil {
 		return err
 	}
@@ -159,7 +221,7 @@ func (x *CreateInfobaseRequest) Formatter(writer io.Writer, version int32) error
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
@@ -167,7 +229,7 @@ func (x *CreateInfobaseRequest) Formatter(writer io.Writer, version int32) error
 	if err := x.Info.Formatter(writer, version); err != nil {
 		return err
 	}
-	// decode x.Mode opts: encoder:"int"  order:3
+	// decode x.Mode opts: encoder:"int" order:3
 	if err := codec256.FormatInt(writer, x.Mode); err != nil {
 		return err
 	}
@@ -181,7 +243,7 @@ func (x *CreateInfobaseResponse) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.InfobaseId opts: encoder:"uuid"  order:1
+	// decode x.InfobaseId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.InfobaseId); err != nil {
 		return err
 	}
@@ -191,7 +253,7 @@ func (x *CreateInfobaseResponse) Formatter(writer io.Writer, version int32) erro
 	if x == nil {
 		return nil
 	}
-	// decode x.InfobaseId opts: encoder:"uuid"  order:1
+	// decode x.InfobaseId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.InfobaseId); err != nil {
 		return err
 	}
@@ -205,15 +267,15 @@ func (x *DropInfobaseRequest) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.InfobaseId opts: encoder:"uuid"  order:2
+	// decode x.InfobaseId opts: encoder:"uuid" order:2
 	if err := codec256.ParseUUID(reader, &x.InfobaseId); err != nil {
 		return err
 	}
-	// decode x.Mode opts: encoder:"int"  order:3
+	// decode x.Mode opts: encoder:"int" order:3
 	if err := codec256.ParseInt(reader, &x.Mode); err != nil {
 		return err
 	}
@@ -223,15 +285,15 @@ func (x *DropInfobaseRequest) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.InfobaseId opts: encoder:"uuid"  order:2
+	// decode x.InfobaseId opts: encoder:"uuid" order:2
 	if err := codec256.FormatUuid(writer, x.InfobaseId); err != nil {
 		return err
 	}
-	// decode x.Mode opts: encoder:"int"  order:3
+	// decode x.Mode opts: encoder:"int" order:3
 	if err := codec256.FormatInt(writer, x.Mode); err != nil {
 		return err
 	}
@@ -245,7 +307,7 @@ func (x *UpdateInfobaseSummaryRequest) Parse(reader io.Reader, version int32) er
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
@@ -261,7 +323,7 @@ func (x *UpdateInfobaseSummaryRequest) Formatter(writer io.Writer, version int32
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
@@ -279,7 +341,7 @@ func (x *UpdateInfobaseRequest) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
@@ -295,7 +357,7 @@ func (x *UpdateInfobaseRequest) Formatter(writer io.Writer, version int32) error
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}

@@ -14,7 +14,7 @@ func (x *ManagerInfo) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Uuid opts: encoder:"uuid"  order:1
+	// decode x.Uuid opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.Uuid); err != nil {
 		return err
 	}
@@ -30,7 +30,7 @@ func (x *ManagerInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseInt(reader, &x.MainManager); err != nil {
 		return err
 	}
-	// decode x.Port opts: encoder:"short"  order:5
+	// decode x.Port opts: encoder:"short" order:5
 	if err := codec256.ParseShort(reader, &x.Port); err != nil {
 		return err
 	}
@@ -44,7 +44,7 @@ func (x *ManagerInfo) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Uuid opts: encoder:"uuid"  order:1
+	// decode x.Uuid opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.Uuid); err != nil {
 		return err
 	}
@@ -60,7 +60,7 @@ func (x *ManagerInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatInt(writer, x.MainManager); err != nil {
 		return err
 	}
-	// decode x.Port opts: encoder:"short"  order:5
+	// decode x.Port opts: encoder:"short" order:5
 	if err := codec256.FormatShort(writer, x.Port); err != nil {
 		return err
 	}

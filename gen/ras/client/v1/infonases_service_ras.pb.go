@@ -14,7 +14,7 @@ import (
 )
 
 type InfobasesServiceImpl interface {
-	GetShortInfobases(ctx context.Context, req *v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error)
+	GetShortInfobases(ctx context.Context, req *v1.GetInfobasesRequest) (*v1.GetInfobasesResponse, error)
 	CreateInfobase(ctx context.Context, req *v1.CreateInfobaseRequest) (*v1.CreateInfobaseResponse, error)
 	DropInfobase(ctx context.Context, req *v1.DropInfobaseRequest) (*emptypb.Empty, error)
 	UpdateInfobase(ctx context.Context, req *v1.UpdateInfobaseRequest) (*emptypb.Empty, error)
@@ -32,9 +32,9 @@ type InfobasesService struct {
 	e EndpointServiceImpl
 }
 
-func (x *InfobasesService) GetShortInfobases(ctx context.Context, req *v1.GetInfobasesShortRequest) (*v1.GetInfobasesShortResponse, error) {
+func (x *InfobasesService) GetShortInfobases(ctx context.Context, req *v1.GetInfobasesRequest) (*v1.GetInfobasesResponse, error) {
 
-	var resp v1.GetInfobasesShortResponse
+	var resp v1.GetInfobasesResponse
 
 	anyRequest, err := anypb.New(req)
 	if err != nil {

@@ -16,7 +16,7 @@ import (
 type AuthServiceImpl interface {
 	AuthenticateCluster(ctx context.Context, req *v1.ClusterAuthenticateRequest) (*emptypb.Empty, error)
 	AuthenticateInfobase(ctx context.Context, req *v1.AuthenticateInfobaseRequest) (*emptypb.Empty, error)
-	AuthenticateAgent(ctx context.Context, req *v1.AuthenticateAgentRequest) (*emptypb.Empty, error)
+	AuthenticateServer(ctx context.Context, req *v1.ServerAuthenticateRequest) (*emptypb.Empty, error)
 }
 
 func NewAuthService(endpointService EndpointServiceImpl) AuthServiceImpl {
@@ -90,7 +90,7 @@ func (x *AuthService) AuthenticateInfobase(ctx context.Context, req *v1.Authenti
 	return &resp, nil
 }
 
-func (x *AuthService) AuthenticateAgent(ctx context.Context, req *v1.AuthenticateAgentRequest) (*emptypb.Empty, error) {
+func (x *AuthService) AuthenticateServer(ctx context.Context, req *v1.ServerAuthenticateRequest) (*emptypb.Empty, error) {
 
 	var resp emptypb.Empty
 
