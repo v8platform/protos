@@ -14,7 +14,7 @@ message GetSessionsRequest {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
       title: "GetSessionsRequest";
-      description: "Get cluster sessions";
+      description: "Получение списка сессий локального кластера";
       required: ["cluster_id"];
     };
   };
@@ -39,7 +39,7 @@ message GetSessionInfoRequest {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
       title: "GetSessionInfoRequest";
-      description: "Get session info";
+      description: "Получение информации о сессий локального кластера";
       required: ["cluster_id", "session_id"];
     };
   };
@@ -64,7 +64,7 @@ message GetInfobaseSessionsRequest {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
       title: "GetInfobaseSessionsRequest";
-      description: "Get cluster infobase sessions list";
+      description: "Получение списка сессий информационной базы локального кластера";
       required: ["cluster_id", "infobase_id"];
     };
   };
@@ -86,7 +86,7 @@ message GetInfobaseSessionsRequest {
 
 message GetInfobaseSessionsResponse {
   option (encoding.options).message_type = "GET_INFOBASE_SESSIONS_RESPONSE";
-  repeated v8platform.serialize.v1.SessionInfo infobases = 1 [(ras.encoding.field).order = 1];
+  repeated v8platform.serialize.v1.SessionInfo sessions = 1 [(ras.encoding.field).order = 1];
 }
 
 message GetSessionInfoResponse {
@@ -101,7 +101,7 @@ message TerminateSessionRequest {
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {
       title: "TerminateSessionRequest";
-      description: "Terminate session";
+      description: "Отключение сессии локального кластера";
       required: ["cluster_id", "session_id"];
     };
   };
@@ -121,7 +121,7 @@ message TerminateSessionRequest {
   ];
   string message = 3 [(ras.encoding.field) = {order: 3},
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      description: "Текст сообщения который будет выведен пользователю при прерывании сессии"
+      description: "Текст сообщения который будет выведен пользователю при отключении сессии"
       format: "string"
     }];
 }

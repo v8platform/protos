@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+package ras.messages.v1;
+
+import "ras/encoding/ras.proto";
+import "v8platform/serialize/v1/connections.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option csharp_namespace = "ras.messages.v1";
+option go_package = "github.com/v8platform/protos/gen/ras/messages/v1;messagesv1";
+
+// Не реализованы следующие запросы, т.к. не требуется
+//    GET_CONNECTION_INFO_SHORT_REQUEST = 54;
+//    GET_CONNECTION_INFO_SHORT_RESPONSE = 55;
+//    GET_INFOBASE_CONNECTIONS_REQUEST = 56;
+//    GET_INFOBASE_CONNECTIONS_RESPONSE = 57;
+
+message GetConnectionsRequest {
+  option (encoding.options).message_type = "GET_CONNECTIONS_SHORT_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetConnectionsRequest";
+      description: "Получение списка соединений локального кластера";
+      required: ["cluster_id"];
+    };
+  };
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+}
+
+message GetConnectionsResponse {
+  option (encoding.options).message_type = "GET_CONNECTIONS_SHORT_RESPONSE";
+  repeated v8platform.serialize.v1.ConnectionInfo connections = 1 [(ras.encoding.field) = {
+    order: 1,
+  }];;
+}
+
+message GetInfobaseConnectionsRequest {
+  option (encoding.options).message_type = "GET_INFOBASE_CONNECTIONS_SHORT_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "GetInfobaseConnectionsRequest";
+      description: "Получение списка соединений информационной базы локального кластера";
+      required: ["cluster_id", "infobase_id"];
+    };
+  };
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+  string infobase_id = 2  [(ras.encoding.field) = {order: 2, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор информационной базы кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+}
+
+message GetInfobaseConnectionsResponse {
+  option (encoding.options).message_type = "GET_INFOBASE_SESSIONS_RESPONSE";
+  repeated v8platform.serialize.v1.ConnectionInfo connections = 1 [(ras.encoding.field).order = 1];
+}
+
+message DisconnectConnectionRequest {
+  option (encoding.options).message_type = "DISCONNECT_REQUEST";
+  option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
+    json_schema: {
+      title: "DisconnectConnectionRequest";
+      description: "Отключение соединения на локальном кластере";
+      required: ["cluster_id", "process_id", "connection_id"];
+    };
+  };
+  string cluster_id = 1 [(ras.encoding.field) = {order: 1, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+  string process_id = 2 [(ras.encoding.field) = {order: 2, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор рабочего процесса локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+  string connection_id = 3 [(ras.encoding.field) = {order: 3, encoder: "uuid"},
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      description: "Уникальный идентификатор соединения локального кластера"
+      format: "uuid"
+      pattern: "^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$"
+    }
+  ];
+
+}
