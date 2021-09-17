@@ -1,0 +1,117 @@
+syntax = "proto3";
+
+package ras.client.v1;
+import "google/protobuf/empty.proto";
+import "ras/protocol/v1/endpoint.proto";
+import "ras/messages/v1/clusters_messages.proto";
+import "ras/messages/v1/services_messages.proto";
+import "ras/messages/v1/managers_messages.proto";
+import "ras/messages/v1/working_processes_messages.proto";
+import "ras/messages/v1/working_servers_messages.proto";
+import "ras/messages/v1/auth_messages.proto";
+import "ras/messages/v1/connections_messages.proto";
+import "ras/messages/v1/infobases_messages.proto";
+import "ras/messages/v1/sessions_messages.proto";
+import "ras/messages/v1/locks_messages.proto";
+import "ras/messages/v1/admin_messages.proto";
+import "ras/client/client.proto";
+
+option go_package = "github.com/v8platform/protos/gen/ras/client/v1;clientv1";
+
+service ClustersService {
+  option(client).is_request_service = true;
+
+  rpc GetClusters(messages.v1.GetClustersRequest) returns (messages.v1.GetClustersResponse) {};
+  rpc GetClusterInfo(messages.v1.GetClusterInfoRequest) returns (messages.v1.GetClusterInfoResponse) {};
+  rpc RegCluster(messages.v1.RegClusterRequest) returns (messages.v1.RegClusterResponse) {};
+  rpc UnregCluster(messages.v1.UnregClusterRequest) returns (google.protobuf.Empty) {};
+
+  // Authenticate
+  rpc Authenticate(messages.v1.ClusterAuthenticateRequest) returns (google.protobuf.Empty) {};
+
+  // Managers
+  rpc GetManagers(messages.v1.GetClusterManagersRequest) returns (messages.v1.GetClusterManagersResponse) {};
+  rpc GetManagerInfo(messages.v1.GetClusterManagerInfoRequest) returns (messages.v1.GetClusterManagerInfoResponse) {};
+
+  // Processes
+  rpc GetWorkingProcesses(messages.v1.GetWorkingProcessesRequest) returns (messages.v1.GetWorkingProcessesResponse) {};
+  rpc GetWorkingProcessInfo(messages.v1.GetWorkingProcessInfoRequest) returns (messages.v1.GetWorkingProcessInfoResponse) {};
+
+  // Servers
+  rpc GetWorkingServers(messages.v1.GetWorkingServersRequest) returns (messages.v1.GetWorkingServersResponse) {};
+  rpc GetWorkingServerInfo(messages.v1.GetWorkingServerInfoRequest) returns (messages.v1.GetWorkingServerInfoResponse) {};
+  rpc AddWorkingServer(messages.v1.AddWorkingServerRequest) returns (messages.v1.AddWorkingServerResponse) {};
+  rpc DeleteWorkingServer(messages.v1.DeleteWorkingServerRequest) returns (google.protobuf.Empty) {};
+
+}
+
+service InfobasesService {
+  option(client).is_request_service = true;
+
+  rpc Authenticate(messages.v1.AuthenticateInfobaseRequest) returns (google.protobuf.Empty) {};
+
+  rpc GetInfobasesSummary(messages.v1.GetInfobasesSummaryRequest) returns (messages.v1.GetInfobasesSummaryResponse) {};
+  rpc GetInfobases(messages.v1.GetInfobasesRequest) returns (messages.v1.GetInfobasesResponse) {};
+  rpc CreateInfobase(messages.v1.CreateInfobaseRequest) returns (messages.v1.CreateInfobaseResponse) {};
+  rpc DropInfobase(messages.v1.DropInfobaseRequest) returns (google.protobuf.Empty){};
+  rpc UpdateInfobase(messages.v1.UpdateInfobaseRequest) returns (google.protobuf.Empty){};
+  rpc UpdateInfobaseSummary(messages.v1.UpdateInfobaseSummaryRequest) returns (google.protobuf.Empty){};
+
+}
+
+service SessionsService {
+  option(client).is_request_service = true;
+
+  rpc GetSessions(messages.v1.GetSessionsRequest) returns (messages.v1.GetSessionsResponse) {};
+  rpc GetInfobaseSessions(messages.v1.GetInfobaseSessionsRequest) returns (messages.v1.GetInfobaseSessionsResponse) {};
+
+  rpc GetSessionInfo(messages.v1.GetSessionInfoRequest) returns (messages.v1.GetSessionInfoResponse) {};
+  rpc TerminateSession(messages.v1.TerminateSessionRequest) returns (google.protobuf.Empty){};
+
+}
+
+service LocksService {
+  option(client).is_request_service = true;
+
+  rpc GetLocks(messages.v1.GetLocksRequest) returns (messages.v1.GetLocksResponse) {};
+  rpc GetInfobaseLocks(messages.v1.GetInfobaseLocksRequest) returns (messages.v1.GetInfobaseLocksResponse) {};
+  rpc GetConnectionLocks(messages.v1.GetConnectionLocksRequest) returns (messages.v1.GetConnectionLocksResponse) {};
+  rpc GetSessionLocks(messages.v1.GetSessionLocksRequest) returns (messages.v1.GetSessionLocksResponse) {};
+}
+
+service ConnectionsService {
+  option(client).is_request_service = true;
+
+  rpc GetConnections(messages.v1.GetConnectionsRequest) returns (messages.v1.GetConnectionsResponse) {};
+  rpc GetInfobaseSessions(messages.v1.GetInfobaseConnectionsRequest) returns (messages.v1.GetInfobaseConnectionsResponse) {};
+  rpc DisconnectConnection(messages.v1.DisconnectConnectionRequest) returns (google.protobuf.Empty) {};
+
+}
+
+service AuthService {
+  option(client).is_request_service = true;
+  rpc AuthenticateCluster(messages.v1.ClusterAuthenticateRequest) returns (google.protobuf.Empty) {};
+  rpc AuthenticateInfobase(messages.v1.AuthenticateInfobaseRequest) returns (google.protobuf.Empty) {};
+  rpc AuthenticateServer(messages.v1.ServerAuthenticateRequest) returns (google.protobuf.Empty) {};
+}
+
+
+service AdminService {
+  option(client).is_request_service = true;
+
+  rpc GetVersion(messages.v1.GetAgentVersionRequest) returns (messages.v1.GetAgentVersionResponse) {};
+
+  rpc AuthenticateServer(messages.v1.ServerAuthenticateRequest) returns (google.protobuf.Empty) {};
+  rpc AuthenticateCluster(messages.v1.ClusterAuthenticateRequest) returns (google.protobuf.Empty) {};
+
+  rpc GetServerAdmins(messages.v1.GetAgentAdminsRequest) returns (messages.v1.GetAgentAdminsResponse) {};
+  rpc GetClustersAdmins(messages.v1.GetClusterAdminsRequest) returns (messages.v1.GetClusterAdminsResponse) {};
+
+  rpc CreateServerAdmin(messages.v1.CreateAgentAdminRequest) returns (google.protobuf.Empty) {};
+  rpc CreateClusterAdmin(messages.v1.CreateClusterAdminRequest) returns (google.protobuf.Empty) {};
+
+  rpc DeleteServerAdmin(messages.v1.DeleteAgentAdminRequest) returns (google.protobuf.Empty) {};
+  rpc DeleteClusterAdmin(messages.v1.DeleteClusterAdminRequest) returns (google.protobuf.Empty) {};
+
+}
+

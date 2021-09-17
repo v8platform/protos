@@ -93,7 +93,7 @@ message AddWorkingServerResponse {
 }
 
 // renamed UnregWorkingServerRequest
-message DeleteWorkingServerInfoRequest {
+message DeleteWorkingServerRequest {
   option (ras.encoding.options).message_type = "UNREG_WORKING_SERVER_REQUEST";
   option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_schema) = {
     json_schema: {

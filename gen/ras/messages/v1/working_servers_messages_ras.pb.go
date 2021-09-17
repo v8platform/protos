@@ -177,11 +177,11 @@ func (x *AddWorkingServerResponse) Formatter(writer io.Writer, version int32) er
 	}
 	return nil
 }
-func (x *DeleteWorkingServerInfoRequest) GetMessageType() MessageType {
+func (x *DeleteWorkingServerRequest) GetMessageType() MessageType {
 	return MessageType_UNREG_WORKING_SERVER_REQUEST
 }
 
-func (x *DeleteWorkingServerInfoRequest) Parse(reader io.Reader, version int32) error {
+func (x *DeleteWorkingServerRequest) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
@@ -195,7 +195,7 @@ func (x *DeleteWorkingServerInfoRequest) Parse(reader io.Reader, version int32) 
 	}
 	return nil
 }
-func (x *DeleteWorkingServerInfoRequest) Formatter(writer io.Writer, version int32) error {
+func (x *DeleteWorkingServerRequest) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
