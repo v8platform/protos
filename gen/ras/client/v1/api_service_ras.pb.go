@@ -8,1438 +8,845 @@ package clientv1
 import (
 	context "context"
 	v1 "github.com/v8platform/protos/gen/ras/messages/v1"
-	proto "google.golang.org/protobuf/proto"
-	anypb "google.golang.org/protobuf/types/known/anypb"
+	v11 "github.com/v8platform/protos/gen/ras/protocol/v1"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 )
 
-type ClustersServiceImpl interface {
-	GetClusters(ctx context.Context, req *v1.GetClustersRequest) (*v1.GetClustersResponse, error)
-	GetClusterInfo(ctx context.Context, req *v1.GetClusterInfoRequest) (*v1.GetClusterInfoResponse, error)
-	RegCluster(ctx context.Context, req *v1.RegClusterRequest) (*v1.RegClusterResponse, error)
-	UnregCluster(ctx context.Context, req *v1.UnregClusterRequest) (*emptypb.Empty, error)
-	Authenticate(ctx context.Context, req *v1.ClusterAuthenticateRequest) (*emptypb.Empty, error)
-	GetManagers(ctx context.Context, req *v1.GetClusterManagersRequest) (*v1.GetClusterManagersResponse, error)
-	GetManagerInfo(ctx context.Context, req *v1.GetClusterManagerInfoRequest) (*v1.GetClusterManagerInfoResponse, error)
-	GetWorkingProcesses(ctx context.Context, req *v1.GetWorkingProcessesRequest) (*v1.GetWorkingProcessesResponse, error)
-	GetWorkingProcessInfo(ctx context.Context, req *v1.GetWorkingProcessInfoRequest) (*v1.GetWorkingProcessInfoResponse, error)
-	GetWorkingServers(ctx context.Context, req *v1.GetWorkingServersRequest) (*v1.GetWorkingServersResponse, error)
-	GetWorkingServerInfo(ctx context.Context, req *v1.GetWorkingServerInfoRequest) (*v1.GetWorkingServerInfoResponse, error)
-	AddWorkingServer(ctx context.Context, req *v1.AddWorkingServerRequest) (*v1.AddWorkingServerResponse, error)
-	DeleteWorkingServer(ctx context.Context, req *v1.DeleteWorkingServerRequest) (*emptypb.Empty, error)
+type ClustersService interface {
+	GetClusters(ctx context.Context, req *v1.GetClustersRequest, opts ...interface{}) (*v1.GetClustersResponse, error)
+	GetClusterInfo(ctx context.Context, req *v1.GetClusterInfoRequest, opts ...interface{}) (*v1.GetClusterInfoResponse, error)
+	RegCluster(ctx context.Context, req *v1.RegClusterRequest, opts ...interface{}) (*v1.RegClusterResponse, error)
+	UnregCluster(ctx context.Context, req *v1.UnregClusterRequest, opts ...interface{}) (*emptypb.Empty, error)
+	GetManagers(ctx context.Context, req *v1.GetClusterManagersRequest, opts ...interface{}) (*v1.GetClusterManagersResponse, error)
+	GetManagerInfo(ctx context.Context, req *v1.GetClusterManagerInfoRequest, opts ...interface{}) (*v1.GetClusterManagerInfoResponse, error)
+	GetWorkingProcesses(ctx context.Context, req *v1.GetWorkingProcessesRequest, opts ...interface{}) (*v1.GetWorkingProcessesResponse, error)
+	GetWorkingProcessInfo(ctx context.Context, req *v1.GetWorkingProcessInfoRequest, opts ...interface{}) (*v1.GetWorkingProcessInfoResponse, error)
+	GetWorkingServers(ctx context.Context, req *v1.GetWorkingServersRequest, opts ...interface{}) (*v1.GetWorkingServersResponse, error)
+	GetWorkingServerInfo(ctx context.Context, req *v1.GetWorkingServerInfoRequest, opts ...interface{}) (*v1.GetWorkingServerInfoResponse, error)
+	AddWorkingServer(ctx context.Context, req *v1.AddWorkingServerRequest, opts ...interface{}) (*v1.AddWorkingServerResponse, error)
+	DeleteWorkingServer(ctx context.Context, req *v1.DeleteWorkingServerRequest, opts ...interface{}) (*emptypb.Empty, error)
 }
 
-func NewClustersService(endpointService EndpointServiceImpl) ClustersServiceImpl {
-	return &ClustersService{
-		endpointService,
+func NewClustersService(client Client) ClustersService {
+	return &clustersService{
+		client,
 	}
 }
 
 // ClustersService is the endpoint message service for RAS service.
-type ClustersService struct {
-	e EndpointServiceImpl
+type clustersService struct {
+	cc Client
 }
 
-func (x *ClustersService) GetClusters(ctx context.Context, req *v1.GetClustersRequest) (*v1.GetClustersResponse, error) {
+func (x *clustersService) GetClusters(ctx context.Context, req *v1.GetClustersRequest, opts ...interface{}) (*v1.GetClustersResponse, error) {
 
-	var resp v1.GetClustersResponse
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return GetClustersHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *ClustersService) GetClusterInfo(ctx context.Context, req *v1.GetClusterInfoRequest) (*v1.GetClusterInfoResponse, error) {
+func GetClustersHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetClustersRequest, opts ...interface{}) (*v1.GetClustersResponse, error) {
 
-	var resp v1.GetClusterInfoResponse
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(v1.GetClustersResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-func (x *ClustersService) RegCluster(ctx context.Context, req *v1.RegClusterRequest) (*v1.RegClusterResponse, error) {
+func (x *clustersService) GetClusterInfo(ctx context.Context, req *v1.GetClusterInfoRequest, opts ...interface{}) (*v1.GetClusterInfoResponse, error) {
 
-	var resp v1.RegClusterResponse
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return GetClusterInfoHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *ClustersService) UnregCluster(ctx context.Context, req *v1.UnregClusterRequest) (*emptypb.Empty, error) {
+func GetClusterInfoHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetClusterInfoRequest, opts ...interface{}) (*v1.GetClusterInfoResponse, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(v1.GetClusterInfoResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-func (x *ClustersService) Authenticate(ctx context.Context, req *v1.ClusterAuthenticateRequest) (*emptypb.Empty, error) {
+func (x *clustersService) RegCluster(ctx context.Context, req *v1.RegClusterRequest, opts ...interface{}) (*v1.RegClusterResponse, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return RegClusterHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *ClustersService) GetManagers(ctx context.Context, req *v1.GetClusterManagersRequest) (*v1.GetClusterManagersResponse, error) {
+func RegClusterHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.RegClusterRequest, opts ...interface{}) (*v1.RegClusterResponse, error) {
 
-	var resp v1.GetClusterManagersResponse
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(v1.RegClusterResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-func (x *ClustersService) GetManagerInfo(ctx context.Context, req *v1.GetClusterManagerInfoRequest) (*v1.GetClusterManagerInfoResponse, error) {
+func (x *clustersService) UnregCluster(ctx context.Context, req *v1.UnregClusterRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	var resp v1.GetClusterManagerInfoResponse
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return UnregClusterHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *ClustersService) GetWorkingProcesses(ctx context.Context, req *v1.GetWorkingProcessesRequest) (*v1.GetWorkingProcessesResponse, error) {
+func UnregClusterHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.UnregClusterRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	var resp v1.GetWorkingProcessesResponse
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(emptypb.Empty)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-func (x *ClustersService) GetWorkingProcessInfo(ctx context.Context, req *v1.GetWorkingProcessInfoRequest) (*v1.GetWorkingProcessInfoResponse, error) {
+func (x *clustersService) GetManagers(ctx context.Context, req *v1.GetClusterManagersRequest, opts ...interface{}) (*v1.GetClusterManagersResponse, error) {
 
-	var resp v1.GetWorkingProcessInfoResponse
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return GetManagersHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *ClustersService) GetWorkingServers(ctx context.Context, req *v1.GetWorkingServersRequest) (*v1.GetWorkingServersResponse, error) {
+func GetManagersHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetClusterManagersRequest, opts ...interface{}) (*v1.GetClusterManagersResponse, error) {
 
-	var resp v1.GetWorkingServersResponse
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(v1.GetClusterManagersResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-func (x *ClustersService) GetWorkingServerInfo(ctx context.Context, req *v1.GetWorkingServerInfoRequest) (*v1.GetWorkingServerInfoResponse, error) {
+func (x *clustersService) GetManagerInfo(ctx context.Context, req *v1.GetClusterManagerInfoRequest, opts ...interface{}) (*v1.GetClusterManagerInfoResponse, error) {
 
-	var resp v1.GetWorkingServerInfoResponse
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return GetManagerInfoHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *ClustersService) AddWorkingServer(ctx context.Context, req *v1.AddWorkingServerRequest) (*v1.AddWorkingServerResponse, error) {
+func GetManagerInfoHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetClusterManagerInfoRequest, opts ...interface{}) (*v1.GetClusterManagerInfoResponse, error) {
 
-	var resp v1.AddWorkingServerResponse
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(v1.GetClusterManagerInfoResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-func (x *ClustersService) DeleteWorkingServer(ctx context.Context, req *v1.DeleteWorkingServerRequest) (*emptypb.Empty, error) {
+func (x *clustersService) GetWorkingProcesses(ctx context.Context, req *v1.GetWorkingProcessesRequest, opts ...interface{}) (*v1.GetWorkingProcessesResponse, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return GetWorkingProcessesHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-type InfobasesServiceImpl interface {
-	Authenticate(ctx context.Context, req *v1.AuthenticateInfobaseRequest) (*emptypb.Empty, error)
-	GetInfobasesSummary(ctx context.Context, req *v1.GetInfobasesSummaryRequest) (*v1.GetInfobasesSummaryResponse, error)
-	GetInfobases(ctx context.Context, req *v1.GetInfobasesRequest) (*v1.GetInfobasesResponse, error)
-	CreateInfobase(ctx context.Context, req *v1.CreateInfobaseRequest) (*v1.CreateInfobaseResponse, error)
-	DropInfobase(ctx context.Context, req *v1.DropInfobaseRequest) (*emptypb.Empty, error)
-	UpdateInfobase(ctx context.Context, req *v1.UpdateInfobaseRequest) (*emptypb.Empty, error)
-	UpdateInfobaseSummary(ctx context.Context, req *v1.UpdateInfobaseSummaryRequest) (*emptypb.Empty, error)
+func GetWorkingProcessesHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetWorkingProcessesRequest, opts ...interface{}) (*v1.GetWorkingProcessesResponse, error) {
+
+	resp := new(v1.GetWorkingProcessesResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
-func NewInfobasesService(endpointService EndpointServiceImpl) InfobasesServiceImpl {
-	return &InfobasesService{
-		endpointService,
+func (x *clustersService) GetWorkingProcessInfo(ctx context.Context, req *v1.GetWorkingProcessInfoRequest, opts ...interface{}) (*v1.GetWorkingProcessInfoResponse, error) {
+
+	endpoint, err := x.cc.GetEndpoint(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return GetWorkingProcessInfoHandler(ctx, x.cc.Request, endpoint, req, opts...)
+}
+
+func GetWorkingProcessInfoHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetWorkingProcessInfoRequest, opts ...interface{}) (*v1.GetWorkingProcessInfoResponse, error) {
+
+	resp := new(v1.GetWorkingProcessInfoResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (x *clustersService) GetWorkingServers(ctx context.Context, req *v1.GetWorkingServersRequest, opts ...interface{}) (*v1.GetWorkingServersResponse, error) {
+
+	endpoint, err := x.cc.GetEndpoint(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return GetWorkingServersHandler(ctx, x.cc.Request, endpoint, req, opts...)
+}
+
+func GetWorkingServersHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetWorkingServersRequest, opts ...interface{}) (*v1.GetWorkingServersResponse, error) {
+
+	resp := new(v1.GetWorkingServersResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (x *clustersService) GetWorkingServerInfo(ctx context.Context, req *v1.GetWorkingServerInfoRequest, opts ...interface{}) (*v1.GetWorkingServerInfoResponse, error) {
+
+	endpoint, err := x.cc.GetEndpoint(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return GetWorkingServerInfoHandler(ctx, x.cc.Request, endpoint, req, opts...)
+}
+
+func GetWorkingServerInfoHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetWorkingServerInfoRequest, opts ...interface{}) (*v1.GetWorkingServerInfoResponse, error) {
+
+	resp := new(v1.GetWorkingServerInfoResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (x *clustersService) AddWorkingServer(ctx context.Context, req *v1.AddWorkingServerRequest, opts ...interface{}) (*v1.AddWorkingServerResponse, error) {
+
+	endpoint, err := x.cc.GetEndpoint(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return AddWorkingServerHandler(ctx, x.cc.Request, endpoint, req, opts...)
+}
+
+func AddWorkingServerHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.AddWorkingServerRequest, opts ...interface{}) (*v1.AddWorkingServerResponse, error) {
+
+	resp := new(v1.AddWorkingServerResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (x *clustersService) DeleteWorkingServer(ctx context.Context, req *v1.DeleteWorkingServerRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	endpoint, err := x.cc.GetEndpoint(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return DeleteWorkingServerHandler(ctx, x.cc.Request, endpoint, req, opts...)
+}
+
+func DeleteWorkingServerHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.DeleteWorkingServerRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	resp := new(emptypb.Empty)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+type InfobasesService interface {
+	GetInfobasesSummary(ctx context.Context, req *v1.GetInfobasesSummaryRequest, opts ...interface{}) (*v1.GetInfobasesSummaryResponse, error)
+	GetInfobases(ctx context.Context, req *v1.GetInfobasesRequest, opts ...interface{}) (*v1.GetInfobasesResponse, error)
+	CreateInfobase(ctx context.Context, req *v1.CreateInfobaseRequest, opts ...interface{}) (*v1.CreateInfobaseResponse, error)
+	DropInfobase(ctx context.Context, req *v1.DropInfobaseRequest, opts ...interface{}) (*emptypb.Empty, error)
+	UpdateInfobase(ctx context.Context, req *v1.UpdateInfobaseRequest, opts ...interface{}) (*emptypb.Empty, error)
+	UpdateInfobaseSummary(ctx context.Context, req *v1.UpdateInfobaseSummaryRequest, opts ...interface{}) (*emptypb.Empty, error)
+}
+
+func NewInfobasesService(client Client) InfobasesService {
+	return &infobasesService{
+		client,
 	}
 }
 
 // InfobasesService is the endpoint message service for RAS service.
-type InfobasesService struct {
-	e EndpointServiceImpl
+type infobasesService struct {
+	cc Client
 }
 
-func (x *InfobasesService) Authenticate(ctx context.Context, req *v1.AuthenticateInfobaseRequest) (*emptypb.Empty, error) {
+func (x *infobasesService) GetInfobasesSummary(ctx context.Context, req *v1.GetInfobasesSummaryRequest, opts ...interface{}) (*v1.GetInfobasesSummaryResponse, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return GetInfobasesSummaryHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *InfobasesService) GetInfobasesSummary(ctx context.Context, req *v1.GetInfobasesSummaryRequest) (*v1.GetInfobasesSummaryResponse, error) {
+func GetInfobasesSummaryHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetInfobasesSummaryRequest, opts ...interface{}) (*v1.GetInfobasesSummaryResponse, error) {
 
-	var resp v1.GetInfobasesSummaryResponse
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(v1.GetInfobasesSummaryResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-func (x *InfobasesService) GetInfobases(ctx context.Context, req *v1.GetInfobasesRequest) (*v1.GetInfobasesResponse, error) {
+func (x *infobasesService) GetInfobases(ctx context.Context, req *v1.GetInfobasesRequest, opts ...interface{}) (*v1.GetInfobasesResponse, error) {
 
-	var resp v1.GetInfobasesResponse
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return GetInfobasesHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *InfobasesService) CreateInfobase(ctx context.Context, req *v1.CreateInfobaseRequest) (*v1.CreateInfobaseResponse, error) {
+func GetInfobasesHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetInfobasesRequest, opts ...interface{}) (*v1.GetInfobasesResponse, error) {
 
-	var resp v1.CreateInfobaseResponse
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(v1.GetInfobasesResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-func (x *InfobasesService) DropInfobase(ctx context.Context, req *v1.DropInfobaseRequest) (*emptypb.Empty, error) {
+func (x *infobasesService) CreateInfobase(ctx context.Context, req *v1.CreateInfobaseRequest, opts ...interface{}) (*v1.CreateInfobaseResponse, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return CreateInfobaseHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *InfobasesService) UpdateInfobase(ctx context.Context, req *v1.UpdateInfobaseRequest) (*emptypb.Empty, error) {
+func CreateInfobaseHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.CreateInfobaseRequest, opts ...interface{}) (*v1.CreateInfobaseResponse, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(v1.CreateInfobaseResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-func (x *InfobasesService) UpdateInfobaseSummary(ctx context.Context, req *v1.UpdateInfobaseSummaryRequest) (*emptypb.Empty, error) {
+func (x *infobasesService) DropInfobase(ctx context.Context, req *v1.DropInfobaseRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return DropInfobaseHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-type SessionsServiceImpl interface {
-	GetSessions(ctx context.Context, req *v1.GetSessionsRequest) (*v1.GetSessionsResponse, error)
-	GetInfobaseSessions(ctx context.Context, req *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error)
-	GetSessionInfo(ctx context.Context, req *v1.GetSessionInfoRequest) (*v1.GetSessionInfoResponse, error)
-	TerminateSession(ctx context.Context, req *v1.TerminateSessionRequest) (*emptypb.Empty, error)
+func DropInfobaseHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.DropInfobaseRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	resp := new(emptypb.Empty)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
-func NewSessionsService(endpointService EndpointServiceImpl) SessionsServiceImpl {
-	return &SessionsService{
-		endpointService,
+func (x *infobasesService) UpdateInfobase(ctx context.Context, req *v1.UpdateInfobaseRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	endpoint, err := x.cc.GetEndpoint(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return UpdateInfobaseHandler(ctx, x.cc.Request, endpoint, req, opts...)
+}
+
+func UpdateInfobaseHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.UpdateInfobaseRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	resp := new(emptypb.Empty)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (x *infobasesService) UpdateInfobaseSummary(ctx context.Context, req *v1.UpdateInfobaseSummaryRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	endpoint, err := x.cc.GetEndpoint(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return UpdateInfobaseSummaryHandler(ctx, x.cc.Request, endpoint, req, opts...)
+}
+
+func UpdateInfobaseSummaryHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.UpdateInfobaseSummaryRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	resp := new(emptypb.Empty)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+type SessionsService interface {
+	GetSessions(ctx context.Context, req *v1.GetSessionsRequest, opts ...interface{}) (*v1.GetSessionsResponse, error)
+	GetInfobaseSessions(ctx context.Context, req *v1.GetInfobaseSessionsRequest, opts ...interface{}) (*v1.GetInfobaseSessionsResponse, error)
+	GetSessionInfo(ctx context.Context, req *v1.GetSessionInfoRequest, opts ...interface{}) (*v1.GetSessionInfoResponse, error)
+	TerminateSession(ctx context.Context, req *v1.TerminateSessionRequest, opts ...interface{}) (*emptypb.Empty, error)
+}
+
+func NewSessionsService(client Client) SessionsService {
+	return &sessionsService{
+		client,
 	}
 }
 
 // SessionsService is the endpoint message service for RAS service.
-type SessionsService struct {
-	e EndpointServiceImpl
+type sessionsService struct {
+	cc Client
 }
 
-func (x *SessionsService) GetSessions(ctx context.Context, req *v1.GetSessionsRequest) (*v1.GetSessionsResponse, error) {
+func (x *sessionsService) GetSessions(ctx context.Context, req *v1.GetSessionsRequest, opts ...interface{}) (*v1.GetSessionsResponse, error) {
 
-	var resp v1.GetSessionsResponse
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return GetSessionsHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *SessionsService) GetInfobaseSessions(ctx context.Context, req *v1.GetInfobaseSessionsRequest) (*v1.GetInfobaseSessionsResponse, error) {
+func GetSessionsHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetSessionsRequest, opts ...interface{}) (*v1.GetSessionsResponse, error) {
 
-	var resp v1.GetInfobaseSessionsResponse
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(v1.GetSessionsResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-func (x *SessionsService) GetSessionInfo(ctx context.Context, req *v1.GetSessionInfoRequest) (*v1.GetSessionInfoResponse, error) {
+func (x *sessionsService) GetInfobaseSessions(ctx context.Context, req *v1.GetInfobaseSessionsRequest, opts ...interface{}) (*v1.GetInfobaseSessionsResponse, error) {
 
-	var resp v1.GetSessionInfoResponse
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return GetInfobaseSessionsHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *SessionsService) TerminateSession(ctx context.Context, req *v1.TerminateSessionRequest) (*emptypb.Empty, error) {
+func GetInfobaseSessionsHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetInfobaseSessionsRequest, opts ...interface{}) (*v1.GetInfobaseSessionsResponse, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(v1.GetInfobaseSessionsResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-type LocksServiceImpl interface {
-	GetLocks(ctx context.Context, req *v1.GetLocksRequest) (*v1.GetLocksResponse, error)
-	GetInfobaseLocks(ctx context.Context, req *v1.GetInfobaseLocksRequest) (*v1.GetInfobaseLocksResponse, error)
-	GetConnectionLocks(ctx context.Context, req *v1.GetConnectionLocksRequest) (*v1.GetConnectionLocksResponse, error)
-	GetSessionLocks(ctx context.Context, req *v1.GetSessionLocksRequest) (*v1.GetSessionLocksResponse, error)
+func (x *sessionsService) GetSessionInfo(ctx context.Context, req *v1.GetSessionInfoRequest, opts ...interface{}) (*v1.GetSessionInfoResponse, error) {
+
+	endpoint, err := x.cc.GetEndpoint(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return GetSessionInfoHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func NewLocksService(endpointService EndpointServiceImpl) LocksServiceImpl {
-	return &LocksService{
-		endpointService,
+func GetSessionInfoHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetSessionInfoRequest, opts ...interface{}) (*v1.GetSessionInfoResponse, error) {
+
+	resp := new(v1.GetSessionInfoResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (x *sessionsService) TerminateSession(ctx context.Context, req *v1.TerminateSessionRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	endpoint, err := x.cc.GetEndpoint(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return TerminateSessionHandler(ctx, x.cc.Request, endpoint, req, opts...)
+}
+
+func TerminateSessionHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.TerminateSessionRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	resp := new(emptypb.Empty)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+type LocksService interface {
+	GetLocks(ctx context.Context, req *v1.GetLocksRequest, opts ...interface{}) (*v1.GetLocksResponse, error)
+	GetInfobaseLocks(ctx context.Context, req *v1.GetInfobaseLocksRequest, opts ...interface{}) (*v1.GetInfobaseLocksResponse, error)
+	GetConnectionLocks(ctx context.Context, req *v1.GetConnectionLocksRequest, opts ...interface{}) (*v1.GetConnectionLocksResponse, error)
+	GetSessionLocks(ctx context.Context, req *v1.GetSessionLocksRequest, opts ...interface{}) (*v1.GetSessionLocksResponse, error)
+}
+
+func NewLocksService(client Client) LocksService {
+	return &locksService{
+		client,
 	}
 }
 
 // LocksService is the endpoint message service for RAS service.
-type LocksService struct {
-	e EndpointServiceImpl
+type locksService struct {
+	cc Client
 }
 
-func (x *LocksService) GetLocks(ctx context.Context, req *v1.GetLocksRequest) (*v1.GetLocksResponse, error) {
+func (x *locksService) GetLocks(ctx context.Context, req *v1.GetLocksRequest, opts ...interface{}) (*v1.GetLocksResponse, error) {
 
-	var resp v1.GetLocksResponse
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return GetLocksHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *LocksService) GetInfobaseLocks(ctx context.Context, req *v1.GetInfobaseLocksRequest) (*v1.GetInfobaseLocksResponse, error) {
+func GetLocksHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetLocksRequest, opts ...interface{}) (*v1.GetLocksResponse, error) {
 
-	var resp v1.GetInfobaseLocksResponse
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(v1.GetLocksResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-func (x *LocksService) GetConnectionLocks(ctx context.Context, req *v1.GetConnectionLocksRequest) (*v1.GetConnectionLocksResponse, error) {
+func (x *locksService) GetInfobaseLocks(ctx context.Context, req *v1.GetInfobaseLocksRequest, opts ...interface{}) (*v1.GetInfobaseLocksResponse, error) {
 
-	var resp v1.GetConnectionLocksResponse
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return GetInfobaseLocksHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *LocksService) GetSessionLocks(ctx context.Context, req *v1.GetSessionLocksRequest) (*v1.GetSessionLocksResponse, error) {
+func GetInfobaseLocksHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetInfobaseLocksRequest, opts ...interface{}) (*v1.GetInfobaseLocksResponse, error) {
 
-	var resp v1.GetSessionLocksResponse
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(v1.GetInfobaseLocksResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-type ConnectionsServiceImpl interface {
-	GetConnections(ctx context.Context, req *v1.GetConnectionsRequest) (*v1.GetConnectionsResponse, error)
-	GetInfobaseSessions(ctx context.Context, req *v1.GetInfobaseConnectionsRequest) (*v1.GetInfobaseConnectionsResponse, error)
-	DisconnectConnection(ctx context.Context, req *v1.DisconnectConnectionRequest) (*emptypb.Empty, error)
+func (x *locksService) GetConnectionLocks(ctx context.Context, req *v1.GetConnectionLocksRequest, opts ...interface{}) (*v1.GetConnectionLocksResponse, error) {
+
+	endpoint, err := x.cc.GetEndpoint(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return GetConnectionLocksHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func NewConnectionsService(endpointService EndpointServiceImpl) ConnectionsServiceImpl {
-	return &ConnectionsService{
-		endpointService,
+func GetConnectionLocksHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetConnectionLocksRequest, opts ...interface{}) (*v1.GetConnectionLocksResponse, error) {
+
+	resp := new(v1.GetConnectionLocksResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (x *locksService) GetSessionLocks(ctx context.Context, req *v1.GetSessionLocksRequest, opts ...interface{}) (*v1.GetSessionLocksResponse, error) {
+
+	endpoint, err := x.cc.GetEndpoint(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return GetSessionLocksHandler(ctx, x.cc.Request, endpoint, req, opts...)
+}
+
+func GetSessionLocksHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetSessionLocksRequest, opts ...interface{}) (*v1.GetSessionLocksResponse, error) {
+
+	resp := new(v1.GetSessionLocksResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+type ConnectionsService interface {
+	GetConnections(ctx context.Context, req *v1.GetConnectionsRequest, opts ...interface{}) (*v1.GetConnectionsResponse, error)
+	GetInfobaseConnections(ctx context.Context, req *v1.GetInfobaseConnectionsRequest, opts ...interface{}) (*v1.GetInfobaseConnectionsResponse, error)
+	DisconnectConnection(ctx context.Context, req *v1.DisconnectConnectionRequest, opts ...interface{}) (*emptypb.Empty, error)
+}
+
+func NewConnectionsService(client Client) ConnectionsService {
+	return &connectionsService{
+		client,
 	}
 }
 
 // ConnectionsService is the endpoint message service for RAS service.
-type ConnectionsService struct {
-	e EndpointServiceImpl
+type connectionsService struct {
+	cc Client
 }
 
-func (x *ConnectionsService) GetConnections(ctx context.Context, req *v1.GetConnectionsRequest) (*v1.GetConnectionsResponse, error) {
+func (x *connectionsService) GetConnections(ctx context.Context, req *v1.GetConnectionsRequest, opts ...interface{}) (*v1.GetConnectionsResponse, error) {
 
-	var resp v1.GetConnectionsResponse
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return GetConnectionsHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *ConnectionsService) GetInfobaseSessions(ctx context.Context, req *v1.GetInfobaseConnectionsRequest) (*v1.GetInfobaseConnectionsResponse, error) {
+func GetConnectionsHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetConnectionsRequest, opts ...interface{}) (*v1.GetConnectionsResponse, error) {
 
-	var resp v1.GetInfobaseConnectionsResponse
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(v1.GetConnectionsResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-func (x *ConnectionsService) DisconnectConnection(ctx context.Context, req *v1.DisconnectConnectionRequest) (*emptypb.Empty, error) {
+func (x *connectionsService) GetInfobaseConnections(ctx context.Context, req *v1.GetInfobaseConnectionsRequest, opts ...interface{}) (*v1.GetInfobaseConnectionsResponse, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return GetInfobaseConnectionsHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-type AuthServiceImpl interface {
-	AuthenticateCluster(ctx context.Context, req *v1.ClusterAuthenticateRequest) (*emptypb.Empty, error)
-	AuthenticateInfobase(ctx context.Context, req *v1.AuthenticateInfobaseRequest) (*emptypb.Empty, error)
-	AuthenticateServer(ctx context.Context, req *v1.ServerAuthenticateRequest) (*emptypb.Empty, error)
+func GetInfobaseConnectionsHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetInfobaseConnectionsRequest, opts ...interface{}) (*v1.GetInfobaseConnectionsResponse, error) {
+
+	resp := new(v1.GetInfobaseConnectionsResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
-func NewAuthService(endpointService EndpointServiceImpl) AuthServiceImpl {
-	return &AuthService{
-		endpointService,
+func (x *connectionsService) DisconnectConnection(ctx context.Context, req *v1.DisconnectConnectionRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	endpoint, err := x.cc.GetEndpoint(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return DisconnectConnectionHandler(ctx, x.cc.Request, endpoint, req, opts...)
+}
+
+func DisconnectConnectionHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.DisconnectConnectionRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	resp := new(emptypb.Empty)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+type AuthService interface {
+	AuthenticateCluster(ctx context.Context, req *v1.ClusterAuthenticateRequest, opts ...interface{}) (*emptypb.Empty, error)
+	AuthenticateInfobase(ctx context.Context, req *v1.AuthenticateInfobaseRequest, opts ...interface{}) (*emptypb.Empty, error)
+	AuthenticateServer(ctx context.Context, req *v1.ServerAuthenticateRequest, opts ...interface{}) (*emptypb.Empty, error)
+}
+
+func NewAuthService(client Client) AuthService {
+	return &authService{
+		client,
 	}
 }
 
 // AuthService is the endpoint message service for RAS service.
-type AuthService struct {
-	e EndpointServiceImpl
+type authService struct {
+	cc Client
 }
 
-func (x *AuthService) AuthenticateCluster(ctx context.Context, req *v1.ClusterAuthenticateRequest) (*emptypb.Empty, error) {
+func (x *authService) AuthenticateCluster(ctx context.Context, req *v1.ClusterAuthenticateRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return AuthenticateClusterHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *AuthService) AuthenticateInfobase(ctx context.Context, req *v1.AuthenticateInfobaseRequest) (*emptypb.Empty, error) {
+func AuthenticateClusterHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.ClusterAuthenticateRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(emptypb.Empty)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-func (x *AuthService) AuthenticateServer(ctx context.Context, req *v1.ServerAuthenticateRequest) (*emptypb.Empty, error) {
+func (x *authService) AuthenticateInfobase(ctx context.Context, req *v1.AuthenticateInfobaseRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return AuthenticateInfobaseHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-type AdminServiceImpl interface {
-	GetVersion(ctx context.Context, req *v1.GetAgentVersionRequest) (*v1.GetAgentVersionResponse, error)
-	AuthenticateServer(ctx context.Context, req *v1.ServerAuthenticateRequest) (*emptypb.Empty, error)
-	AuthenticateCluster(ctx context.Context, req *v1.ClusterAuthenticateRequest) (*emptypb.Empty, error)
-	GetServerAdmins(ctx context.Context, req *v1.GetAgentAdminsRequest) (*v1.GetAgentAdminsResponse, error)
-	GetClustersAdmins(ctx context.Context, req *v1.GetClusterAdminsRequest) (*v1.GetClusterAdminsResponse, error)
-	CreateServerAdmin(ctx context.Context, req *v1.CreateAgentAdminRequest) (*emptypb.Empty, error)
-	CreateClusterAdmin(ctx context.Context, req *v1.CreateClusterAdminRequest) (*emptypb.Empty, error)
-	DeleteServerAdmin(ctx context.Context, req *v1.DeleteAgentAdminRequest) (*emptypb.Empty, error)
-	DeleteClusterAdmin(ctx context.Context, req *v1.DeleteClusterAdminRequest) (*emptypb.Empty, error)
+func AuthenticateInfobaseHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.AuthenticateInfobaseRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	resp := new(emptypb.Empty)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
-func NewAdminService(endpointService EndpointServiceImpl) AdminServiceImpl {
-	return &AdminService{
-		endpointService,
+func (x *authService) AuthenticateServer(ctx context.Context, req *v1.ServerAuthenticateRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	endpoint, err := x.cc.GetEndpoint(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return AuthenticateServerHandler(ctx, x.cc.Request, endpoint, req, opts...)
+}
+
+func AuthenticateServerHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.ServerAuthenticateRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	resp := new(emptypb.Empty)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+type AdminService interface {
+	GetVersion(ctx context.Context, req *v1.GetAgentVersionRequest, opts ...interface{}) (*v1.GetAgentVersionResponse, error)
+	GetServerAdmins(ctx context.Context, req *v1.GetAgentAdminsRequest, opts ...interface{}) (*v1.GetAgentAdminsResponse, error)
+	GetClustersAdmins(ctx context.Context, req *v1.GetClusterAdminsRequest, opts ...interface{}) (*v1.GetClusterAdminsResponse, error)
+	CreateServerAdmin(ctx context.Context, req *v1.CreateAgentAdminRequest, opts ...interface{}) (*emptypb.Empty, error)
+	CreateClusterAdmin(ctx context.Context, req *v1.CreateClusterAdminRequest, opts ...interface{}) (*emptypb.Empty, error)
+	DeleteServerAdmin(ctx context.Context, req *v1.DeleteAgentAdminRequest, opts ...interface{}) (*emptypb.Empty, error)
+	DeleteClusterAdmin(ctx context.Context, req *v1.DeleteClusterAdminRequest, opts ...interface{}) (*emptypb.Empty, error)
+}
+
+func NewAdminService(client Client) AdminService {
+	return &adminService{
+		client,
 	}
 }
 
 // AdminService is the endpoint message service for RAS service.
-type AdminService struct {
-	e EndpointServiceImpl
+type adminService struct {
+	cc Client
 }
 
-func (x *AdminService) GetVersion(ctx context.Context, req *v1.GetAgentVersionRequest) (*v1.GetAgentVersionResponse, error) {
+func (x *adminService) GetVersion(ctx context.Context, req *v1.GetAgentVersionRequest, opts ...interface{}) (*v1.GetAgentVersionResponse, error) {
 
-	var resp v1.GetAgentVersionResponse
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return GetVersionHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *AdminService) AuthenticateServer(ctx context.Context, req *v1.ServerAuthenticateRequest) (*emptypb.Empty, error) {
+func GetVersionHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetAgentVersionRequest, opts ...interface{}) (*v1.GetAgentVersionResponse, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(v1.GetAgentVersionResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-func (x *AdminService) AuthenticateCluster(ctx context.Context, req *v1.ClusterAuthenticateRequest) (*emptypb.Empty, error) {
+func (x *adminService) GetServerAdmins(ctx context.Context, req *v1.GetAgentAdminsRequest, opts ...interface{}) (*v1.GetAgentAdminsResponse, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return GetServerAdminsHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *AdminService) GetServerAdmins(ctx context.Context, req *v1.GetAgentAdminsRequest) (*v1.GetAgentAdminsResponse, error) {
+func GetServerAdminsHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetAgentAdminsRequest, opts ...interface{}) (*v1.GetAgentAdminsResponse, error) {
 
-	var resp v1.GetAgentAdminsResponse
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(v1.GetAgentAdminsResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-func (x *AdminService) GetClustersAdmins(ctx context.Context, req *v1.GetClusterAdminsRequest) (*v1.GetClusterAdminsResponse, error) {
+func (x *adminService) GetClustersAdmins(ctx context.Context, req *v1.GetClusterAdminsRequest, opts ...interface{}) (*v1.GetClusterAdminsResponse, error) {
 
-	var resp v1.GetClusterAdminsResponse
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return GetClustersAdminsHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *AdminService) CreateServerAdmin(ctx context.Context, req *v1.CreateAgentAdminRequest) (*emptypb.Empty, error) {
+func GetClustersAdminsHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetClusterAdminsRequest, opts ...interface{}) (*v1.GetClusterAdminsResponse, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(v1.GetClusterAdminsResponse)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-func (x *AdminService) CreateClusterAdmin(ctx context.Context, req *v1.CreateClusterAdminRequest) (*emptypb.Empty, error) {
+func (x *adminService) CreateServerAdmin(ctx context.Context, req *v1.CreateAgentAdminRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return CreateServerAdminHandler(ctx, x.cc.Request, endpoint, req, opts...)
 }
 
-func (x *AdminService) DeleteServerAdmin(ctx context.Context, req *v1.DeleteAgentAdminRequest) (*emptypb.Empty, error) {
+func CreateServerAdminHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.CreateAgentAdminRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
-	if err != nil {
+	resp := new(emptypb.Empty)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
 		return nil, err
 	}
-
-	anyRespond, err := anypb.New(&resp)
-	if err != nil {
-		return nil, err
-	}
-
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
-	}
-
-	response, err := x.e.Request(ctx, endpointRequest)
-	if err != nil {
-		return nil, err
-	}
-
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
-		return nil, err
-	}
-	return &resp, nil
+	return resp, nil
 }
 
-func (x *AdminService) DeleteClusterAdmin(ctx context.Context, req *v1.DeleteClusterAdminRequest) (*emptypb.Empty, error) {
+func (x *adminService) CreateClusterAdmin(ctx context.Context, req *v1.CreateClusterAdminRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	var resp emptypb.Empty
-
-	anyRequest, err := anypb.New(req)
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
+	return CreateClusterAdminHandler(ctx, x.cc.Request, endpoint, req, opts...)
+}
 
-	anyRespond, err := anypb.New(&resp)
+func CreateClusterAdminHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.CreateClusterAdminRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	resp := new(emptypb.Empty)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
+}
+
+func (x *adminService) DeleteServerAdmin(ctx context.Context, req *v1.DeleteAgentAdminRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
+	return DeleteServerAdminHandler(ctx, x.cc.Request, endpoint, req, opts...)
+}
 
-	endpointRequest := &EndpointRequest{
-		Request: anyRequest,
-		Respond: anyRespond,
+func DeleteServerAdminHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.DeleteAgentAdminRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	resp := new(emptypb.Empty)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
+		return nil, err
 	}
+	return resp, nil
+}
 
-	response, err := x.e.Request(ctx, endpointRequest)
+func (x *adminService) DeleteClusterAdmin(ctx context.Context, req *v1.DeleteClusterAdminRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	endpoint, err := x.cc.GetEndpoint(ctx)
 	if err != nil {
 		return nil, err
 	}
+	return DeleteClusterAdminHandler(ctx, x.cc.Request, endpoint, req, opts...)
+}
 
-	if err := anypb.UnmarshalTo(response, &resp, proto.UnmarshalOptions{}); err != nil {
+func DeleteClusterAdminHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.DeleteClusterAdminRequest, opts ...interface{}) (*emptypb.Empty, error) {
+
+	resp := new(emptypb.Empty)
+	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
 		return nil, err
 	}
-	return &resp, nil
+	return resp, nil
 }

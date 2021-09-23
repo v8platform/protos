@@ -7,46 +7,45 @@ package clientv1
 
 import (
 	context "context"
-	fmt "fmt"
-	cast "github.com/spf13/cast"
-	codec256 "github.com/v8platform/encoder/ras/codec256"
 	v1 "github.com/v8platform/protos/gen/ras/protocol/v1"
-	proto "google.golang.org/protobuf/proto"
-	anypb "google.golang.org/protobuf/types/known/anypb"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	io "io"
 	regexp "regexp"
 	strings "strings"
-	sync "sync"
 )
 
-type ClientServiceImpl interface {
-	Negotiate(ctx context.Context, req *v1.NegotiateMessage) (*emptypb.Empty, error)
-	Connect(ctx context.Context, req *v1.ConnectMessage) (*v1.ConnectMessageAck, error)
-	Disconnect(ctx context.Context, req *v1.DisconnectMessage) (*emptypb.Empty, error)
-	EndpointOpen(ctx context.Context, req *v1.EndpointOpen) (*v1.EndpointOpenAck, error)
-	EndpointClose(ctx context.Context, req *v1.EndpointClose) (*emptypb.Empty, error)
-	EndpointMessage(ctx context.Context, req *v1.EndpointMessage) (*v1.EndpointMessage, error)
-	NewEndpoint(ctx context.Context, req *v1.EndpointOpenAck) (*v1.Endpoint, error)
-}
-type ClientImpl interface {
-	// Методы для блокировки соединения sync.Mutex
-	// берем из sync.Locker
-	sync.Locker
-	// Методы для записи и чтения из соединение
-	// берем из io.ReadWriter
-	io.ReadWriter
+type ClientService interface {
+	Negotiate(ctx context.Context, req *v1.NegotiateMessage, opts ...interface{}) (*emptypb.Empty, error)
+	Connect(ctx context.Context, req *v1.ConnectMessage, opts ...interface{}) (*v1.ConnectMessageAck, error)
+	Disconnect(ctx context.Context, req *v1.DisconnectMessage, opts ...interface{}) (*emptypb.Empty, error)
+	EndpointOpen(ctx context.Context, req *v1.EndpointOpen, opts ...interface{}) (*v1.EndpointOpenAck, error)
+	EndpointClose(ctx context.Context, req *v1.EndpointClose, opts ...interface{}) (*emptypb.Empty, error)
+	EndpointMessage(ctx context.Context, req *v1.EndpointMessage, opts ...interface{}) (*v1.EndpointMessage, error)
 }
 
-func NewClientService(client ClientImpl) ClientServiceImpl {
-	return &clientService{
-		client: client,
+type Request func(ctx context.Context, handler RequestHandler, opts ...interface{}) error
+
+type RequestHandler func(ctx context.Context, rw io.ReadWriter) error
+
+type Client interface {
+	Request(ctx context.Context, handler RequestHandler, opts ...interface{}) error
+	GetEndpoint(ctx context.Context) (Endpoint, error)
+}
+
+type Endpoint interface {
+	GetVersion() int32
+	GetId() int32
+}
+
+func NewClientService(client Client) ClientService {
+	return clientService{
+		cc: client,
 	}
 }
 
 // ClientService is the client for RAS service.
 type clientService struct {
-	client ClientImpl
+	cc Client
 }
 
 var serviceVersions = []string{"3.0", "4.0", "5.0", "6.0", "7.0", "8.0", "9.0", "10.0"}
@@ -82,206 +81,80 @@ func DetectSupportedVersion(err error) string {
 	return ""
 }
 
-func (x *clientService) Negotiate(ctx context.Context, req *v1.NegotiateMessage) (*emptypb.Empty, error) {
-
-	x.client.Lock()
-	defer x.client.Unlock()
-
-	// Check context
-	select {
-	case <-ctx.Done():
-		return nil, ctx.Err()
-	default:
-	}
-
-	if err := req.Formatter(x.client, 0); err != nil {
-		return nil, err
-	}
-	return new(emptypb.Empty), nil
+func (x clientService) Negotiate(ctx context.Context, req *v1.NegotiateMessage, opts ...interface{}) (*emptypb.Empty, error) {
+	return NegotiateHandler(ctx, x.cc.Request, req, opts...)
 }
-func (x *clientService) Connect(ctx context.Context, req *v1.ConnectMessage) (*v1.ConnectMessageAck, error) {
 
-	x.client.Lock()
-	defer x.client.Unlock()
+func NegotiateHandler(ctx context.Context, cc Request, req *v1.NegotiateMessage, opts ...interface{}) (*emptypb.Empty, error) {
 
-	// Check context
-	select {
-	case <-ctx.Done():
-		return nil, ctx.Err()
-	default:
-	}
-
-	packet, err := v1.NewPacket(req)
-	if err != nil {
+	resp := new(emptypb.Empty)
+	if err := cc(ctx, v1.PacketRequestHandler(req, nil), opts...); err != nil {
 		return nil, err
 	}
-	if _, err := packet.WriteTo(x.client); err != nil {
-		return nil, err
-	}
-	ackPacket, err := v1.NewPacket(x.client)
-	if err != nil {
-		return nil, err
-	}
+	return resp, nil
+}
+
+func (x clientService) Connect(ctx context.Context, req *v1.ConnectMessage, opts ...interface{}) (*v1.ConnectMessageAck, error) {
+	return ConnectHandler(ctx, x.cc.Request, req, opts...)
+}
+
+func ConnectHandler(ctx context.Context, cc Request, req *v1.ConnectMessage, opts ...interface{}) (*v1.ConnectMessageAck, error) {
+
 	resp := new(v1.ConnectMessageAck)
-	return resp, ackPacket.Unpack(resp)
+	if err := cc(ctx, v1.PacketRequestHandler(req, resp), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
-func (x *clientService) Disconnect(ctx context.Context, req *v1.DisconnectMessage) (*emptypb.Empty, error) {
-
-	x.client.Lock()
-	defer x.client.Unlock()
-
-	// Check context
-	select {
-	case <-ctx.Done():
-		return nil, ctx.Err()
-	default:
-	}
-
-	packet, err := v1.NewPacket(req)
-	if err != nil {
-		return nil, err
-	}
-	if _, err := packet.WriteTo(x.client); err != nil {
-		return nil, err
-	}
-	return new(emptypb.Empty), nil
+func (x clientService) Disconnect(ctx context.Context, req *v1.DisconnectMessage, opts ...interface{}) (*emptypb.Empty, error) {
+	return DisconnectHandler(ctx, x.cc.Request, req, opts...)
 }
-func (x *clientService) EndpointOpen(ctx context.Context, req *v1.EndpointOpen) (*v1.EndpointOpenAck, error) {
 
-	x.client.Lock()
-	defer x.client.Unlock()
+func DisconnectHandler(ctx context.Context, cc Request, req *v1.DisconnectMessage, opts ...interface{}) (*emptypb.Empty, error) {
 
-	// Check context
-	select {
-	case <-ctx.Done():
-		return nil, ctx.Err()
-	default:
-	}
-
-	packet, err := v1.NewPacket(req)
-	if err != nil {
+	resp := new(emptypb.Empty)
+	if err := cc(ctx, v1.PacketRequestHandler(req, nil), opts...); err != nil {
 		return nil, err
 	}
-	if _, err := packet.WriteTo(x.client); err != nil {
-		return nil, err
-	}
-	ackPacket, err := v1.NewPacket(x.client)
-	if err != nil {
-		return nil, err
-	}
+	return resp, nil
+}
+
+func (x clientService) EndpointOpen(ctx context.Context, req *v1.EndpointOpen, opts ...interface{}) (*v1.EndpointOpenAck, error) {
+	return EndpointOpenHandler(ctx, x.cc.Request, req, opts...)
+}
+
+func EndpointOpenHandler(ctx context.Context, cc Request, req *v1.EndpointOpen, opts ...interface{}) (*v1.EndpointOpenAck, error) {
+
 	resp := new(v1.EndpointOpenAck)
-	return resp, ackPacket.Unpack(resp)
+	if err := cc(ctx, v1.PacketRequestHandler(req, resp), opts...); err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
-func (x *clientService) EndpointClose(ctx context.Context, req *v1.EndpointClose) (*emptypb.Empty, error) {
-
-	x.client.Lock()
-	defer x.client.Unlock()
-
-	// Check context
-	select {
-	case <-ctx.Done():
-		return nil, ctx.Err()
-	default:
-	}
-
-	packet, err := v1.NewPacket(req)
-	if err != nil {
-		return nil, err
-	}
-	if _, err := packet.WriteTo(x.client); err != nil {
-		return nil, err
-	}
-	return new(emptypb.Empty), nil
+func (x clientService) EndpointClose(ctx context.Context, req *v1.EndpointClose, opts ...interface{}) (*emptypb.Empty, error) {
+	return EndpointCloseHandler(ctx, x.cc.Request, req, opts...)
 }
-func (x *clientService) EndpointMessage(ctx context.Context, req *v1.EndpointMessage) (*v1.EndpointMessage, error) {
 
-	x.client.Lock()
-	defer x.client.Unlock()
+func EndpointCloseHandler(ctx context.Context, cc Request, req *v1.EndpointClose, opts ...interface{}) (*emptypb.Empty, error) {
 
-	// Check context
-	select {
-	case <-ctx.Done():
-		return nil, ctx.Err()
-	default:
-	}
-
-	packet, err := v1.NewPacket(req)
-	if err != nil {
+	resp := new(emptypb.Empty)
+	if err := cc(ctx, v1.PacketRequestHandler(req, nil), opts...); err != nil {
 		return nil, err
 	}
-	if _, err := packet.WriteTo(x.client); err != nil {
-		return nil, err
-	}
-	ackPacket, err := v1.NewPacket(x.client)
-	if err != nil {
-		return nil, err
-	}
+	return resp, nil
+}
+
+func (x clientService) EndpointMessage(ctx context.Context, req *v1.EndpointMessage, opts ...interface{}) (*v1.EndpointMessage, error) {
+	return EndpointMessageHandler(ctx, x.cc.Request, req, opts...)
+}
+
+func EndpointMessageHandler(ctx context.Context, cc Request, req *v1.EndpointMessage, opts ...interface{}) (*v1.EndpointMessage, error) {
+
 	resp := new(v1.EndpointMessage)
-	return resp, ackPacket.Unpack(resp)
-}
-
-func (x *clientService) NewEndpoint(_ context.Context, req *v1.EndpointOpenAck) (*v1.Endpoint, error) {
-	return &v1.Endpoint{
-		Service: req.GetService(),
-		Version: cast.ToInt32(cast.ToFloat32(req.GetVersion())),
-		Id:      req.GetEndpointId(),
-		Format:  codec256.Version(),
-	}, nil
-}
-
-type EndpointServiceImpl interface {
-	Request(ctx context.Context, req *EndpointRequest) (*anypb.Any, error)
-}
-
-func NewEndpointService(clientService ClientServiceImpl, endpoint v1.EndpointImpl) EndpointServiceImpl {
-	return &endpointService{
-		endpoint,
-		clientService,
-	}
-}
-
-// EndpointService is the endpoint service for RAS service.
-type endpointService struct {
-	v1.EndpointImpl
-	client ClientServiceImpl
-}
-
-func (x *endpointService) Request(ctx context.Context, req *EndpointRequest) (*anypb.Any, error) {
-	message, err := anypb.UnmarshalNew(req.GetRequest(), proto.UnmarshalOptions{})
-	if err != nil {
+	if err := cc(ctx, v1.PacketRequestHandler(req, resp), opts...); err != nil {
 		return nil, err
 	}
-
-	reqMessage, err := x.NewMessage(message)
-	if err != nil {
-		return nil, err
-	}
-
-	respMessage, err := x.client.EndpointMessage(ctx, reqMessage)
-	if err != nil {
-		return nil, err
-	}
-
-	respProtoMessage, err := anypb.UnmarshalNew(req.GetRespond(), proto.UnmarshalOptions{})
-	if err != nil {
-		return nil, err
-	}
-
-	if _, ok := respProtoMessage.(*emptypb.Empty); ok {
-		if err := x.UnpackMessage(respMessage, nil); err != nil {
-			return nil, err
-		}
-		return anypb.New(respProtoMessage)
-	}
-
-	messageParser, ok := respProtoMessage.(v1.EndpointMessageParser)
-	if !ok {
-		return nil, fmt.Errorf("not parser interface")
-	}
-	if err := x.UnpackMessage(respMessage, messageParser); err != nil {
-		return nil, err
-	}
-	return anypb.New(respProtoMessage)
+	return resp, nil
 }

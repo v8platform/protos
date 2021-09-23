@@ -26,9 +26,6 @@ service ClustersService {
   rpc RegCluster(messages.v1.RegClusterRequest) returns (messages.v1.RegClusterResponse) {};
   rpc UnregCluster(messages.v1.UnregClusterRequest) returns (google.protobuf.Empty) {};
 
-  // Authenticate
-  rpc Authenticate(messages.v1.ClusterAuthenticateRequest) returns (google.protobuf.Empty) {};
-
   // Managers
   rpc GetManagers(messages.v1.GetClusterManagersRequest) returns (messages.v1.GetClusterManagersResponse) {};
   rpc GetManagerInfo(messages.v1.GetClusterManagerInfoRequest) returns (messages.v1.GetClusterManagerInfoResponse) {};
@@ -47,8 +44,6 @@ service ClustersService {
 
 service InfobasesService {
   option(client).is_request_service = true;
-
-  rpc Authenticate(messages.v1.AuthenticateInfobaseRequest) returns (google.protobuf.Empty) {};
 
   rpc GetInfobasesSummary(messages.v1.GetInfobasesSummaryRequest) returns (messages.v1.GetInfobasesSummaryResponse) {};
   rpc GetInfobases(messages.v1.GetInfobasesRequest) returns (messages.v1.GetInfobasesResponse) {};
@@ -83,7 +78,7 @@ service ConnectionsService {
   option(client).is_request_service = true;
 
   rpc GetConnections(messages.v1.GetConnectionsRequest) returns (messages.v1.GetConnectionsResponse) {};
-  rpc GetInfobaseSessions(messages.v1.GetInfobaseConnectionsRequest) returns (messages.v1.GetInfobaseConnectionsResponse) {};
+  rpc GetInfobaseConnections(messages.v1.GetInfobaseConnectionsRequest) returns (messages.v1.GetInfobaseConnectionsResponse) {};
   rpc DisconnectConnection(messages.v1.DisconnectConnectionRequest) returns (google.protobuf.Empty) {};
 
 }
@@ -100,9 +95,6 @@ service AdminService {
   option(client).is_request_service = true;
 
   rpc GetVersion(messages.v1.GetAgentVersionRequest) returns (messages.v1.GetAgentVersionResponse) {};
-
-  rpc AuthenticateServer(messages.v1.ServerAuthenticateRequest) returns (google.protobuf.Empty) {};
-  rpc AuthenticateCluster(messages.v1.ClusterAuthenticateRequest) returns (google.protobuf.Empty) {};
 
   rpc GetServerAdmins(messages.v1.GetAgentAdminsRequest) returns (messages.v1.GetAgentAdminsResponse) {};
   rpc GetClustersAdmins(messages.v1.GetClusterAdminsRequest) returns (messages.v1.GetClusterAdminsResponse) {};
