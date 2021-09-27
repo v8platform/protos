@@ -18,7 +18,7 @@ message ClusterInfo {
   int32 lifetime_limit = 4 [(ras.encoding.field) = {
     order: 4,
   }];
-  int32 Port = 5 [(ras.encoding.field) = {
+  int32 port = 5 [(ras.encoding.field) = {
     order: 5,
     encoder: "short",
   }];

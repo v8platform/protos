@@ -26,7 +26,7 @@ func (x *EndpointOpen) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseString(reader, &x.Service); err != nil {
 		return err
 	}
-	// decode x.Version opts: encoder:"string"  order:3
+	// decode x.Version opts: encoder:"string" order:3
 	if err := codec256.ParseString(reader, &x.Version); err != nil {
 		return err
 	}
@@ -42,7 +42,7 @@ func (x *EndpointOpen) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatString(writer, x.Service); err != nil {
 		return err
 	}
-	// decode x.Version opts: encoder:"string"  order:3
+	// decode x.Version opts: encoder:"string" order:3
 	if err := codec256.FormatString(writer, x.Version); err != nil {
 		return err
 	}
@@ -64,11 +64,11 @@ func (x *EndpointOpenAck) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseString(reader, &x.Service); err != nil {
 		return err
 	}
-	// decode x.Version opts: encoder:"string"  order:2
+	// decode x.Version opts: encoder:"string" order:2
 	if err := codec256.ParseString(reader, &x.Version); err != nil {
 		return err
 	}
-	// decode x.EndpointId opts: encoder:"nullable"  order:3
+	// decode x.EndpointId opts: encoder:"nullable" order:3
 	if err := codec256.ParseNullable(reader, &x.EndpointId); err != nil {
 		return err
 	}
@@ -84,11 +84,11 @@ func (x *EndpointOpenAck) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatString(writer, x.Service); err != nil {
 		return err
 	}
-	// decode x.Version opts: encoder:"string"  order:2
+	// decode x.Version opts: encoder:"string" order:2
 	if err := codec256.FormatString(writer, x.Version); err != nil {
 		return err
 	}
-	// decode x.EndpointId opts: encoder:"nullable"  order:3
+	// decode x.EndpointId opts: encoder:"nullable" order:3
 	if err := codec256.FormatNullable(writer, x.EndpointId); err != nil {
 		return err
 	}
@@ -106,7 +106,7 @@ func (x *EndpointClose) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.EndpointId opts: encoder:"nullable"  order:1
+	// decode x.EndpointId opts: encoder:"nullable" order:1
 	if err := codec256.ParseNullable(reader, &x.EndpointId); err != nil {
 		return err
 	}
@@ -116,7 +116,7 @@ func (x *EndpointClose) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.EndpointId opts: encoder:"nullable"  order:1
+	// decode x.EndpointId opts: encoder:"nullable" order:1
 	if err := codec256.FormatNullable(writer, x.EndpointId); err != nil {
 		return err
 	}
@@ -178,42 +178,45 @@ type Endpoint interface {
 	GetId() int32
 }
 
-func EndpointRequestHandler(endpoint Endpoint, req EndpointMessageFormatter, reply EndpointMessageParser) func(ctx context.Context, rw io.ReadWriter) error {
-	return func(ctx context.Context, rw io.ReadWriter) error {
+type Channel interface {
+	SendMsg(ctx context.Context, msg interface{}, opts ...interface{}) error
+	RecvMsg(ctx context.Context, msg interface{}, opts ...interface{}) error
+}
 
-		reqPacket, err := NewEndpointMessage(endpoint, req)
-		if err != nil {
-			return err
-		}
+func EndpointChannelRequest(ctx context.Context, channel Channel, endpoint Endpoint, req EndpointMessageFormatter, reply EndpointMessageParser) error {
 
-		replyPacket := &EndpointMessage{}
-
-		if err = PacketRequestHandler(reqPacket, replyPacket)(ctx, rw); err != nil {
-			return err
-		}
-
-		return replyPacket.Unpack(endpoint, reply)
+	reqPacket, err := NewEndpointMessage(endpoint, req)
+	if err != nil {
+		return err
 	}
+
+	replyPacket := &EndpointMessage{}
+
+	if err = PacketChannelRequest(ctx, channel, reqPacket, replyPacket); err != nil {
+		return err
+	}
+
+	return replyPacket.Unpack(endpoint, reply)
 }
 func (x *EndpointMessage) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.EndpointId opts: encoder:"nullable"  order:1
+	// decode x.EndpointId opts: encoder:"nullable" order:1
 	if err := codec256.ParseNullable(reader, &x.EndpointId); err != nil {
 		return err
 	}
-	// decode x.Format opts: encoder:"short"  order:2
+	// decode x.Format opts: encoder:"short" order:2
 	if err := codec256.ParseShort(reader, &x.Format); err != nil {
 		return err
 	}
-	// decode x.Type opts: encoder:"byte"  order:3
+	// decode x.Type opts: encoder:"byte" order:3
 	var val_Type int32
 	if err := codec256.ParseByte(reader, &val_Type); err != nil {
 		return err
 	}
 	x.Type = EndpointDataType(val_Type)
-	// decode x.VoidMessage opts: order:4  type_field:3
+	// decode x.VoidMessage opts: order:4 type_field:3
 	if x.GetType() == EndpointDataType_ENDPOINT_DATA_TYPE_VOID_MESSAGE {
 		void_message := &EndpointDataVoidMessage{}
 		if err := void_message.Parse(reader, version); err != nil {
@@ -224,7 +227,7 @@ func (x *EndpointMessage) Parse(reader io.Reader, version int32) error {
 			VoidMessage: void_message,
 		}
 	}
-	// decode x.Message opts: order:4  type_field:3
+	// decode x.Message opts: order:4 type_field:3
 	if x.GetType() == EndpointDataType_ENDPOINT_DATA_TYPE_MESSAGE {
 		message := &EndpointDataMessage{}
 		if err := message.Parse(reader, version); err != nil {
@@ -235,7 +238,7 @@ func (x *EndpointMessage) Parse(reader io.Reader, version int32) error {
 			Message: message,
 		}
 	}
-	// decode x.Failure opts: order:4  type_field:3
+	// decode x.Failure opts: order:4 type_field:3
 	if x.GetType() == EndpointDataType_ENDPOINT_DATA_TYPE_EXCEPTION {
 		failure := &EndpointFailureMessage{}
 		if err := failure.Parse(reader, version); err != nil {
@@ -252,31 +255,31 @@ func (x *EndpointMessage) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.EndpointId opts: encoder:"nullable"  order:1
+	// decode x.EndpointId opts: encoder:"nullable" order:1
 	if err := codec256.FormatNullable(writer, x.EndpointId); err != nil {
 		return err
 	}
-	// decode x.Format opts: encoder:"short"  order:2
+	// decode x.Format opts: encoder:"short" order:2
 	if err := codec256.FormatShort(writer, x.Format); err != nil {
 		return err
 	}
-	// decode x.Type opts: encoder:"byte"  order:3
+	// decode x.Type opts: encoder:"byte" order:3
 	if err := codec256.FormatByte(writer, int32(x.Type)); err != nil {
 		return err
 	}
-	// decode x.VoidMessage opts: order:4  type_field:3
+	// decode x.VoidMessage opts: order:4 type_field:3
 	if val := x.GetVoidMessage(); val != nil {
 		if err := val.Formatter(writer, version); err != nil {
 			return err
 		}
 	}
-	// decode x.Message opts: order:4  type_field:3
+	// decode x.Message opts: order:4 type_field:3
 	if val := x.GetMessage(); val != nil {
 		if err := val.Formatter(writer, version); err != nil {
 			return err
 		}
 	}
-	// decode x.Failure opts: order:4  type_field:3
+	// decode x.Failure opts: order:4 type_field:3
 	if val := x.GetFailure(); val != nil {
 		if err := val.Formatter(writer, version); err != nil {
 			return err
@@ -304,7 +307,7 @@ func (x *EndpointFailureAck) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseString(reader, &x.Version); err != nil {
 		return err
 	}
-	// decode x.EndpointId opts: encoder:"nullable"  order:3
+	// decode x.EndpointId opts: encoder:"nullable" order:3
 	if err := codec256.ParseNullable(reader, &x.EndpointId); err != nil {
 		return err
 	}
@@ -348,7 +351,7 @@ func (x *EndpointFailureAck) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatString(writer, x.Version); err != nil {
 		return err
 	}
-	// decode x.EndpointId opts: encoder:"nullable"  order:3
+	// decode x.EndpointId opts: encoder:"nullable" order:3
 	if err := codec256.FormatNullable(writer, x.EndpointId); err != nil {
 		return err
 	}
@@ -425,7 +428,7 @@ func (x *EndpointDataMessage) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Type opts: encoder:"byte"  order:1
+	// decode x.Type opts: encoder:"byte" order:1
 	var val_Type int32
 	if err := codec256.ParseByte(reader, &val_Type); err != nil {
 		return err
@@ -443,7 +446,7 @@ func (x *EndpointDataMessage) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Type opts: encoder:"byte"  order:1
+	// decode x.Type opts: encoder:"byte" order:1
 	if err := codec256.FormatByte(writer, int32(x.Type)); err != nil {
 		return err
 	}

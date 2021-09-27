@@ -19,7 +19,7 @@ func (x *GetLocksRequest) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (x *GetLocksRequest) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
@@ -81,11 +81,11 @@ func (x *GetInfobaseLocksRequest) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.InfobaseId opts: encoder:"uuid"  order:2
+	// decode x.InfobaseId opts: encoder:"uuid" order:2
 	if err := codec256.ParseUUID(reader, &x.InfobaseId); err != nil {
 		return err
 	}
@@ -95,11 +95,11 @@ func (x *GetInfobaseLocksRequest) Formatter(writer io.Writer, version int32) err
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.InfobaseId opts: encoder:"uuid"  order:2
+	// decode x.InfobaseId opts: encoder:"uuid" order:2
 	if err := codec256.FormatUuid(writer, x.InfobaseId); err != nil {
 		return err
 	}
@@ -151,11 +151,11 @@ func (x *GetConnectionLocksRequest) Parse(reader io.Reader, version int32) error
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.ConnectionId opts: encoder:"uuid"  order:2
+	// decode x.ConnectionId opts: encoder:"uuid" order:2
 	if err := codec256.ParseUUID(reader, &x.ConnectionId); err != nil {
 		return err
 	}
@@ -165,11 +165,11 @@ func (x *GetConnectionLocksRequest) Formatter(writer io.Writer, version int32) e
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.ConnectionId opts: encoder:"uuid"  order:2
+	// decode x.ConnectionId opts: encoder:"uuid" order:2
 	if err := codec256.FormatUuid(writer, x.ConnectionId); err != nil {
 		return err
 	}
@@ -221,15 +221,15 @@ func (x *GetSessionLocksRequest) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.InfobaseId opts: encoder:"uuid"  order:2
+	// decode x.InfobaseId opts: encoder:"uuid" order:2
 	if err := codec256.ParseUUID(reader, &x.InfobaseId); err != nil {
 		return err
 	}
-	// decode x.SessionId opts: encoder:"uuid"  order:3
+	// decode x.SessionId opts: encoder:"uuid" order:3
 	if err := codec256.ParseUUID(reader, &x.SessionId); err != nil {
 		return err
 	}
@@ -239,15 +239,15 @@ func (x *GetSessionLocksRequest) Formatter(writer io.Writer, version int32) erro
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.InfobaseId opts: encoder:"uuid"  order:2
+	// decode x.InfobaseId opts: encoder:"uuid" order:2
 	if err := codec256.FormatUuid(writer, x.InfobaseId); err != nil {
 		return err
 	}
-	// decode x.SessionId opts: encoder:"uuid"  order:3
+	// decode x.SessionId opts: encoder:"uuid" order:3
 	if err := codec256.FormatUuid(writer, x.SessionId); err != nil {
 		return err
 	}

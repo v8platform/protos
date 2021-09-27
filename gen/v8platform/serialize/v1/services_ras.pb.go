@@ -26,7 +26,7 @@ func (x *ServiceInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseInt(reader, &x.MainOnly); err != nil {
 		return err
 	}
-	// decode x.Managers opts: encoder:"uuid"  order:4
+	// decode x.Managers opts: encoder:"uuid" order:4
 	var size_Managers int
 	if err := codec256.ParseSize(reader, &size_Managers); err != nil {
 		return err
@@ -56,7 +56,7 @@ func (x *ServiceInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatInt(writer, x.MainOnly); err != nil {
 		return err
 	}
-	// decode x.Managers opts: encoder:"uuid"  order:4
+	// decode x.Managers opts: encoder:"uuid" order:4
 	if err := codec256.FormatSize(writer, len(x.Managers)); err != nil {
 		return err
 	}

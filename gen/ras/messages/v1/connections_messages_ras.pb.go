@@ -19,7 +19,7 @@ func (x *GetConnectionsRequest) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (x *GetConnectionsRequest) Formatter(writer io.Writer, version int32) error
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
@@ -81,11 +81,11 @@ func (x *GetInfobaseConnectionsRequest) Parse(reader io.Reader, version int32) e
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.InfobaseId opts: encoder:"uuid"  order:2
+	// decode x.InfobaseId opts: encoder:"uuid" order:2
 	if err := codec256.ParseUUID(reader, &x.InfobaseId); err != nil {
 		return err
 	}
@@ -95,11 +95,11 @@ func (x *GetInfobaseConnectionsRequest) Formatter(writer io.Writer, version int3
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.InfobaseId opts: encoder:"uuid"  order:2
+	// decode x.InfobaseId opts: encoder:"uuid" order:2
 	if err := codec256.FormatUuid(writer, x.InfobaseId); err != nil {
 		return err
 	}
@@ -151,15 +151,15 @@ func (x *DisconnectConnectionRequest) Parse(reader io.Reader, version int32) err
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.ProcessId opts: encoder:"uuid"  order:2
+	// decode x.ProcessId opts: encoder:"uuid" order:2
 	if err := codec256.ParseUUID(reader, &x.ProcessId); err != nil {
 		return err
 	}
-	// decode x.ConnectionId opts: encoder:"uuid"  order:3
+	// decode x.ConnectionId opts: encoder:"uuid" order:3
 	if err := codec256.ParseUUID(reader, &x.ConnectionId); err != nil {
 		return err
 	}
@@ -169,15 +169,15 @@ func (x *DisconnectConnectionRequest) Formatter(writer io.Writer, version int32)
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.ProcessId opts: encoder:"uuid"  order:2
+	// decode x.ProcessId opts: encoder:"uuid" order:2
 	if err := codec256.FormatUuid(writer, x.ProcessId); err != nil {
 		return err
 	}
-	// decode x.ConnectionId opts: encoder:"uuid"  order:3
+	// decode x.ConnectionId opts: encoder:"uuid" order:3
 	if err := codec256.FormatUuid(writer, x.ConnectionId); err != nil {
 		return err
 	}

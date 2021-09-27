@@ -9,7 +9,6 @@ import (
 	context "context"
 	v1 "github.com/v8platform/protos/gen/ras/protocol/v1"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"
-	io "io"
 	regexp "regexp"
 	strings "strings"
 )
@@ -23,14 +22,18 @@ type ClientService interface {
 	EndpointMessage(ctx context.Context, req *v1.EndpointMessage, opts ...interface{}) (*v1.EndpointMessage, error)
 }
 
-type Request func(ctx context.Context, handler RequestHandler, opts ...interface{}) error
-
-type RequestHandler func(ctx context.Context, rw io.ReadWriter) error
+type Channel interface {
+	SendMsg(ctx context.Context, msg interface{}, opts ...interface{}) error
+	RecvMsg(ctx context.Context, msg interface{}, opts ...interface{}) error
+}
 
 type Client interface {
-	Request(ctx context.Context, handler RequestHandler, opts ...interface{}) error
-	GetEndpoint(ctx context.Context) (Endpoint, error)
+	Invoke(ctx context.Context, needEndpoint bool, req interface{}, handler InvokeHandler, opts ...interface{}) (interface{}, error)
 }
+
+type InvokeHandler func(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error)
+type Interceptor func(ctx context.Context, channel Channel, endpoint Endpoint, info *RequestInfo, req interface{}, handler InterceptorHandler) (interface{}, error)
+type InterceptorHandler func(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}) (interface{}, error)
 
 type Endpoint interface {
 	GetVersion() int32
@@ -46,6 +49,11 @@ func NewClientService(client Client) ClientService {
 // ClientService is the client for RAS service.
 type clientService struct {
 	cc Client
+}
+
+type RequestInfo struct {
+	Method     string
+	FullMethod string
 }
 
 var serviceVersions = []string{"3.0", "4.0", "5.0", "6.0", "7.0", "8.0", "9.0", "10.0"}
@@ -82,79 +90,157 @@ func DetectSupportedVersion(err error) string {
 }
 
 func (x clientService) Negotiate(ctx context.Context, req *v1.NegotiateMessage, opts ...interface{}) (*emptypb.Empty, error) {
-	return NegotiateHandler(ctx, x.cc.Request, req, opts...)
-}
-
-func NegotiateHandler(ctx context.Context, cc Request, req *v1.NegotiateMessage, opts ...interface{}) (*emptypb.Empty, error) {
-
-	resp := new(emptypb.Empty)
-	if err := cc(ctx, v1.PacketRequestHandler(req, nil), opts...); err != nil {
+	reply, err := x.cc.Invoke(ctx, false, req, NegotiateHandler, opts...)
+	if err != nil {
 		return nil, err
 	}
-	return resp, nil
+	return reply.(*emptypb.Empty), nil
+}
+
+func NegotiateHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
+
+	if interceptor == nil {
+		reply := new(emptypb.Empty)
+		return reply, v1.PacketChannelRequest(ctx, channel, req.(*v1.NegotiateMessage), nil)
+	}
+	info := &RequestInfo{
+		Method:     "Negotiate",
+		FullMethod: "/ras.client.v1.ClientService/Negotiate",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(emptypb.Empty)
+		return reply, v1.PacketChannelRequest(ctx, cc, req.(*v1.NegotiateMessage), nil)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x clientService) Connect(ctx context.Context, req *v1.ConnectMessage, opts ...interface{}) (*v1.ConnectMessageAck, error) {
-	return ConnectHandler(ctx, x.cc.Request, req, opts...)
-}
-
-func ConnectHandler(ctx context.Context, cc Request, req *v1.ConnectMessage, opts ...interface{}) (*v1.ConnectMessageAck, error) {
-
-	resp := new(v1.ConnectMessageAck)
-	if err := cc(ctx, v1.PacketRequestHandler(req, resp), opts...); err != nil {
+	reply, err := x.cc.Invoke(ctx, false, req, ConnectHandler, opts...)
+	if err != nil {
 		return nil, err
 	}
-	return resp, nil
+	return reply.(*v1.ConnectMessageAck), nil
+}
+
+func ConnectHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
+
+	if interceptor == nil {
+		reply := new(v1.ConnectMessageAck)
+		return reply, v1.PacketChannelRequest(ctx, channel, req.(*v1.ConnectMessage), reply)
+	}
+	info := &RequestInfo{
+		Method:     "Connect",
+		FullMethod: "/ras.client.v1.ClientService/Connect",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.ConnectMessageAck)
+		return reply, v1.PacketChannelRequest(ctx, cc, req.(*v1.ConnectMessage), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x clientService) Disconnect(ctx context.Context, req *v1.DisconnectMessage, opts ...interface{}) (*emptypb.Empty, error) {
-	return DisconnectHandler(ctx, x.cc.Request, req, opts...)
-}
-
-func DisconnectHandler(ctx context.Context, cc Request, req *v1.DisconnectMessage, opts ...interface{}) (*emptypb.Empty, error) {
-
-	resp := new(emptypb.Empty)
-	if err := cc(ctx, v1.PacketRequestHandler(req, nil), opts...); err != nil {
+	reply, err := x.cc.Invoke(ctx, false, req, DisconnectHandler, opts...)
+	if err != nil {
 		return nil, err
 	}
-	return resp, nil
+	return reply.(*emptypb.Empty), nil
+}
+
+func DisconnectHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
+
+	if interceptor == nil {
+		reply := new(emptypb.Empty)
+		return reply, v1.PacketChannelRequest(ctx, channel, req.(*v1.DisconnectMessage), nil)
+	}
+	info := &RequestInfo{
+		Method:     "Disconnect",
+		FullMethod: "/ras.client.v1.ClientService/Disconnect",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(emptypb.Empty)
+		return reply, v1.PacketChannelRequest(ctx, cc, req.(*v1.DisconnectMessage), nil)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x clientService) EndpointOpen(ctx context.Context, req *v1.EndpointOpen, opts ...interface{}) (*v1.EndpointOpenAck, error) {
-	return EndpointOpenHandler(ctx, x.cc.Request, req, opts...)
-}
-
-func EndpointOpenHandler(ctx context.Context, cc Request, req *v1.EndpointOpen, opts ...interface{}) (*v1.EndpointOpenAck, error) {
-
-	resp := new(v1.EndpointOpenAck)
-	if err := cc(ctx, v1.PacketRequestHandler(req, resp), opts...); err != nil {
+	reply, err := x.cc.Invoke(ctx, false, req, EndpointOpenHandler, opts...)
+	if err != nil {
 		return nil, err
 	}
-	return resp, nil
+	return reply.(*v1.EndpointOpenAck), nil
+}
+
+func EndpointOpenHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
+
+	if interceptor == nil {
+		reply := new(v1.EndpointOpenAck)
+		return reply, v1.PacketChannelRequest(ctx, channel, req.(*v1.EndpointOpen), reply)
+	}
+	info := &RequestInfo{
+		Method:     "EndpointOpen",
+		FullMethod: "/ras.client.v1.ClientService/EndpointOpen",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.EndpointOpenAck)
+		return reply, v1.PacketChannelRequest(ctx, cc, req.(*v1.EndpointOpen), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x clientService) EndpointClose(ctx context.Context, req *v1.EndpointClose, opts ...interface{}) (*emptypb.Empty, error) {
-	return EndpointCloseHandler(ctx, x.cc.Request, req, opts...)
-}
-
-func EndpointCloseHandler(ctx context.Context, cc Request, req *v1.EndpointClose, opts ...interface{}) (*emptypb.Empty, error) {
-
-	resp := new(emptypb.Empty)
-	if err := cc(ctx, v1.PacketRequestHandler(req, nil), opts...); err != nil {
+	reply, err := x.cc.Invoke(ctx, false, req, EndpointCloseHandler, opts...)
+	if err != nil {
 		return nil, err
 	}
-	return resp, nil
+	return reply.(*emptypb.Empty), nil
+}
+
+func EndpointCloseHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
+
+	if interceptor == nil {
+		reply := new(emptypb.Empty)
+		return reply, v1.PacketChannelRequest(ctx, channel, req.(*v1.EndpointClose), nil)
+	}
+	info := &RequestInfo{
+		Method:     "EndpointClose",
+		FullMethod: "/ras.client.v1.ClientService/EndpointClose",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(emptypb.Empty)
+		return reply, v1.PacketChannelRequest(ctx, cc, req.(*v1.EndpointClose), nil)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x clientService) EndpointMessage(ctx context.Context, req *v1.EndpointMessage, opts ...interface{}) (*v1.EndpointMessage, error) {
-	return EndpointMessageHandler(ctx, x.cc.Request, req, opts...)
-}
-
-func EndpointMessageHandler(ctx context.Context, cc Request, req *v1.EndpointMessage, opts ...interface{}) (*v1.EndpointMessage, error) {
-
-	resp := new(v1.EndpointMessage)
-	if err := cc(ctx, v1.PacketRequestHandler(req, resp), opts...); err != nil {
+	reply, err := x.cc.Invoke(ctx, false, req, EndpointMessageHandler, opts...)
+	if err != nil {
 		return nil, err
 	}
-	return resp, nil
+	return reply.(*v1.EndpointMessage), nil
+}
+
+func EndpointMessageHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
+
+	if interceptor == nil {
+		reply := new(v1.EndpointMessage)
+		return reply, v1.PacketChannelRequest(ctx, channel, req.(*v1.EndpointMessage), reply)
+	}
+	info := &RequestInfo{
+		Method:     "EndpointMessage",
+		FullMethod: "/ras.client.v1.ClientService/EndpointMessage",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.EndpointMessage)
+		return reply, v1.PacketChannelRequest(ctx, cc, req.(*v1.EndpointMessage), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }

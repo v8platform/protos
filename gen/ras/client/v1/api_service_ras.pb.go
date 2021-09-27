@@ -40,223 +40,332 @@ type clustersService struct {
 
 func (x *clustersService) GetClusters(ctx context.Context, req *v1.GetClustersRequest, opts ...interface{}) (*v1.GetClustersResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetClustersHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetClustersHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetClustersResponse), nil
 }
 
-func GetClustersHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetClustersRequest, opts ...interface{}) (*v1.GetClustersResponse, error) {
+func GetClustersHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetClustersResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetClustersResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetClustersRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetClusters",
+		FullMethod: "/ras.client.v1.ClustersService/GetClusters",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetClustersResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetClustersRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *clustersService) GetClusterInfo(ctx context.Context, req *v1.GetClusterInfoRequest, opts ...interface{}) (*v1.GetClusterInfoResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetClusterInfoHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetClusterInfoHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetClusterInfoResponse), nil
 }
 
-func GetClusterInfoHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetClusterInfoRequest, opts ...interface{}) (*v1.GetClusterInfoResponse, error) {
+func GetClusterInfoHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetClusterInfoResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetClusterInfoResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetClusterInfoRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetClusterInfo",
+		FullMethod: "/ras.client.v1.ClustersService/GetClusterInfo",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetClusterInfoResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetClusterInfoRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *clustersService) RegCluster(ctx context.Context, req *v1.RegClusterRequest, opts ...interface{}) (*v1.RegClusterResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, RegClusterHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return RegClusterHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.RegClusterResponse), nil
 }
 
-func RegClusterHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.RegClusterRequest, opts ...interface{}) (*v1.RegClusterResponse, error) {
+func RegClusterHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.RegClusterResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.RegClusterResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.RegClusterRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "RegCluster",
+		FullMethod: "/ras.client.v1.ClustersService/RegCluster",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.RegClusterResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.RegClusterRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *clustersService) UnregCluster(ctx context.Context, req *v1.UnregClusterRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, UnregClusterHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return UnregClusterHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*emptypb.Empty), nil
 }
 
-func UnregClusterHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.UnregClusterRequest, opts ...interface{}) (*emptypb.Empty, error) {
+func UnregClusterHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(emptypb.Empty)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.UnregClusterRequest), nil)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "UnregCluster",
+		FullMethod: "/ras.client.v1.ClustersService/UnregCluster",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.UnregClusterRequest), nil)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *clustersService) GetManagers(ctx context.Context, req *v1.GetClusterManagersRequest, opts ...interface{}) (*v1.GetClusterManagersResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetManagersHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetManagersHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetClusterManagersResponse), nil
 }
 
-func GetManagersHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetClusterManagersRequest, opts ...interface{}) (*v1.GetClusterManagersResponse, error) {
+func GetManagersHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetClusterManagersResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetClusterManagersResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetClusterManagersRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetManagers",
+		FullMethod: "/ras.client.v1.ClustersService/GetManagers",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetClusterManagersResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetClusterManagersRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *clustersService) GetManagerInfo(ctx context.Context, req *v1.GetClusterManagerInfoRequest, opts ...interface{}) (*v1.GetClusterManagerInfoResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetManagerInfoHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetManagerInfoHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetClusterManagerInfoResponse), nil
 }
 
-func GetManagerInfoHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetClusterManagerInfoRequest, opts ...interface{}) (*v1.GetClusterManagerInfoResponse, error) {
+func GetManagerInfoHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetClusterManagerInfoResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetClusterManagerInfoResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetClusterManagerInfoRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetManagerInfo",
+		FullMethod: "/ras.client.v1.ClustersService/GetManagerInfo",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetClusterManagerInfoResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetClusterManagerInfoRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *clustersService) GetWorkingProcesses(ctx context.Context, req *v1.GetWorkingProcessesRequest, opts ...interface{}) (*v1.GetWorkingProcessesResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetWorkingProcessesHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetWorkingProcessesHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetWorkingProcessesResponse), nil
 }
 
-func GetWorkingProcessesHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetWorkingProcessesRequest, opts ...interface{}) (*v1.GetWorkingProcessesResponse, error) {
+func GetWorkingProcessesHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetWorkingProcessesResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetWorkingProcessesResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetWorkingProcessesRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetWorkingProcesses",
+		FullMethod: "/ras.client.v1.ClustersService/GetWorkingProcesses",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetWorkingProcessesResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetWorkingProcessesRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *clustersService) GetWorkingProcessInfo(ctx context.Context, req *v1.GetWorkingProcessInfoRequest, opts ...interface{}) (*v1.GetWorkingProcessInfoResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetWorkingProcessInfoHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetWorkingProcessInfoHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetWorkingProcessInfoResponse), nil
 }
 
-func GetWorkingProcessInfoHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetWorkingProcessInfoRequest, opts ...interface{}) (*v1.GetWorkingProcessInfoResponse, error) {
+func GetWorkingProcessInfoHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetWorkingProcessInfoResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetWorkingProcessInfoResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetWorkingProcessInfoRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetWorkingProcessInfo",
+		FullMethod: "/ras.client.v1.ClustersService/GetWorkingProcessInfo",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetWorkingProcessInfoResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetWorkingProcessInfoRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *clustersService) GetWorkingServers(ctx context.Context, req *v1.GetWorkingServersRequest, opts ...interface{}) (*v1.GetWorkingServersResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetWorkingServersHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetWorkingServersHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetWorkingServersResponse), nil
 }
 
-func GetWorkingServersHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetWorkingServersRequest, opts ...interface{}) (*v1.GetWorkingServersResponse, error) {
+func GetWorkingServersHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetWorkingServersResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetWorkingServersResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetWorkingServersRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetWorkingServers",
+		FullMethod: "/ras.client.v1.ClustersService/GetWorkingServers",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetWorkingServersResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetWorkingServersRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *clustersService) GetWorkingServerInfo(ctx context.Context, req *v1.GetWorkingServerInfoRequest, opts ...interface{}) (*v1.GetWorkingServerInfoResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetWorkingServerInfoHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetWorkingServerInfoHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetWorkingServerInfoResponse), nil
 }
 
-func GetWorkingServerInfoHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetWorkingServerInfoRequest, opts ...interface{}) (*v1.GetWorkingServerInfoResponse, error) {
+func GetWorkingServerInfoHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetWorkingServerInfoResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetWorkingServerInfoResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetWorkingServerInfoRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetWorkingServerInfo",
+		FullMethod: "/ras.client.v1.ClustersService/GetWorkingServerInfo",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetWorkingServerInfoResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetWorkingServerInfoRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *clustersService) AddWorkingServer(ctx context.Context, req *v1.AddWorkingServerRequest, opts ...interface{}) (*v1.AddWorkingServerResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, AddWorkingServerHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return AddWorkingServerHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.AddWorkingServerResponse), nil
 }
 
-func AddWorkingServerHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.AddWorkingServerRequest, opts ...interface{}) (*v1.AddWorkingServerResponse, error) {
+func AddWorkingServerHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.AddWorkingServerResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.AddWorkingServerResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.AddWorkingServerRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "AddWorkingServer",
+		FullMethod: "/ras.client.v1.ClustersService/AddWorkingServer",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.AddWorkingServerResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.AddWorkingServerRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *clustersService) DeleteWorkingServer(ctx context.Context, req *v1.DeleteWorkingServerRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, DeleteWorkingServerHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return DeleteWorkingServerHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*emptypb.Empty), nil
 }
 
-func DeleteWorkingServerHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.DeleteWorkingServerRequest, opts ...interface{}) (*emptypb.Empty, error) {
+func DeleteWorkingServerHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(emptypb.Empty)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.DeleteWorkingServerRequest), nil)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "DeleteWorkingServer",
+		FullMethod: "/ras.client.v1.ClustersService/DeleteWorkingServer",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.DeleteWorkingServerRequest), nil)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 type InfobasesService interface {
 	GetInfobasesSummary(ctx context.Context, req *v1.GetInfobasesSummaryRequest, opts ...interface{}) (*v1.GetInfobasesSummaryResponse, error)
 	GetInfobases(ctx context.Context, req *v1.GetInfobasesRequest, opts ...interface{}) (*v1.GetInfobasesResponse, error)
+	GetInfobase(ctx context.Context, req *v1.GetInfobaseInfoRequest, opts ...interface{}) (*v1.GetInfobaseInfoResponse, error)
 	CreateInfobase(ctx context.Context, req *v1.CreateInfobaseRequest, opts ...interface{}) (*v1.CreateInfobaseResponse, error)
 	DropInfobase(ctx context.Context, req *v1.DropInfobaseRequest, opts ...interface{}) (*emptypb.Empty, error)
 	UpdateInfobase(ctx context.Context, req *v1.UpdateInfobaseRequest, opts ...interface{}) (*emptypb.Empty, error)
@@ -276,110 +385,191 @@ type infobasesService struct {
 
 func (x *infobasesService) GetInfobasesSummary(ctx context.Context, req *v1.GetInfobasesSummaryRequest, opts ...interface{}) (*v1.GetInfobasesSummaryResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetInfobasesSummaryHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetInfobasesSummaryHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetInfobasesSummaryResponse), nil
 }
 
-func GetInfobasesSummaryHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetInfobasesSummaryRequest, opts ...interface{}) (*v1.GetInfobasesSummaryResponse, error) {
+func GetInfobasesSummaryHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetInfobasesSummaryResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetInfobasesSummaryResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetInfobasesSummaryRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetInfobasesSummary",
+		FullMethod: "/ras.client.v1.InfobasesService/GetInfobasesSummary",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetInfobasesSummaryResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetInfobasesSummaryRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *infobasesService) GetInfobases(ctx context.Context, req *v1.GetInfobasesRequest, opts ...interface{}) (*v1.GetInfobasesResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetInfobasesHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetInfobasesHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetInfobasesResponse), nil
 }
 
-func GetInfobasesHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetInfobasesRequest, opts ...interface{}) (*v1.GetInfobasesResponse, error) {
+func GetInfobasesHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetInfobasesResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
+	if interceptor == nil {
+		reply := new(v1.GetInfobasesResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetInfobasesRequest), reply)
+	}
+	info := &RequestInfo{
+		Method:     "GetInfobases",
+		FullMethod: "/ras.client.v1.InfobasesService/GetInfobases",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetInfobasesResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetInfobasesRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
+}
+
+func (x *infobasesService) GetInfobase(ctx context.Context, req *v1.GetInfobaseInfoRequest, opts ...interface{}) (*v1.GetInfobaseInfoResponse, error) {
+
+	reply, err := x.cc.Invoke(ctx, true, req, GetInfobaseHandler, opts...)
+	if err != nil {
 		return nil, err
 	}
-	return resp, nil
+	return reply.(*v1.GetInfobaseInfoResponse), nil
+}
+
+func GetInfobaseHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
+
+	if interceptor == nil {
+		reply := new(v1.GetInfobaseInfoResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetInfobaseInfoRequest), reply)
+	}
+	info := &RequestInfo{
+		Method:     "GetInfobase",
+		FullMethod: "/ras.client.v1.InfobasesService/GetInfobase",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetInfobaseInfoResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetInfobaseInfoRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *infobasesService) CreateInfobase(ctx context.Context, req *v1.CreateInfobaseRequest, opts ...interface{}) (*v1.CreateInfobaseResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, CreateInfobaseHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return CreateInfobaseHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.CreateInfobaseResponse), nil
 }
 
-func CreateInfobaseHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.CreateInfobaseRequest, opts ...interface{}) (*v1.CreateInfobaseResponse, error) {
+func CreateInfobaseHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.CreateInfobaseResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.CreateInfobaseResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.CreateInfobaseRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "CreateInfobase",
+		FullMethod: "/ras.client.v1.InfobasesService/CreateInfobase",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.CreateInfobaseResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.CreateInfobaseRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *infobasesService) DropInfobase(ctx context.Context, req *v1.DropInfobaseRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, DropInfobaseHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return DropInfobaseHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*emptypb.Empty), nil
 }
 
-func DropInfobaseHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.DropInfobaseRequest, opts ...interface{}) (*emptypb.Empty, error) {
+func DropInfobaseHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(emptypb.Empty)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.DropInfobaseRequest), nil)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "DropInfobase",
+		FullMethod: "/ras.client.v1.InfobasesService/DropInfobase",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.DropInfobaseRequest), nil)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *infobasesService) UpdateInfobase(ctx context.Context, req *v1.UpdateInfobaseRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, UpdateInfobaseHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return UpdateInfobaseHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*emptypb.Empty), nil
 }
 
-func UpdateInfobaseHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.UpdateInfobaseRequest, opts ...interface{}) (*emptypb.Empty, error) {
+func UpdateInfobaseHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(emptypb.Empty)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.UpdateInfobaseRequest), nil)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "UpdateInfobase",
+		FullMethod: "/ras.client.v1.InfobasesService/UpdateInfobase",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.UpdateInfobaseRequest), nil)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *infobasesService) UpdateInfobaseSummary(ctx context.Context, req *v1.UpdateInfobaseSummaryRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, UpdateInfobaseSummaryHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return UpdateInfobaseSummaryHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*emptypb.Empty), nil
 }
 
-func UpdateInfobaseSummaryHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.UpdateInfobaseSummaryRequest, opts ...interface{}) (*emptypb.Empty, error) {
+func UpdateInfobaseSummaryHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(emptypb.Empty)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.UpdateInfobaseSummaryRequest), nil)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "UpdateInfobaseSummary",
+		FullMethod: "/ras.client.v1.InfobasesService/UpdateInfobaseSummary",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.UpdateInfobaseSummaryRequest), nil)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 type SessionsService interface {
@@ -402,74 +592,110 @@ type sessionsService struct {
 
 func (x *sessionsService) GetSessions(ctx context.Context, req *v1.GetSessionsRequest, opts ...interface{}) (*v1.GetSessionsResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetSessionsHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetSessionsHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetSessionsResponse), nil
 }
 
-func GetSessionsHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetSessionsRequest, opts ...interface{}) (*v1.GetSessionsResponse, error) {
+func GetSessionsHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetSessionsResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetSessionsResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetSessionsRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetSessions",
+		FullMethod: "/ras.client.v1.SessionsService/GetSessions",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetSessionsResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetSessionsRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *sessionsService) GetInfobaseSessions(ctx context.Context, req *v1.GetInfobaseSessionsRequest, opts ...interface{}) (*v1.GetInfobaseSessionsResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetInfobaseSessionsHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetInfobaseSessionsHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetInfobaseSessionsResponse), nil
 }
 
-func GetInfobaseSessionsHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetInfobaseSessionsRequest, opts ...interface{}) (*v1.GetInfobaseSessionsResponse, error) {
+func GetInfobaseSessionsHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetInfobaseSessionsResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetInfobaseSessionsResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetInfobaseSessionsRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetInfobaseSessions",
+		FullMethod: "/ras.client.v1.SessionsService/GetInfobaseSessions",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetInfobaseSessionsResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetInfobaseSessionsRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *sessionsService) GetSessionInfo(ctx context.Context, req *v1.GetSessionInfoRequest, opts ...interface{}) (*v1.GetSessionInfoResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetSessionInfoHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetSessionInfoHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetSessionInfoResponse), nil
 }
 
-func GetSessionInfoHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetSessionInfoRequest, opts ...interface{}) (*v1.GetSessionInfoResponse, error) {
+func GetSessionInfoHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetSessionInfoResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetSessionInfoResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetSessionInfoRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetSessionInfo",
+		FullMethod: "/ras.client.v1.SessionsService/GetSessionInfo",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetSessionInfoResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetSessionInfoRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *sessionsService) TerminateSession(ctx context.Context, req *v1.TerminateSessionRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, TerminateSessionHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return TerminateSessionHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*emptypb.Empty), nil
 }
 
-func TerminateSessionHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.TerminateSessionRequest, opts ...interface{}) (*emptypb.Empty, error) {
+func TerminateSessionHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(emptypb.Empty)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.TerminateSessionRequest), nil)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "TerminateSession",
+		FullMethod: "/ras.client.v1.SessionsService/TerminateSession",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.TerminateSessionRequest), nil)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 type LocksService interface {
@@ -492,74 +718,110 @@ type locksService struct {
 
 func (x *locksService) GetLocks(ctx context.Context, req *v1.GetLocksRequest, opts ...interface{}) (*v1.GetLocksResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetLocksHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetLocksHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetLocksResponse), nil
 }
 
-func GetLocksHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetLocksRequest, opts ...interface{}) (*v1.GetLocksResponse, error) {
+func GetLocksHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetLocksResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetLocksResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetLocksRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetLocks",
+		FullMethod: "/ras.client.v1.LocksService/GetLocks",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetLocksResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetLocksRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *locksService) GetInfobaseLocks(ctx context.Context, req *v1.GetInfobaseLocksRequest, opts ...interface{}) (*v1.GetInfobaseLocksResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetInfobaseLocksHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetInfobaseLocksHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetInfobaseLocksResponse), nil
 }
 
-func GetInfobaseLocksHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetInfobaseLocksRequest, opts ...interface{}) (*v1.GetInfobaseLocksResponse, error) {
+func GetInfobaseLocksHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetInfobaseLocksResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetInfobaseLocksResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetInfobaseLocksRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetInfobaseLocks",
+		FullMethod: "/ras.client.v1.LocksService/GetInfobaseLocks",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetInfobaseLocksResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetInfobaseLocksRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *locksService) GetConnectionLocks(ctx context.Context, req *v1.GetConnectionLocksRequest, opts ...interface{}) (*v1.GetConnectionLocksResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetConnectionLocksHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetConnectionLocksHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetConnectionLocksResponse), nil
 }
 
-func GetConnectionLocksHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetConnectionLocksRequest, opts ...interface{}) (*v1.GetConnectionLocksResponse, error) {
+func GetConnectionLocksHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetConnectionLocksResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetConnectionLocksResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetConnectionLocksRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetConnectionLocks",
+		FullMethod: "/ras.client.v1.LocksService/GetConnectionLocks",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetConnectionLocksResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetConnectionLocksRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *locksService) GetSessionLocks(ctx context.Context, req *v1.GetSessionLocksRequest, opts ...interface{}) (*v1.GetSessionLocksResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetSessionLocksHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetSessionLocksHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetSessionLocksResponse), nil
 }
 
-func GetSessionLocksHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetSessionLocksRequest, opts ...interface{}) (*v1.GetSessionLocksResponse, error) {
+func GetSessionLocksHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetSessionLocksResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetSessionLocksResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetSessionLocksRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetSessionLocks",
+		FullMethod: "/ras.client.v1.LocksService/GetSessionLocks",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetSessionLocksResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetSessionLocksRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 type ConnectionsService interface {
@@ -581,56 +843,83 @@ type connectionsService struct {
 
 func (x *connectionsService) GetConnections(ctx context.Context, req *v1.GetConnectionsRequest, opts ...interface{}) (*v1.GetConnectionsResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetConnectionsHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetConnectionsHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetConnectionsResponse), nil
 }
 
-func GetConnectionsHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetConnectionsRequest, opts ...interface{}) (*v1.GetConnectionsResponse, error) {
+func GetConnectionsHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetConnectionsResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetConnectionsResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetConnectionsRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetConnections",
+		FullMethod: "/ras.client.v1.ConnectionsService/GetConnections",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetConnectionsResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetConnectionsRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *connectionsService) GetInfobaseConnections(ctx context.Context, req *v1.GetInfobaseConnectionsRequest, opts ...interface{}) (*v1.GetInfobaseConnectionsResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetInfobaseConnectionsHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetInfobaseConnectionsHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetInfobaseConnectionsResponse), nil
 }
 
-func GetInfobaseConnectionsHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetInfobaseConnectionsRequest, opts ...interface{}) (*v1.GetInfobaseConnectionsResponse, error) {
+func GetInfobaseConnectionsHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetInfobaseConnectionsResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetInfobaseConnectionsResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetInfobaseConnectionsRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetInfobaseConnections",
+		FullMethod: "/ras.client.v1.ConnectionsService/GetInfobaseConnections",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetInfobaseConnectionsResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetInfobaseConnectionsRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *connectionsService) DisconnectConnection(ctx context.Context, req *v1.DisconnectConnectionRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, DisconnectConnectionHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return DisconnectConnectionHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*emptypb.Empty), nil
 }
 
-func DisconnectConnectionHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.DisconnectConnectionRequest, opts ...interface{}) (*emptypb.Empty, error) {
+func DisconnectConnectionHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(emptypb.Empty)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.DisconnectConnectionRequest), nil)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "DisconnectConnection",
+		FullMethod: "/ras.client.v1.ConnectionsService/DisconnectConnection",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.DisconnectConnectionRequest), nil)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 type AuthService interface {
@@ -652,56 +941,83 @@ type authService struct {
 
 func (x *authService) AuthenticateCluster(ctx context.Context, req *v1.ClusterAuthenticateRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, AuthenticateClusterHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return AuthenticateClusterHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*emptypb.Empty), nil
 }
 
-func AuthenticateClusterHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.ClusterAuthenticateRequest, opts ...interface{}) (*emptypb.Empty, error) {
+func AuthenticateClusterHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(emptypb.Empty)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.ClusterAuthenticateRequest), nil)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "AuthenticateCluster",
+		FullMethod: "/ras.client.v1.AuthService/AuthenticateCluster",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.ClusterAuthenticateRequest), nil)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *authService) AuthenticateInfobase(ctx context.Context, req *v1.AuthenticateInfobaseRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, AuthenticateInfobaseHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return AuthenticateInfobaseHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*emptypb.Empty), nil
 }
 
-func AuthenticateInfobaseHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.AuthenticateInfobaseRequest, opts ...interface{}) (*emptypb.Empty, error) {
+func AuthenticateInfobaseHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(emptypb.Empty)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.AuthenticateInfobaseRequest), nil)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "AuthenticateInfobase",
+		FullMethod: "/ras.client.v1.AuthService/AuthenticateInfobase",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.AuthenticateInfobaseRequest), nil)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *authService) AuthenticateServer(ctx context.Context, req *v1.ServerAuthenticateRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, AuthenticateServerHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return AuthenticateServerHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*emptypb.Empty), nil
 }
 
-func AuthenticateServerHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.ServerAuthenticateRequest, opts ...interface{}) (*emptypb.Empty, error) {
+func AuthenticateServerHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(emptypb.Empty)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.ServerAuthenticateRequest), nil)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "AuthenticateServer",
+		FullMethod: "/ras.client.v1.AuthService/AuthenticateServer",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.ServerAuthenticateRequest), nil)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 type AdminService interface {
@@ -727,126 +1043,189 @@ type adminService struct {
 
 func (x *adminService) GetVersion(ctx context.Context, req *v1.GetAgentVersionRequest, opts ...interface{}) (*v1.GetAgentVersionResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetVersionHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetVersionHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetAgentVersionResponse), nil
 }
 
-func GetVersionHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetAgentVersionRequest, opts ...interface{}) (*v1.GetAgentVersionResponse, error) {
+func GetVersionHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetAgentVersionResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetAgentVersionResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetAgentVersionRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetVersion",
+		FullMethod: "/ras.client.v1.AdminService/GetVersion",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetAgentVersionResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetAgentVersionRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *adminService) GetServerAdmins(ctx context.Context, req *v1.GetAgentAdminsRequest, opts ...interface{}) (*v1.GetAgentAdminsResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetServerAdminsHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetServerAdminsHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetAgentAdminsResponse), nil
 }
 
-func GetServerAdminsHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetAgentAdminsRequest, opts ...interface{}) (*v1.GetAgentAdminsResponse, error) {
+func GetServerAdminsHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetAgentAdminsResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetAgentAdminsResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetAgentAdminsRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetServerAdmins",
+		FullMethod: "/ras.client.v1.AdminService/GetServerAdmins",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetAgentAdminsResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetAgentAdminsRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *adminService) GetClustersAdmins(ctx context.Context, req *v1.GetClusterAdminsRequest, opts ...interface{}) (*v1.GetClusterAdminsResponse, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, GetClustersAdminsHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return GetClustersAdminsHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*v1.GetClusterAdminsResponse), nil
 }
 
-func GetClustersAdminsHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.GetClusterAdminsRequest, opts ...interface{}) (*v1.GetClusterAdminsResponse, error) {
+func GetClustersAdminsHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(v1.GetClusterAdminsResponse)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, resp), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(v1.GetClusterAdminsResponse)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.GetClusterAdminsRequest), reply)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "GetClustersAdmins",
+		FullMethod: "/ras.client.v1.AdminService/GetClustersAdmins",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(v1.GetClusterAdminsResponse)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.GetClusterAdminsRequest), reply)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *adminService) CreateServerAdmin(ctx context.Context, req *v1.CreateAgentAdminRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, CreateServerAdminHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return CreateServerAdminHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*emptypb.Empty), nil
 }
 
-func CreateServerAdminHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.CreateAgentAdminRequest, opts ...interface{}) (*emptypb.Empty, error) {
+func CreateServerAdminHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(emptypb.Empty)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.CreateAgentAdminRequest), nil)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "CreateServerAdmin",
+		FullMethod: "/ras.client.v1.AdminService/CreateServerAdmin",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.CreateAgentAdminRequest), nil)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *adminService) CreateClusterAdmin(ctx context.Context, req *v1.CreateClusterAdminRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, CreateClusterAdminHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return CreateClusterAdminHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*emptypb.Empty), nil
 }
 
-func CreateClusterAdminHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.CreateClusterAdminRequest, opts ...interface{}) (*emptypb.Empty, error) {
+func CreateClusterAdminHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(emptypb.Empty)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.CreateClusterAdminRequest), nil)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "CreateClusterAdmin",
+		FullMethod: "/ras.client.v1.AdminService/CreateClusterAdmin",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.CreateClusterAdminRequest), nil)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *adminService) DeleteServerAdmin(ctx context.Context, req *v1.DeleteAgentAdminRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, DeleteServerAdminHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return DeleteServerAdminHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*emptypb.Empty), nil
 }
 
-func DeleteServerAdminHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.DeleteAgentAdminRequest, opts ...interface{}) (*emptypb.Empty, error) {
+func DeleteServerAdminHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(emptypb.Empty)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.DeleteAgentAdminRequest), nil)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "DeleteServerAdmin",
+		FullMethod: "/ras.client.v1.AdminService/DeleteServerAdmin",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.DeleteAgentAdminRequest), nil)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }
 
 func (x *adminService) DeleteClusterAdmin(ctx context.Context, req *v1.DeleteClusterAdminRequest, opts ...interface{}) (*emptypb.Empty, error) {
 
-	endpoint, err := x.cc.GetEndpoint(ctx)
+	reply, err := x.cc.Invoke(ctx, true, req, DeleteClusterAdminHandler, opts...)
 	if err != nil {
 		return nil, err
 	}
-	return DeleteClusterAdminHandler(ctx, x.cc.Request, endpoint, req, opts...)
+	return reply.(*emptypb.Empty), nil
 }
 
-func DeleteClusterAdminHandler(ctx context.Context, cc Request, endpoint Endpoint, req *v1.DeleteClusterAdminRequest, opts ...interface{}) (*emptypb.Empty, error) {
+func DeleteClusterAdminHandler(ctx context.Context, channel Channel, endpoint Endpoint, req interface{}, interceptor Interceptor) (interface{}, error) {
 
-	resp := new(emptypb.Empty)
-	if err := cc(ctx, v11.EndpointRequestHandler(endpoint, req, nil), opts...); err != nil {
-		return nil, err
+	if interceptor == nil {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, channel, endpoint, req.(*v1.DeleteClusterAdminRequest), nil)
 	}
-	return resp, nil
+	info := &RequestInfo{
+		Method:     "DeleteClusterAdmin",
+		FullMethod: "/ras.client.v1.AdminService/DeleteClusterAdmin",
+	}
+
+	handler := func(ctx context.Context, cc Channel, endpoint Endpoint, req interface{}) (interface{}, error) {
+		reply := new(emptypb.Empty)
+		return reply, v11.EndpointChannelRequest(ctx, cc, endpoint, req.(*v1.DeleteClusterAdminRequest), nil)
+	}
+	return interceptor(ctx, channel, endpoint, info, req, handler)
 }

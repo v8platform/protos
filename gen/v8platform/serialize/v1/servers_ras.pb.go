@@ -14,7 +14,7 @@ func (x *ServerInfo) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Uuid opts: encoder:"uuid"  order:1
+	// decode x.Uuid opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.Uuid); err != nil {
 		return err
 	}
@@ -34,7 +34,7 @@ func (x *ServerInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseBool(reader, &x.MainServer); err != nil {
 		return err
 	}
-	// decode x.SafeWorkingProcessesMemoryLimit opts: encoder:"long"  order:6
+	// decode x.SafeWorkingProcessesMemoryLimit opts: encoder:"long" order:6
 	if err := codec256.ParseLong(reader, &x.SafeWorkingProcessesMemoryLimit); err != nil {
 		return err
 	}
@@ -76,15 +76,15 @@ func (x *ServerInfo) Parse(reader io.Reader, version int32) error {
 		x.PortRanges = append(x.PortRanges, val)
 	}
 	if version >= 8 {
-		// decode x.CriticalTotalMemory opts: order:14  version:8
+		// decode x.CriticalTotalMemory opts: order:14 version:8
 		if err := codec256.ParseLong(reader, &x.CriticalTotalMemory); err != nil {
 			return err
 		}
-		// decode x.TemporaryAllowedTotalMemory opts: order:15  version:8
+		// decode x.TemporaryAllowedTotalMemory opts: order:15 version:8
 		if err := codec256.ParseLong(reader, &x.TemporaryAllowedTotalMemory); err != nil {
 			return err
 		}
-		// decode x.TemporaryAllowedTotalMemoryTimeLimit opts: order:16  version:8
+		// decode x.TemporaryAllowedTotalMemoryTimeLimit opts: order:16 version:8
 		if err := codec256.ParseLong(reader, &x.TemporaryAllowedTotalMemoryTimeLimit); err != nil {
 			return err
 		}
@@ -95,7 +95,7 @@ func (x *ServerInfo) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Uuid opts: encoder:"uuid"  order:1
+	// decode x.Uuid opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.Uuid); err != nil {
 		return err
 	}
@@ -115,7 +115,7 @@ func (x *ServerInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatBool(writer, x.MainServer); err != nil {
 		return err
 	}
-	// decode x.SafeWorkingProcessesMemoryLimit opts: encoder:"long"  order:6
+	// decode x.SafeWorkingProcessesMemoryLimit opts: encoder:"long" order:6
 	if err := codec256.FormatLong(writer, x.SafeWorkingProcessesMemoryLimit); err != nil {
 		return err
 	}
@@ -153,15 +153,15 @@ func (x *ServerInfo) Formatter(writer io.Writer, version int32) error {
 		}
 	}
 	if version >= 8 {
-		// decode x.CriticalTotalMemory opts: order:14  version:8
+		// decode x.CriticalTotalMemory opts: order:14 version:8
 		if err := codec256.FormatLong(writer, x.CriticalTotalMemory); err != nil {
 			return err
 		}
-		// decode x.TemporaryAllowedTotalMemory opts: order:15  version:8
+		// decode x.TemporaryAllowedTotalMemory opts: order:15 version:8
 		if err := codec256.FormatLong(writer, x.TemporaryAllowedTotalMemory); err != nil {
 			return err
 		}
-		// decode x.TemporaryAllowedTotalMemoryTimeLimit opts: order:16  version:8
+		// decode x.TemporaryAllowedTotalMemoryTimeLimit opts: order:16 version:8
 		if err := codec256.FormatLong(writer, x.TemporaryAllowedTotalMemoryTimeLimit); err != nil {
 			return err
 		}
@@ -172,11 +172,11 @@ func (x *PortRange) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Min opts: encoder:"short"  order:1
+	// decode x.Min opts: encoder:"short" order:1
 	if err := codec256.ParseShort(reader, &x.Min); err != nil {
 		return err
 	}
-	// decode x.Max opts: encoder:"short"  order:2
+	// decode x.Max opts: encoder:"short" order:2
 	if err := codec256.ParseShort(reader, &x.Max); err != nil {
 		return err
 	}
@@ -186,11 +186,11 @@ func (x *PortRange) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Min opts: encoder:"short"  order:1
+	// decode x.Min opts: encoder:"short" order:1
 	if err := codec256.FormatShort(writer, x.Min); err != nil {
 		return err
 	}
-	// decode x.Max opts: encoder:"short"  order:2
+	// decode x.Max opts: encoder:"short" order:2
 	if err := codec256.FormatShort(writer, x.Max); err != nil {
 		return err
 	}

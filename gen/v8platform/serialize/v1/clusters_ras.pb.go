@@ -14,7 +14,7 @@ func (x *ClusterInfo) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Uuid opts: encoder:"uuid"  order:1
+	// decode x.Uuid opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.Uuid); err != nil {
 		return err
 	}
@@ -30,7 +30,7 @@ func (x *ClusterInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseInt(reader, &x.LifetimeLimit); err != nil {
 		return err
 	}
-	// decode x.Port opts: encoder:"short"  order:5
+	// decode x.Port opts: encoder:"short" order:5
 	if err := codec256.ParseShort(reader, &x.Port); err != nil {
 		return err
 	}
@@ -67,7 +67,7 @@ func (x *ClusterInfo) Parse(reader io.Reader, version int32) error {
 		return err
 	}
 	if version >= 9 {
-		// decode x.KillByMemoryWithDump opts: order:14  version:9
+		// decode x.KillByMemoryWithDump opts: order:14 version:9
 		if err := codec256.ParseBool(reader, &x.KillByMemoryWithDump); err != nil {
 			return err
 		}
@@ -78,7 +78,7 @@ func (x *ClusterInfo) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Uuid opts: encoder:"uuid"  order:1
+	// decode x.Uuid opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.Uuid); err != nil {
 		return err
 	}
@@ -94,7 +94,7 @@ func (x *ClusterInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatInt(writer, x.LifetimeLimit); err != nil {
 		return err
 	}
-	// decode x.Port opts: encoder:"short"  order:5
+	// decode x.Port opts: encoder:"short" order:5
 	if err := codec256.FormatShort(writer, x.Port); err != nil {
 		return err
 	}
@@ -131,7 +131,7 @@ func (x *ClusterInfo) Formatter(writer io.Writer, version int32) error {
 		return err
 	}
 	if version >= 9 {
-		// decode x.KillByMemoryWithDump opts: order:14  version:9
+		// decode x.KillByMemoryWithDump opts: order:14 version:9
 		if err := codec256.FormatBool(writer, x.KillByMemoryWithDump); err != nil {
 			return err
 		}

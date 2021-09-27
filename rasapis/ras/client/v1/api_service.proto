@@ -47,6 +47,7 @@ service InfobasesService {
 
   rpc GetInfobasesSummary(messages.v1.GetInfobasesSummaryRequest) returns (messages.v1.GetInfobasesSummaryResponse) {};
   rpc GetInfobases(messages.v1.GetInfobasesRequest) returns (messages.v1.GetInfobasesResponse) {};
+  rpc GetInfobase(messages.v1.GetInfobaseInfoRequest) returns (messages.v1.GetInfobaseInfoResponse) {};
   rpc CreateInfobase(messages.v1.CreateInfobaseRequest) returns (messages.v1.CreateInfobaseResponse) {};
   rpc DropInfobase(messages.v1.DropInfobaseRequest) returns (google.protobuf.Empty){};
   rpc UpdateInfobase(messages.v1.UpdateInfobaseRequest) returns (google.protobuf.Empty){};

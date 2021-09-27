@@ -19,7 +19,7 @@ func (x *GetWorkingServersRequest) Parse(reader io.Reader, version int32) error 
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (x *GetWorkingServersRequest) Formatter(writer io.Writer, version int32) er
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
@@ -69,11 +69,11 @@ func (x *GetWorkingServerInfoRequest) Parse(reader io.Reader, version int32) err
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.ServerId opts: encoder:"uuid"  order:2
+	// decode x.ServerId opts: encoder:"uuid" order:2
 	if err := codec256.ParseUUID(reader, &x.ServerId); err != nil {
 		return err
 	}
@@ -83,11 +83,11 @@ func (x *GetWorkingServerInfoRequest) Formatter(writer io.Writer, version int32)
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.ServerId opts: encoder:"uuid"  order:2
+	// decode x.ServerId opts: encoder:"uuid" order:2
 	if err := codec256.FormatUuid(writer, x.ServerId); err != nil {
 		return err
 	}
@@ -127,7 +127,7 @@ func (x *AddWorkingServerRequest) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
@@ -143,7 +143,7 @@ func (x *AddWorkingServerRequest) Formatter(writer io.Writer, version int32) err
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
@@ -161,7 +161,7 @@ func (x *AddWorkingServerResponse) Parse(reader io.Reader, version int32) error 
 	if x == nil {
 		return nil
 	}
-	// decode x.ServerId opts: encoder:"uuid"  order:1
+	// decode x.ServerId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ServerId); err != nil {
 		return err
 	}
@@ -171,7 +171,7 @@ func (x *AddWorkingServerResponse) Formatter(writer io.Writer, version int32) er
 	if x == nil {
 		return nil
 	}
-	// decode x.ServerId opts: encoder:"uuid"  order:1
+	// decode x.ServerId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ServerId); err != nil {
 		return err
 	}
@@ -185,11 +185,11 @@ func (x *DeleteWorkingServerRequest) Parse(reader io.Reader, version int32) erro
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.ServerId opts: encoder:"uuid"  order:2
+	// decode x.ServerId opts: encoder:"uuid" order:2
 	if err := codec256.ParseUUID(reader, &x.ServerId); err != nil {
 		return err
 	}
@@ -199,11 +199,11 @@ func (x *DeleteWorkingServerRequest) Formatter(writer io.Writer, version int32) 
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.ServerId opts: encoder:"uuid"  order:2
+	// decode x.ServerId opts: encoder:"uuid" order:2
 	if err := codec256.FormatUuid(writer, x.ServerId); err != nil {
 		return err
 	}

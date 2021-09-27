@@ -19,7 +19,7 @@ func (x *GetClusterManagersRequest) Parse(reader io.Reader, version int32) error
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
@@ -29,7 +29,7 @@ func (x *GetClusterManagersRequest) Formatter(writer io.Writer, version int32) e
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
@@ -69,11 +69,11 @@ func (x *GetClusterManagerInfoRequest) Parse(reader io.Reader, version int32) er
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.ParseUUID(reader, &x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.ManagerId opts: encoder:"uuid"  order:2
+	// decode x.ManagerId opts: encoder:"uuid" order:2
 	if err := codec256.ParseUUID(reader, &x.ManagerId); err != nil {
 		return err
 	}
@@ -83,11 +83,11 @@ func (x *GetClusterManagerInfoRequest) Formatter(writer io.Writer, version int32
 	if x == nil {
 		return nil
 	}
-	// decode x.ClusterId opts: encoder:"uuid"  order:1
+	// decode x.ClusterId opts: encoder:"uuid" order:1
 	if err := codec256.FormatUuid(writer, x.ClusterId); err != nil {
 		return err
 	}
-	// decode x.ManagerId opts: encoder:"uuid"  order:2
+	// decode x.ManagerId opts: encoder:"uuid" order:2
 	if err := codec256.FormatUuid(writer, x.ManagerId); err != nil {
 		return err
 	}

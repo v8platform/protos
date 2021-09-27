@@ -46,12 +46,12 @@ var packetPool = sync.Pool{New: func() interface{} {
 	return &Packet{}
 }}
 
-func RecvPacketMsg(reader io.Reader, packetMessage PacketMessageParser) error {
+func RecvPacketMsg(ctx context.Context, channel Channel, packetMessage PacketMessageParser) error {
 
 	packet := getPacket()
 	defer putPacket(packet)
 
-	if err := packet.Parse(reader, 0); err != nil {
+	if err := channel.RecvMsg(ctx, packet); err != nil {
 		return err
 	}
 	if err := packet.Unpack(packetMessage); err != nil {
@@ -61,24 +61,8 @@ func RecvPacketMsg(reader io.Reader, packetMessage PacketMessageParser) error {
 	return nil
 
 }
-func PacketRequestHandler(req PacketMessageFormatter, reply PacketMessageParser) func(ctx context.Context, rw io.ReadWriter) error {
-	return func(ctx context.Context, rw io.ReadWriter) error {
 
-		if err := SendPacketMsg(rw, req); err != nil {
-			return err
-		}
-
-		if reply == nil {
-			return nil
-		}
-
-		if err := RecvPacketMsg(rw, reply); err != nil {
-			return err
-		}
-		return nil
-	}
-}
-func SendPacketMsg(writer io.Writer, packetMessage PacketMessageFormatter) error {
+func SendPacketMsg(ctx context.Context, channel Channel, packetMessage PacketMessageFormatter) error {
 
 	buf := &bytes.Buffer{}
 
@@ -87,8 +71,7 @@ func SendPacketMsg(writer io.Writer, packetMessage PacketMessageFormatter) error
 	}
 
 	if packetMessage.GetPacketType() == PacketType_PACKET_TYPE_NEGOTIATE {
-		_, err := buf.WriteTo(writer)
-		if err != nil {
+		if err := channel.SendMsg(ctx, buf); err != nil {
 			return err
 		}
 		return nil
@@ -101,12 +84,26 @@ func SendPacketMsg(writer io.Writer, packetMessage PacketMessageFormatter) error
 	packet.Data = buf.Bytes()
 	packet.Size = int32(len(packet.Data))
 
-	_, err := packet.WriteTo(writer)
-	if err != nil {
+	if err := channel.SendMsg(ctx, packet); err != nil {
 		return err
 	}
 	return nil
 
+}
+func PacketChannelRequest(ctx context.Context, channel Channel, req PacketMessageFormatter, reply PacketMessageParser) error {
+
+	if err := SendPacketMsg(ctx, channel, req); err != nil {
+		return err
+	}
+
+	if reply == nil {
+		return nil
+	}
+
+	if err := RecvPacketMsg(ctx, channel, reply); err != nil {
+		return err
+	}
+	return nil
 }
 
 func NewPacket(message interface{}) (*Packet, error) {
@@ -146,33 +143,33 @@ func (x *Packet) Unpack(into PacketMessageParser) error {
 func (x *Packet) UnpackNew() (interface{}, error) {
 	var into interface{}
 	switch x.GetType() {
-	// type PacketType_PACKET_TYPE_ENDPOINT_OPEN_ACK cast EndpointOpenAck
-	case PacketType_PACKET_TYPE_ENDPOINT_OPEN_ACK:
-		into = &EndpointOpenAck{}
-	// type PacketType_PACKET_TYPE_CONNECT cast ConnectMessage
-	case PacketType_PACKET_TYPE_CONNECT:
-		into = &ConnectMessage{}
-	// type PacketType_PACKET_TYPE_NEGOTIATE cast NegotiateMessage
-	case PacketType_PACKET_TYPE_NEGOTIATE:
-		into = &NegotiateMessage{}
-	// type PacketType_PACKET_TYPE_CONNECT_ACK cast ConnectMessageAck
-	case PacketType_PACKET_TYPE_CONNECT_ACK:
-		into = &ConnectMessageAck{}
-	// type PacketType_PACKET_TYPE_DISCONNECT cast DisconnectMessage
-	case PacketType_PACKET_TYPE_DISCONNECT:
-		into = &DisconnectMessage{}
-	// type PacketType_PACKET_TYPE_ENDPOINT_OPEN cast EndpointOpen
-	case PacketType_PACKET_TYPE_ENDPOINT_OPEN:
-		into = &EndpointOpen{}
-	// type PacketType_PACKET_TYPE_ENDPOINT_MESSAGE cast EndpointMessage
-	case PacketType_PACKET_TYPE_ENDPOINT_MESSAGE:
-		into = &EndpointMessage{}
 	// type PacketType_PACKET_TYPE_ENDPOINT_CLOSE cast EndpointClose
 	case PacketType_PACKET_TYPE_ENDPOINT_CLOSE:
 		into = &EndpointClose{}
+	// type PacketType_PACKET_TYPE_ENDPOINT_MESSAGE cast EndpointMessage
+	case PacketType_PACKET_TYPE_ENDPOINT_MESSAGE:
+		into = &EndpointMessage{}
+	// type PacketType_PACKET_TYPE_CONNECT cast ConnectMessage
+	case PacketType_PACKET_TYPE_CONNECT:
+		into = &ConnectMessage{}
+	// type PacketType_PACKET_TYPE_DISCONNECT cast DisconnectMessage
+	case PacketType_PACKET_TYPE_DISCONNECT:
+		into = &DisconnectMessage{}
 	// type PacketType_PACKET_TYPE_ENDPOINT_FAILURE cast EndpointFailureAck
 	case PacketType_PACKET_TYPE_ENDPOINT_FAILURE:
 		into = &EndpointFailureAck{}
+	// type PacketType_PACKET_TYPE_CONNECT_ACK cast ConnectMessageAck
+	case PacketType_PACKET_TYPE_CONNECT_ACK:
+		into = &ConnectMessageAck{}
+	// type PacketType_PACKET_TYPE_ENDPOINT_OPEN cast EndpointOpen
+	case PacketType_PACKET_TYPE_ENDPOINT_OPEN:
+		into = &EndpointOpen{}
+	// type PacketType_PACKET_TYPE_NEGOTIATE cast NegotiateMessage
+	case PacketType_PACKET_TYPE_NEGOTIATE:
+		into = &NegotiateMessage{}
+	// type PacketType_PACKET_TYPE_ENDPOINT_OPEN_ACK cast EndpointOpenAck
+	case PacketType_PACKET_TYPE_ENDPOINT_OPEN_ACK:
+		into = &EndpointOpenAck{}
 	default:
 		return nil, fmt.Errorf("unknown unpack type %s", x.GetType())
 	}
@@ -188,28 +185,33 @@ func (x *Packet) UnpackNew() (interface{}, error) {
 }
 
 func (x *Packet) WriteTo(w io.Writer) (int64, error) {
-	buf := &bytes.Buffer{}
-	if err := x.Formatter(buf, 0); err != nil {
+	if err := x.Formatter(w, 0); err != nil {
 		return 0, err
 	}
-	n, err := w.Write(buf.Bytes())
-	return int64(n), err
+	return int64(0), nil
+}
+
+func (x *Packet) ReadFrom(r io.Reader) (int64, error) {
+	if err := x.Parse(r, 0); err != nil {
+		return 0, err
+	}
+	return int64(0), nil
 }
 func (x *Packet) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Type opts: encoder:"byte"  order:1
+	// decode x.Type opts: encoder:"byte" order:1
 	var val_Type int32
 	if err := codec256.ParseByte(reader, &val_Type); err != nil {
 		return err
 	}
 	x.Type = PacketType(val_Type)
-	// decode x.Size opts: encoder:"size"  order:2
+	// decode x.Size opts: encoder:"size" order:2
 	if err := codec256.ParseSize(reader, &x.Size); err != nil {
 		return err
 	}
-	// decode x.Data opts: encoder:"bytes"  order:3  type_field:1  size_field:2
+	// decode x.Data opts: encoder:"bytes" order:3 type_field:1 size_field:2
 	x.Data = make([]byte, x.GetSize())
 	if err := codec256.ParseBytes(reader, x.Data); err != nil {
 		return err
@@ -220,15 +222,15 @@ func (x *Packet) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Type opts: encoder:"byte"  order:1
+	// decode x.Type opts: encoder:"byte" order:1
 	if err := codec256.FormatByte(writer, int32(x.Type)); err != nil {
 		return err
 	}
-	// decode x.Size opts: encoder:"size"  order:2
+	// decode x.Size opts: encoder:"size" order:2
 	if err := codec256.FormatSize(writer, x.Size); err != nil {
 		return err
 	}
-	// decode x.Data opts: encoder:"bytes"  order:3  type_field:1  size_field:2
+	// decode x.Data opts: encoder:"bytes" order:3 type_field:1 size_field:2
 	if err := codec256.FormatBytes(writer, x.Data); err != nil {
 		return err
 	}
