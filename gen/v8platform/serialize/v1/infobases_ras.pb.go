@@ -27,20 +27,20 @@ func (x *InfobaseInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseString(reader, &x.Dbms); err != nil {
 		return err
 	}
-	// decode x.DbServer opts: order:4
-	if err := codec256.ParseString(reader, &x.DbServer); err != nil {
-		return err
-	}
-	// decode x.DbName opts: order:5
+	// decode x.DbName opts: order:4
 	if err := codec256.ParseString(reader, &x.DbName); err != nil {
 		return err
 	}
-	// decode x.DbUser opts: order:6
-	if err := codec256.ParseString(reader, &x.DbUser); err != nil {
+	// decode x.DbPwd opts: order:5
+	if err := codec256.ParseString(reader, &x.DbPwd); err != nil {
 		return err
 	}
-	// decode x.DbPwd opts: order:7
-	if err := codec256.ParseString(reader, &x.DbPwd); err != nil {
+	// decode x.DbServer opts: order:6
+	if err := codec256.ParseString(reader, &x.DbServer); err != nil {
+		return err
+	}
+	// decode x.DbUser opts: order:7
+	if err := codec256.ParseString(reader, &x.DbUser); err != nil {
 		return err
 	}
 	// decode x.DeniedFrom opts: encoder:"time" order:8
@@ -133,20 +133,20 @@ func (x *InfobaseInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatString(writer, x.Dbms); err != nil {
 		return err
 	}
-	// decode x.DbServer opts: order:4
-	if err := codec256.FormatString(writer, x.DbServer); err != nil {
-		return err
-	}
-	// decode x.DbName opts: order:5
+	// decode x.DbName opts: order:4
 	if err := codec256.FormatString(writer, x.DbName); err != nil {
 		return err
 	}
-	// decode x.DbUser opts: order:6
-	if err := codec256.FormatString(writer, x.DbUser); err != nil {
+	// decode x.DbPwd opts: order:5
+	if err := codec256.FormatString(writer, x.DbPwd); err != nil {
 		return err
 	}
-	// decode x.DbPwd opts: order:7
-	if err := codec256.FormatString(writer, x.DbPwd); err != nil {
+	// decode x.DbServer opts: order:6
+	if err := codec256.FormatString(writer, x.DbServer); err != nil {
+		return err
+	}
+	// decode x.DbUser opts: order:7
+	if err := codec256.FormatString(writer, x.DbUser); err != nil {
 		return err
 	}
 	// decode x.DeniedFrom opts: encoder:"time" order:8

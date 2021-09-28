@@ -16,10 +16,10 @@ message InfobaseInfo {
   string uuid = 2 [(ras.encoding.field) = {encoder: "uuid", order: 1}];
   int32 date_offset = 3 [(ras.encoding.field).order = 2];
   string dbms = 4 [(ras.encoding.field).order = 3];
-  string db_server = 5 [(ras.encoding.field).order = 4];
-  string db_name = 6 [(ras.encoding.field).order = 5];
-  string db_user = 7 [(ras.encoding.field).order = 6];
-  string db_pwd = 8 [(ras.encoding.field).order = 7];
+  string db_name = 5 [(ras.encoding.field).order = 4];
+  string db_pwd = 6 [(ras.encoding.field).order = 5];
+  string db_server = 7 [(ras.encoding.field).order = 6];
+  string db_user = 8 [(ras.encoding.field).order = 7];
   google.protobuf.Timestamp denied_from = 9 [(ras.encoding.field) = {encoder: "time", order: 8}];
   string denied_message = 10 [(ras.encoding.field).order = 9];
   string denied_parameter = 11 [(ras.encoding.field).order = 10];
