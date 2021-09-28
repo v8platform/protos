@@ -29,7 +29,7 @@ message GetWorkingProcessesRequest {
 
 message GetWorkingProcessesResponse {
   option (ras.encoding.options).message_type = "GET_WORKING_PROCESSES_RESPONSE";
-  v8platform.serialize.v1.ProcessInfo processes = 1 [(ras.encoding.field).order = 1];
+  repeated v8platform.serialize.v1.ProcessInfo processes = 1 [(ras.encoding.field).order = 1];
 }
 
 

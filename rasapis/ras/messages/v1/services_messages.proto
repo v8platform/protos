@@ -29,5 +29,5 @@ message GetClusterServicesRequest {
 
 message GetClusterServicesResponse {
   option (ras.encoding.options).message_type = "GET_CLUSTER_SERVICES_RESPONSE";
-  v8platform.serialize.v1.ServiceInfo info = 1 [(ras.encoding.field).order = 1];
+  repeated v8platform.serialize.v1.ServiceInfo services = 1 [(ras.encoding.field).order = 1];
 }

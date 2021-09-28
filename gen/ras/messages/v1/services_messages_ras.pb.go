@@ -43,21 +43,33 @@ func (x *GetClusterServicesResponse) Parse(reader io.Reader, version int32) erro
 	if x == nil {
 		return nil
 	}
-	// decode x.Info opts: order:1
-	x.Info = &v1.ServiceInfo{}
-	if err := x.Info.Parse(reader, version); err != nil {
+	// decode x.Services opts: order:1
+	var size_Services int
+	if err := codec256.ParseSize(reader, &size_Services); err != nil {
 		return err
 	}
+	for i := 0; i < size_Services; i++ {
+		val := &v1.ServiceInfo{}
+		if err := val.Parse(reader, version); err != nil {
+			return err
+		}
 
+		x.Services = append(x.Services, val)
+	}
 	return nil
 }
 func (x *GetClusterServicesResponse) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Info opts: order:1
-	if err := x.Info.Formatter(writer, version); err != nil {
+	// decode x.Services opts: order:1
+	if err := codec256.FormatSize(writer, len(x.Services)); err != nil {
 		return err
+	}
+	for i := 0; i < len(x.Services); i++ {
+		if err := x.Services[i].Formatter(writer, version); err != nil {
+			return err
+		}
 	}
 	return nil
 }

@@ -29,7 +29,7 @@ message GetWorkingServersRequest {
 
 message GetWorkingServersResponse {
   option (ras.encoding.options).message_type = "GET_WORKING_SERVERS_RESPONSE";
-  v8platform.serialize.v1.ServerInfo servers = 1 [(ras.encoding.field).order = 1];
+  repeated v8platform.serialize.v1.ServerInfo servers = 1 [(ras.encoding.field).order = 1];
 }
 
 message GetWorkingServerInfoRequest {

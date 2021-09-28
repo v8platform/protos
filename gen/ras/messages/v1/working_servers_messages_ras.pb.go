@@ -44,11 +44,18 @@ func (x *GetWorkingServersResponse) Parse(reader io.Reader, version int32) error
 		return nil
 	}
 	// decode x.Servers opts: order:1
-	x.Servers = &v1.ServerInfo{}
-	if err := x.Servers.Parse(reader, version); err != nil {
+	var size_Servers int
+	if err := codec256.ParseSize(reader, &size_Servers); err != nil {
 		return err
 	}
+	for i := 0; i < size_Servers; i++ {
+		val := &v1.ServerInfo{}
+		if err := val.Parse(reader, version); err != nil {
+			return err
+		}
 
+		x.Servers = append(x.Servers, val)
+	}
 	return nil
 }
 func (x *GetWorkingServersResponse) Formatter(writer io.Writer, version int32) error {
@@ -56,8 +63,13 @@ func (x *GetWorkingServersResponse) Formatter(writer io.Writer, version int32) e
 		return nil
 	}
 	// decode x.Servers opts: order:1
-	if err := x.Servers.Formatter(writer, version); err != nil {
+	if err := codec256.FormatSize(writer, len(x.Servers)); err != nil {
 		return err
+	}
+	for i := 0; i < len(x.Servers); i++ {
+		if err := x.Servers[i].Formatter(writer, version); err != nil {
+			return err
+		}
 	}
 	return nil
 }

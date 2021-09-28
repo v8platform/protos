@@ -44,11 +44,18 @@ func (x *GetWorkingProcessesResponse) Parse(reader io.Reader, version int32) err
 		return nil
 	}
 	// decode x.Processes opts: order:1
-	x.Processes = &v1.ProcessInfo{}
-	if err := x.Processes.Parse(reader, version); err != nil {
+	var size_Processes int
+	if err := codec256.ParseSize(reader, &size_Processes); err != nil {
 		return err
 	}
+	for i := 0; i < size_Processes; i++ {
+		val := &v1.ProcessInfo{}
+		if err := val.Parse(reader, version); err != nil {
+			return err
+		}
 
+		x.Processes = append(x.Processes, val)
+	}
 	return nil
 }
 func (x *GetWorkingProcessesResponse) Formatter(writer io.Writer, version int32) error {
@@ -56,8 +63,13 @@ func (x *GetWorkingProcessesResponse) Formatter(writer io.Writer, version int32)
 		return nil
 	}
 	// decode x.Processes opts: order:1
-	if err := x.Processes.Formatter(writer, version); err != nil {
+	if err := codec256.FormatSize(writer, len(x.Processes)); err != nil {
 		return err
+	}
+	for i := 0; i < len(x.Processes); i++ {
+		if err := x.Processes[i].Formatter(writer, version); err != nil {
+			return err
+		}
 	}
 	return nil
 }

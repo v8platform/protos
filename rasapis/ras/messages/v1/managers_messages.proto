@@ -29,7 +29,7 @@ message GetClusterManagersRequest {
 
 message GetClusterManagersResponse {
   option (ras.encoding.options).message_type = "GET_CLUSTER_MANAGERS_RESPONSE";
-  v8platform.serialize.v1.ManagerInfo info = 1 [(ras.encoding.field).order = 1];
+  repeated v8platform.serialize.v1.ManagerInfo managers = 1 [(ras.encoding.field).order = 1];
 }
 
 message GetClusterManagerInfoRequest {

@@ -43,21 +43,33 @@ func (x *GetClusterManagersResponse) Parse(reader io.Reader, version int32) erro
 	if x == nil {
 		return nil
 	}
-	// decode x.Info opts: order:1
-	x.Info = &v1.ManagerInfo{}
-	if err := x.Info.Parse(reader, version); err != nil {
+	// decode x.Managers opts: order:1
+	var size_Managers int
+	if err := codec256.ParseSize(reader, &size_Managers); err != nil {
 		return err
 	}
+	for i := 0; i < size_Managers; i++ {
+		val := &v1.ManagerInfo{}
+		if err := val.Parse(reader, version); err != nil {
+			return err
+		}
 
+		x.Managers = append(x.Managers, val)
+	}
 	return nil
 }
 func (x *GetClusterManagersResponse) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Info opts: order:1
-	if err := x.Info.Formatter(writer, version); err != nil {
+	// decode x.Managers opts: order:1
+	if err := codec256.FormatSize(writer, len(x.Managers)); err != nil {
 		return err
+	}
+	for i := 0; i < len(x.Managers); i++ {
+		if err := x.Managers[i].Formatter(writer, version); err != nil {
+			return err
+		}
 	}
 	return nil
 }
