@@ -22,8 +22,8 @@ func (x *ServerInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseString(reader, &x.AgentHost); err != nil {
 		return err
 	}
-	// decode x.AgentPort opts: order:3
-	if err := codec256.ParseInt(reader, &x.AgentPort); err != nil {
+	// decode x.AgentPort opts: encoder:"short" order:3
+	if err := codec256.ParseShort(reader, &x.AgentPort); err != nil {
 		return err
 	}
 	// decode x.Name opts: order:4
@@ -54,8 +54,8 @@ func (x *ServerInfo) Parse(reader io.Reader, version int32) error {
 	if err := codec256.ParseInt(reader, &x.ConnectionsLimit); err != nil {
 		return err
 	}
-	// decode x.ClusterPort opts: order:11
-	if err := codec256.ParseInt(reader, &x.ClusterPort); err != nil {
+	// decode x.ClusterPort opts: encoder:"short" order:11
+	if err := codec256.ParseShort(reader, &x.ClusterPort); err != nil {
 		return err
 	}
 	// decode x.DedicateManagers opts: order:12
@@ -103,8 +103,8 @@ func (x *ServerInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatString(writer, x.AgentHost); err != nil {
 		return err
 	}
-	// decode x.AgentPort opts: order:3
-	if err := codec256.FormatInt(writer, x.AgentPort); err != nil {
+	// decode x.AgentPort opts: encoder:"short" order:3
+	if err := codec256.FormatShort(writer, x.AgentPort); err != nil {
 		return err
 	}
 	// decode x.Name opts: order:4
@@ -135,8 +135,8 @@ func (x *ServerInfo) Formatter(writer io.Writer, version int32) error {
 	if err := codec256.FormatInt(writer, x.ConnectionsLimit); err != nil {
 		return err
 	}
-	// decode x.ClusterPort opts: order:11
-	if err := codec256.FormatInt(writer, x.ClusterPort); err != nil {
+	// decode x.ClusterPort opts: encoder:"short" order:11
+	if err := codec256.FormatShort(writer, x.ClusterPort); err != nil {
 		return err
 	}
 	// decode x.DedicateManagers opts: order:12

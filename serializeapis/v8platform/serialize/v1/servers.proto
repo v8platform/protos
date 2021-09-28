@@ -13,7 +13,7 @@ message ServerInfo  {
 
   string uuid = 1 [(ras.encoding.field) = {encoder: "uuid", order: 1}];
   string agent_host = 2 [(ras.encoding.field).order = 2];
-  int32  agent_port = 3 [(ras.encoding.field).order = 3];
+  int32  agent_port = 3 [(ras.encoding.field) = {order: 3, encoder: "short"}];
   string name = 4 [(ras.encoding.field).order = 4];
   bool main_server = 5 [(ras.encoding.field).order = 5];
   int64 safe_working_processes_memory_limit = 6 [(ras.encoding.field) = {encoder: "long", order: 6}];
@@ -22,7 +22,7 @@ message ServerInfo  {
   int64 memory_limit = 9 [(ras.encoding.field).order = 9];
 
   int32 connections_limit = 10 [(ras.encoding.field).order = 10];
-  int32 cluster_port = 11 [(ras.encoding.field).order = 11];
+  int32 cluster_port = 11 [(ras.encoding.field) = {order: 11, encoder: "short"}];
   bool dedicate_managers = 12 [(ras.encoding.field).order = 12];
   repeated PortRange port_ranges = 13 [(ras.encoding.field).order = 13];
 
