@@ -34,7 +34,7 @@ message ServerInfo  {
 
 message PortRange {
 
-  int32 Min = 1 [(ras.encoding.field) = {encoder: "short", order: 1}];
-  int32 Max = 2 [(ras.encoding.field) = {encoder: "short", order: 2}];
+  int32 high = 1 [(ras.encoding.field) = {encoder: "short", order: 1}];
+  int32 low = 2 [(ras.encoding.field) = {encoder: "short", order: 2}];
 
 }

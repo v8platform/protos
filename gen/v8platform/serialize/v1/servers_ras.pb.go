@@ -172,12 +172,12 @@ func (x *PortRange) Parse(reader io.Reader, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Min opts: encoder:"short" order:1
-	if err := codec256.ParseShort(reader, &x.Min); err != nil {
+	// decode x.High opts: encoder:"short" order:1
+	if err := codec256.ParseShort(reader, &x.High); err != nil {
 		return err
 	}
-	// decode x.Max opts: encoder:"short" order:2
-	if err := codec256.ParseShort(reader, &x.Max); err != nil {
+	// decode x.Low opts: encoder:"short" order:2
+	if err := codec256.ParseShort(reader, &x.Low); err != nil {
 		return err
 	}
 	return nil
@@ -186,12 +186,12 @@ func (x *PortRange) Formatter(writer io.Writer, version int32) error {
 	if x == nil {
 		return nil
 	}
-	// decode x.Min opts: encoder:"short" order:1
-	if err := codec256.FormatShort(writer, x.Min); err != nil {
+	// decode x.High opts: encoder:"short" order:1
+	if err := codec256.FormatShort(writer, x.High); err != nil {
 		return err
 	}
-	// decode x.Max opts: encoder:"short" order:2
-	if err := codec256.FormatShort(writer, x.Max); err != nil {
+	// decode x.Low opts: encoder:"short" order:2
+	if err := codec256.FormatShort(writer, x.Low); err != nil {
 		return err
 	}
 	return nil
